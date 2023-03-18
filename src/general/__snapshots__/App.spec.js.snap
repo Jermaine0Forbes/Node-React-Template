@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ColorBox component snapshot renders 1`] = `
+<div
+  className="my-5"
+  id="color-box"
+  style={
+    Object {
+      "background": "sienna",
+      "height": "80px",
+      "transition": "all 0.3s",
+      "width": "80px",
+    }
+  }
+/>
+`;
