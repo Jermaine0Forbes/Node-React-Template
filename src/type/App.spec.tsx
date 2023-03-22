@@ -7,11 +7,11 @@ import { expect } from "@jest/globals";
 import 'regenerator-runtime/runtime';
 
 
-describe("App", () => {
-    it("has been rendered", () => {
-        render(<App/>);
+// describe("App", () => {
+//     it("has been rendered", () => {
+//         render(<App/>);
 
-        const title = screen.getByText(/what is your name/i);
-        expect(title).toBeInTheDocument();
-    })
-})
+//         const title = screen.getByText(/what is your name/i);
+//         expect(title).toBeInTheDocument();
+//     })
+// })

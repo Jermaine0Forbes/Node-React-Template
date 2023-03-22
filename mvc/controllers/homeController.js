@@ -1,6 +1,6 @@
-const 
-goose = require("mongoose"),
-User = goose.model("Users");
+// const 
+// goose = require("mongoose"),
+// User = goose.model("Users");
      
 
 module.exports.index = (req,res) => {
@@ -8,10 +8,11 @@ module.exports.index = (req,res) => {
 }
 
 module.exports.storeUser = (req, res) => {
-    User.create(req.body, (err, data) => {
-        if(err) return res.send(err)
+    res.redirect("/users")
+    // User.create(req.body, (err, data) => {
+    //     if(err) return res.send(err)
 
-        console.log(data)
-        res.redirect("/users")
-    })
+    //     console.log(data)
+    //     res.redirect("/users")
+    // })
 }

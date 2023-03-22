@@ -1,4 +1,4 @@
-require("./mvc/models/db");
+// require("./mvc/models/db");
 require('dotenv').config();
 var express = require('express');
 var body = require('body-parser');
@@ -64,10 +64,7 @@ app.use(function(err,req,res,next){
 })
 
 app.listen(port, ip, function(){
-    var n = process.env.APP_ENV;
-    const code = require('crypto').randomBytes(64).toString('hex');
+    const env = process.env.APP_ENV;
     console.log("node connected to "+port);
-    console.log("node environment is in "+n)
-    console.log("encrypted key")
-    console.log(code)
+    console.log("node environment is in "+env)
 })
