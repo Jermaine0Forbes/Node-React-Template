@@ -1,8 +1,7 @@
 const path = require("path");
 module.exports = {
   entry:{
-    app:"/src/general/root.js",
-    type: "/src/type/index.tsx"
+    app: "/src/index.tsx"
   },
   output: {
    path: path.resolve(__dirname, "public/js"),
@@ -33,9 +32,9 @@ module.exports = {
   },
   mode: "development",
   watch:true,
-  // devServer:{
-  //   port:3002,
-  //   // contentBase:"./public/js",
-  //   hot:true
-  // }
+  devServer:{
+    port:3002,
+    // contentBase:"./public/js",
+    hot:true
+  }
 };
