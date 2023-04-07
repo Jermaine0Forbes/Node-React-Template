@@ -1,5 +1,4 @@
-import React , {SyntheticEvent, useContext, useRef, useState} from 'react';
-import { Button , Box, Container, Grid, TextField,Input } from '@material-ui/core';
+import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
@@ -30,11 +29,3 @@ export default function App():JSX.Element
     )
 }
 
-export const DisplayName = () => {
-    const contextType = useContext(MyTheme);
-    return (
-        <Box className="mt-4" aria-label="name-box">
-           {contextType}
-        </Box>
-    )
-}
