@@ -27,17 +27,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     })
-    .then( () => queryInterface.addConstraint('Terms',{
-      type: "foreign key",
-      name: "fk_terms_sets",
-      fields:['setId'],
-      references: {
-        table: 'Sets',
-        field: 'id',
-      },
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    }));
+;
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Sets');
