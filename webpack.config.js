@@ -33,7 +33,7 @@ module.exports = {
   mode: "development",
   watch:true,
   devServer:{
-    port:3002,
+    port:4000,
     // contentBase:"./public/js",
     hot:true
   }

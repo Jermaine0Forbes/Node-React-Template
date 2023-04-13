@@ -8,7 +8,7 @@ export default function Home():JSX.Element
         <Container>
             <Box>
                 <main>
-                    Home page
+                    Home pages
                 </main>
             </Box>
         </Container>

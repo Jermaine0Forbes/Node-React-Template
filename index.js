@@ -26,12 +26,13 @@ app.use(body.json());
 app.use(body.urlencoded({extended:true}));
 app.use(cookie());
 
-app.use("/", routes);
+// app.use("/", routes);
+app.get('*', (req, res) => res.sendFile(path.resolve('mvc', 'views', 'home','index.html')));
 
-app.use(function(req,res,next){
+app.use(function(err,req,res,next){
     console.log("status code is")
     console.log(res.statusCode)
-	if(res.statusCode == 404 || res.statusCode == 200){
+	if(res.statusCode == 404 ){
 	  return res.render('error/400', {code:404, errTitle:err});
 	}else{
         return next();
