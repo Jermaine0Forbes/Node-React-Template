@@ -8,7 +8,7 @@ export default function Study():JSX.Element
         <Container>
             <Box>
                 <main>
-                    study page
+                    foo pages
                 </main>
             </Box>
         </Container>

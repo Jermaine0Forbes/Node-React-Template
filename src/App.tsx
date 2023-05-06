@@ -7,6 +7,7 @@ import Study from "./pages/Study";
 import Test from "./pages/Test";
 import Account from "./pages/Account";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 const MyTheme = React.createContext(null);
 
@@ -23,6 +24,7 @@ export default function App():JSX.Element
             <Route path="test" element={<Test />} />
             <Route path="account" element={<Account />} />
             <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
           </Route>
         </Routes>
       </BrowserRouter>

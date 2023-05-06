@@ -13,21 +13,22 @@ var routes = require('./mvc/routes/router');
 
 
 app.use(cors());
-app.engine('hbs',hbs({
-    extname: 'hbs', 
-    defaultLayout: 'main', 
-    layoutsDir: __dirname + '/mvc/views/layouts/',
-    partialsDir: __dirname + '/mvc/views/partials/'
-}))
-app.set("view engine","hbs");
+// app.engine('hbs',hbs({
+//     extname: 'hbs', 
+//     defaultLayout: 'main', 
+//     layoutsDir: __dirname + '/mvc/views/layouts/',
+//     partialsDir: __dirname + '/mvc/views/partials/'
+// }))
+// app.set("view engine","hbs");
 app.set("views",path.join(__dirname,"mvc/views")); // setting the views path
-app.use(express.static(path.join(__dirname,'public')));
+app.use(express.static(path.join(__dirname,'public/js/')));
 app.use(body.json());
 app.use(body.urlencoded({extended:true}));
 app.use(cookie());
 
 // app.use("/", routes);
-app.get('*', (req, res) => res.sendFile(path.resolve('mvc', 'views', 'home','index.html')));
+// app.get('*', (req, res) => res.sendFile(path.resolve('mvc', 'views','home','index.html')));
+app.get('*', (req, res) => res.sendFile(path.resolve('public', 'js','index.html')));
 
 app.use(function(err,req,res,next){
     console.log("status code is")
