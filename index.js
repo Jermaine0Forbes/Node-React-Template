@@ -8,33 +8,32 @@ var app = express();
 var ip =  process.env.IP || 'localhost'; // change the IP address to get your 
 var cors = require("cors");
 var port = process.env.PORT || 3001;
-const hbs = require("express-handlebars");
-var routes = require('./mvc/routes/router');
+// const hbs = require("express-handlebars");
+const routes = require('./mvc/routes/router');
 
 
 app.use(cors());
-// app.engine('hbs',hbs({
-//     extname: 'hbs', 
-//     defaultLayout: 'main', 
-//     layoutsDir: __dirname + '/mvc/views/layouts/',
-//     partialsDir: __dirname + '/mvc/views/partials/'
-// }))
-// app.set("view engine","hbs");
 app.set("views",path.join(__dirname,"mvc/views")); // setting the views path
 app.use(express.static(path.join(__dirname,'public/js/')));
 app.use(body.json());
 app.use(body.urlencoded({extended:true}));
 app.use(cookie());
 
-// app.use("/", routes);
+// app.post('/api/register', (req,res) => {
+//     var list = ["item1", "item2", "item3"];
+//     res.json(list);
+//     console.log('Sent list of items');
+// });
+app.use("/api", routes);
 // app.get('*', (req, res) => res.sendFile(path.resolve('mvc', 'views','home','index.html')));
-app.get('*', (req, res) => res.sendFile(path.resolve('public', 'js','index.html')));
+app.get('/', (req, res) => res.sendFile(path.resolve('public', 'js','index.html')));
 
 app.use(function(err,req,res,next){
     console.log("status code is")
     console.log(res.statusCode)
 	if(res.statusCode == 404 ){
-	  return res.render('error/400', {code:404, errTitle:err});
+	  return res.sendStatus(404);
+	//   return res.render('error/400', {code:404, errTitle:err});
 	}else{
         return next();
         

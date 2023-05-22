@@ -28,6 +28,7 @@ export default function Layout():JSX.Element
                         <MenuItem><Link to="/create">Create</Link></MenuItem>
                         <MenuItem><Link to="/test">Test</Link></MenuItem>
                         <MenuItem><Link to="/study">Study</Link></MenuItem>
+                        <MenuItem><Link to="/register">Register</Link></MenuItem>
                     </MenuList>
                 </Toolbar>
             </AppBar>

@@ -4,7 +4,8 @@
      
 
 module.exports.index = (req,res) => {
-    res.render("user/index", {users:[]});
+    return res.json({users: [ 'john', 'jacob', 'smith']});
+    // res.render("user/index", {users:[]});
     // User.find({})
     // .lean()
     // .exec((err, users) => {
