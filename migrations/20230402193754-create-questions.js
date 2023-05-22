@@ -16,6 +16,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       correct: {
+        // Need to establish the array in the 'questions' model
         type: Sequelize.ENUM('wrong','correct')
       },
       testId: {

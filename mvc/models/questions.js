@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Questions.init({
     question: DataTypes.STRING,
     termId: DataTypes.INTEGER,
-    correct: DataTypes.ENUM,
+    correct: DataTypes.ENUM('wrong','correct'), // Make sure you add the values or an error will happen
     testId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     termId: DataTypes.INTEGER

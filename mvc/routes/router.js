@@ -2,10 +2,10 @@ const express = require('express');
 const route = express.Router();
 const homeCtr = require("../controllers/homeController");
 const userCtr = require("../controllers/userController");
-// const  Users = require("../models/users");
+const  { Users } = require("../models/index");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
-import Users from "../models/users";
+// import Users from "../models/users";
 
 async function hashPassword(password, saltRounds = 10)
 {
@@ -33,16 +33,14 @@ route.post("/register", async (req,res) => {
 
     const hashed = await hashPassword(password);
     console.log(hashed);
-    // return res.sendStatus(200);
-    console.log(Users)
-    // Users.create({username, password: hashed, email})
-    // .then(resp => {
-    //     console.log(resp)
-    //     res.sendStatus(200);
-    // })
-    // .catch(err => console.log(err));
 
-    // User.create()
+    await Users.create({username, password: hashed, email})
+    .then(resp => {
+        console.log(resp)
+        res.sendStatus(200);
+    })
+    .catch(err => console.log(err));
+
     
 })
 
