@@ -12,7 +12,7 @@ import Register from "./pages/Register";
 
 const MyTheme = React.createContext(null);
 const queryClient = new QueryClient()
-export default function App():JSX.Element
+export default function App()
 {
     
     return (

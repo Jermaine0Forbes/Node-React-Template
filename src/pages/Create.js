@@ -1,14 +1,14 @@
 import React from 'react';
 import { Container, Grid, Box } from '@material-ui/core';
 
-export default function Test():JSX.Element
+export default function Create()
 {
     
     return (
         <Container>
             <Box>
                 <main>
-                    test page
+                    create page
                 </main>
             </Box>
         </Container>

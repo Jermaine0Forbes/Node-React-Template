@@ -5,7 +5,7 @@ import { css } from '@emotion/react'
 const btnStyle = css`
     margin-top: 1em;
 `;
-export default function Login():JSX.Element
+export default function Login()
 {
     
     return (

@@ -8,11 +8,11 @@ const btnStyle = css`
     margin-top: 1em;
 `;
 
-export default function Register():JSX.Element
+export default function Register()
 {
     const navigate = useNavigate();
     const {isLoading, isSuccess, mutate} = useMutation({
-        mutationFn: (formData:any) =>{
+        mutationFn: (formData) =>{
             return fetch(process.env.URL+'/api/register', { 
                 method:'POST', 
                 headers:{
@@ -35,17 +35,13 @@ export default function Register():JSX.Element
     ;
     useEffect(() => isSuccess && navigate("/") , [isSuccess])
 
-    const handleSubmit = (e:any) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        type User = {
-            username?: any,
-            password?: any,
-            email?: any,
-        };
-        const data = {} as User;
+
+        const data = {};
         const form = new FormData(e.target);
         for (const [key, value] of form.entries()){
-            data[key as keyof User] = value;
+            data[key] = value;
         };
         console.log('data')
         console.log(data)
