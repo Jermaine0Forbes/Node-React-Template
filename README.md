@@ -1,5 +1,5 @@
-# Quiz Trak
-Express, React, and Typescript template
+# Node React Template
+Express & React template
 
 
 ## Simple Commands
