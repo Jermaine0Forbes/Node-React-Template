@@ -1,14 +1,14 @@
 import React from 'react';
 import { Container, Grid, Box } from '@material-ui/core';
 
-export default function Test()
+export default function Delete()
 {
     
     return (
         <Container>
             <Box>
                 <main>
-                    tests page
+                    delete page
                 </main>
             </Box>
         </Container>

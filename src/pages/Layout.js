@@ -26,9 +26,9 @@ export default function Layout()
                     <MenuList className={classes.toolbar}>
                         <MenuItem><Link to="/">Home</Link></MenuItem>
                         <MenuItem><Link to="/create">Create</Link></MenuItem>
-                        <MenuItem><Link to="/test">Test</Link></MenuItem>
-                        <MenuItem><Link to="/study">Study</Link></MenuItem>
-                        <MenuItem><Link to="/register">Register</Link></MenuItem>
+                        <MenuItem><Link to="/list">List</Link></MenuItem>
+                        <MenuItem><Link to="/update">Update</Link></MenuItem>
+                        <MenuItem><Link to="/delete">Delete</Link></MenuItem>
                     </MenuList>
                 </Toolbar>
             </AppBar>

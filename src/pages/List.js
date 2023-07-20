@@ -1,14 +1,14 @@
 import React from 'react';
 import { Container, Grid, Box } from '@material-ui/core';
 
-export default function Test()
+export default function List()
 {
     
     return (
         <Container>
             <Box>
                 <main>
-                    tests page
+                    list page
                 </main>
             </Box>
         </Container>

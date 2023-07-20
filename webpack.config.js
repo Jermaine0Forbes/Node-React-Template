@@ -15,9 +15,7 @@ module.exports = () => {
   }, {});
 
  return {
-    entry:{
-      app: "/src/index.tsx"
-    },
+    entry:"/src/index.js",
     output: {
      path: path.resolve(__dirname, "mvc/views"),
     //  path: path.resolve(__dirname, "public/js"),
