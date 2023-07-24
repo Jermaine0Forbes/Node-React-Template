@@ -1,12 +1,23 @@
-import React, {useEffect} from 'react';
-import { Container, Grid, Box, Typography,TextField, Button, Link, CircularProgress } from '@material-ui/core';
-import { css } from '@emotion/react';
+import React, {useEffect, useState} from 'react';
+import { 
+    Container, Grid, Box, 
+    Typography,TextField, Button, 
+    CircularProgress, FormControl,
+    Select, MenuItem, InputLabel,
+    Snackbar
+} from '@material-ui/core';
+import { Alert } from '@mui/material';
+// import { css } from '@emotion/react';
 import { useMutation } from 'react-query';
 import { useNavigate } from "react-router-dom";
+import { faker } from '@faker-js/faker';
 
 export default function Create()
 {
+    const [open, setOpen] = useState(false);
+    const [level, setLevel] = useState(faker.number.int({max:4,min:1}));
     const navigate = useNavigate();
+    const firstName = faker.person.firstName();
     const {isLoading, isSuccess, mutate} = useMutation({
         mutationFn: (formData) =>{
             return fetch(process.env.URL+'/api/register', { 
@@ -18,18 +29,10 @@ export default function Create()
                 body: JSON.stringify(formData),
                 // body: formData,
             })
-            // .then((res) =>  {
-            //     console.log(res.status)
-            //     if(res.status === 200)
-            //        return redirect("/");
-                
-            //     console.log('nothing')
-            // })
             .catch(err => console.error(err));
         },
     });
-    ;
-    useEffect(() => isSuccess && navigate("/") , [isSuccess])
+    useEffect(() => isSuccess && setOpen(!open) , [isSuccess])
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -41,11 +44,11 @@ export default function Create()
         };
         console.log('data')
         console.log(data)
-        // console.log(e)
         mutate(data)
-        // mutation.mutate(form)
     }
-    
+
+    const handleClose = () => { setOpen(!open)};
+     
     return (
         <Container>
             {
@@ -56,21 +59,48 @@ export default function Create()
                 <Box component={'form'} onSubmit={(e) => handleSubmit(e)} >
                     <Typography variant="h3">Create</Typography>
                     <Grid>
-                        <TextField label="email" name="email" type='email'></TextField>
+                        <TextField label="email" name="email" type='email' value={firstName+"@example.com"}></TextField>
                     </Grid>    
                     <Grid>
-                        <TextField label="username" name="username"></TextField>
+                        <TextField label="username" name="username" value={firstName+" "+faker.person.lastName()}></TextField>
+                    </Grid>                    
+                    <Grid item xs={2}>
+                        <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">Admin Level</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="adminLevel"
+                            name="adminLevel"
+                            value={level}
+                            onChange={ (e) =>{ setLevel(e.target.value)} }
+                        >
+                            <MenuItem value={1}>Admin I</MenuItem>
+                            <MenuItem value={2}>Admin II</MenuItem>
+                            <MenuItem value={3}>Admin III</MenuItem>
+                            <MenuItem value={4}>Admin IV</MenuItem>
+                        </Select>
+                        </FormControl>
                     </Grid>
                     <Grid>
-                        <TextField label="password" name="password" type="password" value="password"></TextField>
+                        <TextField label="password" name="password" type="password" value="123"></TextField>
                     </Grid>
                     <Grid >
                         <Button   type='submit' variant='contained' color="secondary">Submit</Button>
                     </Grid>
-                    <Link href='/login' color="secondary">Have an account? Sign in here</Link>
                 </Box>
                 )
             }
+            {
+                isSuccess && (
+                    <Snackbar open={open} autoHideDuration={10000} onClose={handleClose} >
+                        <Alert  severity="success" sx={{ width: '100%' }}>
+                            User <strong>{firstName}</strong> has been created!
+                        </Alert>
+                    </Snackbar>
+                )
+            }
+
         </Container>
     );
 }

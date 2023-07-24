@@ -1,5 +1,5 @@
 const express = require('express');
-const route = express.Router();
+const router = express.Router();
 const homeCtr = require("../controllers/homeController");
 const userCtr = require("../controllers/userController");
 const  { Users } = require("../models/index");
@@ -23,26 +23,27 @@ function invalidRegister(email, user, pass){
 }
 
 // route.get("/", home.index);
-route.post("/store/user", homeCtr.storeUser);
-route.get("/users", userCtr.index);
-route.post("/register", async (req,res) => {
+router.post("/store/user", homeCtr.storeUser);
+router.get("/users", userCtr.index);
+router.route('/user/:id')
+      .get(userCtr.get)
+
+router.post("/register", async (req,res) => {
     
-    const { email, username, password}  = req.body;
+    const { email, username, password, adminLevel}  = req.body;
     if(invalidRegister(email, username, password))
        return res.sendStatus(400);
 
     const hashed = await hashPassword(password);
     console.log(hashed);
-
-    await Users.create({username, password: hashed, email})
+    console.log(req.body);
+    await Users.create({username, password: hashed, email, adminLevel})
     .then(resp => {
         console.log(resp)
         res.sendStatus(200);
     })
     .catch(err => console.log(err));
-
-    
 })
 
 
-module.exports = route;
+module.exports = router;

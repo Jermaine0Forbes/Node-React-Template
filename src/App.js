@@ -12,9 +12,10 @@ import Register from "./pages/Register";
 import Delete from "./pages/Delete";
 import List from "./pages/List";
 import Update from "./pages/Update";
+import NotFound from "./pages/NotFound";
 
 const MyTheme = React.createContext(null);
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 export default function App()
 {
     
@@ -31,8 +32,9 @@ export default function App()
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
                 <Route path="delete" element={<Delete />} />
-                <Route path="update" element={<Update/>} />
+                <Route path="update/:id" element={<Update/>} />
                 <Route path="list" element={<List />} />
+                <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>
         </BrowserRouter>
