@@ -20,8 +20,10 @@ const fetchUsers = async () => {
 export default function List()
 {
     const [users,setUsers] = useState([]);
-    const {isLoading, isSuccess, data} = useQuery('users', fetchUsers);
-    useEffect(() => { data?.users.length && setUsers(data.users)}, [isSuccess]);
+    const {isLoading, isSuccess, data} = useQuery('users', fetchUsers, {
+        staleTime: Infinity
+    });
+    useEffect(() => { data?.users?.length && setUsers(data.users)}, [isSuccess]);
     console.log(data)
     return (
         <Container>

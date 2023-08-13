@@ -32,10 +32,10 @@ export default function App()
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
                 <Route path="delete" element={<Delete />} />
-                <Route path="update/:id" element={<Update/>} />
                 <Route path="list" element={<List />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
+              <Route exact path="/update/:id" element={<Update/>} />
             </Routes>
         </BrowserRouter>
       </QueryClientProvider>

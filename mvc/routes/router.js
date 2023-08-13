@@ -27,6 +27,7 @@ router.post("/store/user", homeCtr.storeUser);
 router.get("/users", userCtr.index);
 router.route('/user/:id')
       .get(userCtr.get)
+      .put(userCtr.put)
 
 router.post("/register", async (req,res) => {
     

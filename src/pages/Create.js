@@ -59,10 +59,10 @@ export default function Create()
                 <Box component={'form'} onSubmit={(e) => handleSubmit(e)} >
                     <Typography variant="h3">Create</Typography>
                     <Grid>
-                        <TextField label="email" name="email" type='email' value={firstName+"@example.com"}></TextField>
+                        <TextField label="email" name="email" type='email' defaultValue={firstName+"@example.com"}></TextField>
                     </Grid>    
                     <Grid>
-                        <TextField label="username" name="username" value={firstName+" "+faker.person.lastName()}></TextField>
+                        <TextField label="username" name="username" defaultValue={firstName+" "+faker.person.lastName()}></TextField>
                     </Grid>                    
                     <Grid item xs={2}>
                         <FormControl fullWidth>
@@ -72,7 +72,7 @@ export default function Create()
                             id="demo-simple-select"
                             label="adminLevel"
                             name="adminLevel"
-                            value={level}
+                            defaultValue={level}
                             onChange={ (e) =>{ setLevel(e.target.value)} }
                         >
                             <MenuItem value={1}>Admin I</MenuItem>

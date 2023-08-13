@@ -26,7 +26,8 @@ app.use(cookie());
 // });
 app.use("/api", routes);
 // app.get('*', (req, res) => res.sendFile(path.resolve('mvc', 'views','home','index.html')));
-app.get('/', (req, res) => res.sendFile(path.resolve('public', 'js','index.html')));
+app.get('*', (req, res) => res.sendFile(path.resolve('public', 'js','index.html')));
+// app.get('/', (req, res) => {  console.log(req.path); res.sendFile(path.resolve('public', 'js','index.html'))});
 
 app.use(function(err,req,res,next){
     console.log("status code is")
