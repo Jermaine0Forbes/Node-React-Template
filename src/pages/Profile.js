@@ -15,7 +15,7 @@ const fetchUser = async (id) => {
     const res = await fetch(process.env.URL+'/api/user/'+id);
     return res.json();
 
-}
+};
 
 const updateUser = async (id,data) => {
     return fetch(process.env.URL+'/api/user/'+id, {
@@ -27,6 +27,13 @@ const updateUser = async (id,data) => {
     })
     .then(res => res.json())
     .catch(err => { console.log(err)});
+};
+
+const deleteUser = async (id) => {
+    const resp = await fetch(process.env.URL+'/api/user/'+id,{
+        method: 'DELETE',
+    });
+    console.log(resp);
 }
 
 
@@ -37,9 +44,10 @@ export default function Update()
     const [level, setLevel] = useState(1);
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
+    const formRef = useRef(null);
     console.log(id)
 
-    const handleClose = () => { setOpen(!open)};
+    const handleClose = useCallback(() => { setOpen(!open)}, [open]);
     const {isLoading, isSuccess, data, dataUpdatedAt} = useQuery('get-user', () => fetchUser(id), {
         refetchOnMount:true,
     });
@@ -63,23 +71,31 @@ export default function Update()
         onSuccess: () => { setOpen(true)}
     })
 
+    const { mutate: deleting , isSuccess: deleteSuccess } = useMutation({
+        mutationFn: (id) => { deleteUser(id)},
+        onSuccess: () => {}
+    });
+
 
     const handleSubmit = useCallback((e) => {
         e.preventDefault();
 
+        // console.log(e.target)
+        // console.log("use ref")
+        // console.log(formRef.current)
         const updatedUser = {};
-        const form = new FormData(e.target);
+        const form = new FormData(formRef.current);
+        // const form = new FormData(e.target);
         for (const [key, value] of form.entries()){
             updatedUser[key] = value;
         };
         console.log('data')
         console.log(updatedUser)
-        mutate({ id: id, data: updatedUser});
+        // mutate({ id: id, data: updatedUser});
     },[data]);
 
     const handleChange = (e) => {
         e.preventDefault();
-        // console.log(formRef.current)
         switch(e.target.name)
         {
             case 'email':
@@ -88,14 +104,15 @@ export default function Update()
             default:
                 setName(e.target.value)
         }
-       
     };
+
+    const handleDelete = useCallback((e) => { e.preventDefault(); deleting(id)},[id]);
 
     return (
         <Layout2>
             <Container>
-                <Box component={'form'}  onSubmit={(e) => handleSubmit(e)}>
-                <Typography variant="h3">Update</Typography>
+                <Box component={'form'} ref={formRef} >
+                <Typography variant="h3">Profile</Typography>
                     <Grid item xs={4}>
                         {
                             isLoading && (
@@ -129,10 +146,16 @@ export default function Update()
                                     </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid >
-                                    <Button   type='submit' variant='contained' color="secondary">Submit</Button>
-                                </Grid>
-                                
+                                <Box component={'section'}  sx={{my:'16px'}}>
+                                    <Grid container spacing={2} gap={2}>
+                                        <Grid item>
+                                            <Button type='submit' variant='contained' color="secondary"  onClick={(e) => handleSubmit(e)}>Save</Button>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button type='delete' variant='contained' color="default" onClick={(e) => handleDelete(e)}>Delete</Button>
+                                        </Grid>
+                                    </Grid>
+                                </Box>
                                 </>
                             )
                         }

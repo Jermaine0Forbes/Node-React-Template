@@ -28,6 +28,7 @@ router.get("/users", userCtr.index);
 router.route('/user/:id')
       .get(userCtr.get)
       .put(userCtr.put)
+      .delete(userCtr.delete)
 
 router.post("/register", async (req,res) => {
     

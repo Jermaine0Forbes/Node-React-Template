@@ -57,7 +57,7 @@ export default function List()
                                         }
                                     return (
                                         <Tooltip key={i} title={"Admin Level "+e.adminLevel}>
-                                            <ListItemButton  divider component={Link} to={"/update/"+e.id}>
+                                            <ListItemButton  divider component={Link} to={"/user/"+e.id}>
                                                 <ListItemIcon>
                                                     <AccountCircleIcon color={color} />
                                                 </ListItemIcon>

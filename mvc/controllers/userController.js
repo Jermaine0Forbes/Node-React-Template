@@ -66,3 +66,9 @@ module.exports.put = async (req, res) =>{
     //   .catch(err => { console.error(err)})
 
 }
+
+module.exports.delete = async (req, res) => {
+  const id = req.params.id;
+  console.log("deleting")
+  console.log('id: '+id);
+}
