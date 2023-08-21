@@ -27,12 +27,14 @@ module.exports.get = async (req,res) => {
     
     if( typeof Number(id)  !== "number")
     {
-        return res.error("id is not a number");
+      console.error(id+" is not a number");
+      return res.sendStatus(500);
     }
     const user = await Users.findByPk(id,{ attributes: ['adminLevel','email', 'id', 'username']});
 
     if(user === null){
         console.error("cannot find user "+id);
+        return res.sendStatus(500);
     }
 
     return res.json(user);
@@ -42,11 +44,11 @@ module.exports.get = async (req,res) => {
 module.exports.put = async (req, res) =>{
     console.log(req.path)
     const id = req.params.id;
-    const {adminLevel, email, username} = req.body;
     console.log(req.body)
     if( typeof Number(id)  !== "number")
     {
-        return res.error("id is not a number");
+       console.error(id+" is not a number");
+        return res.sendStatus(500);
     }
     Users.update(req.body, {
         where: {id:id}
@@ -71,4 +73,20 @@ module.exports.delete = async (req, res) => {
   const id = req.params.id;
   console.log("deleting")
   console.log('id: '+id);
+
+  if( typeof Number(id)  !== "number")
+  {
+     console.error(id+" is not a number");
+      return res.sendStatus(500);
+  }
+
+  // equivalent of sleeping
+  // await new Promise(resolve => setTimeout(resolve, 5000));
+  await Users.destroy({
+    where: {
+      id: id,
+    }
+  })
+
+  return res.sendStatus(200);
 }
