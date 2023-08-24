@@ -19,11 +19,6 @@ app.use(body.json());
 app.use(body.urlencoded({extended:true}));
 app.use(cookie());
 
-// app.post('/api/register', (req,res) => {
-//     var list = ["item1", "item2", "item3"];
-//     res.json(list);
-//     console.log('Sent list of items');
-// });
 app.use("/api", routes);
 // app.get('*', (req, res) => res.sendFile(path.resolve('mvc', 'views','home','index.html')));
 app.get('*', (req, res) => res.sendFile(path.resolve('public', 'js','index.html')));

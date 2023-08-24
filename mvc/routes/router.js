@@ -18,6 +18,7 @@ router.route('/user/:id')
       .delete(userCtr.delete)
 
 router.post("/register",loginCtr.register);
+router.post("/login",loginCtr.login);
 
 
 module.exports = router;

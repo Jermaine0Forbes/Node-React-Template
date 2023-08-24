@@ -27,8 +27,8 @@ export default function Layout()
                         <MenuItem><Link to="/">Home</Link></MenuItem>
                         <MenuItem><Link to="/create">Create</Link></MenuItem>
                         <MenuItem><Link to="/list">List</Link></MenuItem>
-                        <MenuItem><Link to="/update">Update</Link></MenuItem>
-                        <MenuItem><Link to="/delete">Delete</Link></MenuItem>
+                        <MenuItem><Link to="/login">Login</Link></MenuItem>
+                        <MenuItem><Link to="/register">Register</Link></MenuItem>
                     </MenuList>
                 </Toolbar>
             </AppBar>
