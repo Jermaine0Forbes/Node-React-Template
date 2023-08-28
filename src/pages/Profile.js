@@ -13,8 +13,6 @@ import { useColor } from '../hooks/users';
 import {fetchUser,updateUser, deleteUser} from '../services/users';
 import { useParams,useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from 'react-query';
-import Layout2 from './Layout2';
-
 
 
 
@@ -104,71 +102,69 @@ export default function Update()
 
 
     return (
-        <Layout2>
-            <Container>
-                <Typography variant="h3">Profile</Typography>
- 
-                        {
-                            isLoading && (
-                                <CircularProgress color="secondary" />
-                            ) 
-                        }
-                        {
-                            isSuccess && data && (
-                                <>
-                                    <AccountCircleIcon color={useColor(level)} sx={{fontSize:'90px'}}/>
-                                    <Box component={'form'} ref={formRef} >
-                                        <Grid item xs={4}>
-                                            <Grid>
-                                                <TextField label="email" name="email" type='email' value={email} onChange={(e) => {handleChange(e)}}></TextField>
-                                            </Grid>    
-                                            <Grid>
-                                                <TextField label="username" name="username" value={name} onChange={(e) => {handleChange(e)}} ></TextField>
-                                            </Grid>                    
-                                            <Grid >
-                                                <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">Admin Level</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    label="adminLevel"
-                                                    name="adminLevel"
-                                                    value={level}
-                                                    onChange={ (e) =>{ setLevel(e.target.value)} }
-                                                >
-                                                    <MenuItem value={1}>Admin I</MenuItem>
-                                                    <MenuItem value={2}>Admin II</MenuItem>
-                                                    <MenuItem value={3}>Admin III</MenuItem>
-                                                    <MenuItem value={4}>Admin IV</MenuItem>
-                                                </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Box component={'section'}  sx={{my:'16px'}}>
-                                                <Grid container spacing={2} gap={2}>
-                                                    <Grid item>
-                                                        <Button type='submit' variant='contained' color="secondary"  onClick={(e) => handleSubmit(e)}>Save</Button>
-                                                    </Grid>
-                                                    <Grid item>
-                                                        <LoadingButton type='delete' loading={deleteLoading} variant='contained'  onClick={(e) => handleDelete(e)}>Delete</LoadingButton>
-                                                    </Grid>
-                                                </Grid>
-                                            </Box>
-                                        </Grid>
-                                    </Box>
-                                </>
-                            )
-                        }
-                        {
-                            updateSuccess && (
-                                <Snackbar open={open} autoHideDuration={10000} onClose={handleClose} >
-                                    <Alert  severity="success" sx={{ width: '100%' }}>
-                                        <strong>{name}</strong> has been updated!
-                                    </Alert>
-                                </Snackbar>
-                            )
-                        }
+        <Container>
+            <Typography variant="h3">Profile</Typography>
 
-            </Container>
-        </Layout2>
+                    {
+                        isLoading && (
+                            <CircularProgress color="secondary" />
+                        ) 
+                    }
+                    {
+                        isSuccess && data && (
+                            <>
+                                <AccountCircleIcon color={useColor(level)} sx={{fontSize:'90px'}}/>
+                                <Box component={'form'} ref={formRef} >
+                                    <Grid item xs={4}>
+                                        <Grid>
+                                            <TextField label="email" name="email" type='email' value={email} onChange={(e) => {handleChange(e)}}></TextField>
+                                        </Grid>    
+                                        <Grid>
+                                            <TextField label="username" name="username" value={name} onChange={(e) => {handleChange(e)}} ></TextField>
+                                        </Grid>                    
+                                        <Grid >
+                                            <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Admin Level</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                label="adminLevel"
+                                                name="adminLevel"
+                                                value={level}
+                                                onChange={ (e) =>{ setLevel(e.target.value)} }
+                                            >
+                                                <MenuItem value={1}>Admin I</MenuItem>
+                                                <MenuItem value={2}>Admin II</MenuItem>
+                                                <MenuItem value={3}>Admin III</MenuItem>
+                                                <MenuItem value={4}>Admin IV</MenuItem>
+                                            </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Box component={'section'}  sx={{my:'16px'}}>
+                                            <Grid container spacing={2} gap={2}>
+                                                <Grid item>
+                                                    <Button type='submit' variant='contained' color="secondary"  onClick={(e) => handleSubmit(e)}>Save</Button>
+                                                </Grid>
+                                                <Grid item>
+                                                    <LoadingButton type='delete' loading={deleteLoading} variant='contained'  onClick={(e) => handleDelete(e)}>Delete</LoadingButton>
+                                                </Grid>
+                                            </Grid>
+                                        </Box>
+                                    </Grid>
+                                </Box>
+                            </>
+                        )
+                    }
+                    {
+                        updateSuccess && (
+                            <Snackbar open={open} autoHideDuration={10000} onClose={handleClose} >
+                                <Alert  severity="success" sx={{ width: '100%' }}>
+                                    <strong>{name}</strong> has been updated!
+                                </Alert>
+                            </Snackbar>
+                        )
+                    }
+
+        </Container>
     );
 }

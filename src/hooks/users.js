@@ -11,7 +11,7 @@ export const  useColor = (adminLevel) => {
             break;
 
         case 3:
-            color = 'info'
+            color = 'warning'
             break;
 
     }

@@ -31,9 +31,18 @@ export default function Register()
             // })
             .catch(err => console.error(err));
         },
+        onSuccess: async (data) => {
+            if(data.status === 200){
+                const token =  await data.text();
+                setToken(token)
+                localStorage.setItem('usr', token);
+                console.log('storage successfully set!');
+                navigate('/');
+            }
+        }
     });
     ;
-    useEffect(() => isSuccess && navigate("/") , [isSuccess])
+    // useEffect(() => isSuccess && navigate("/") , [isSuccess])
 
     const handleSubmit = (e) => {
         e.preventDefault();

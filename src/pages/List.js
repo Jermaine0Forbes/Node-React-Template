@@ -51,7 +51,7 @@ export default function List()
                                                 break;
 
                                             case 3:
-                                                color = 'info'
+                                                color = 'warning'
                                                 break;
 
                                         }

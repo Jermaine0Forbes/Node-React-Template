@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 dotenv.config();
 
 function generateAccessToken(user) {
-    return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: '1800s' });
+    return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: '3h' });
   }
 
 async function hashPassword(password, saltRounds = 10)
@@ -46,12 +46,14 @@ module.exports.register = async (req,res) => {
        return res.sendStatus(400);
 
     const hashed = await hashPassword(password);
-    console.log(hashed);
-    console.log(req.body);
+    // console.log(hashed);
+    // console.log(req.body);
+    const user = { email, username, adminLevel};
     await Users.create({username, password: hashed, email, adminLevel})
     .then(resp => {
         console.log(resp)
-        res.sendStatus(200);
+       
+        res.send(generateAccessToken(user));
     })
     .catch(err => console.log(err));
 }
@@ -67,21 +69,21 @@ module.exports.login = async (req, res) => {
    {
     return res.status(401).send('Invalid email');
    }
-   const user = await Users.findOne({where: {email}});
+   const pass = await Users.findOne({where: {email}, attributes: ['password']});
 
-   if(noUser(user))
+   if(noUser(pass))
    {
     return res.status(401).send('There is no user with that email address');
    }
 
-   const result = await bcrypt.compare(password, user.password);
-   if(!result)
-//    if(invalidPassword(password, user))
+   if(await invalidPassword(password, pass))
    {
+    console.error('The users credentials are incorrect');
     return res.status(401).send('The users credentials are incorrect');
    }
+   const user = await Users.findOne({where: {email}, attributes: ['adminLevel','email', 'id', 'username']});
 
-//    console.log(user.dataValues)
+   console.log(user.dataValues)
 
    return res.send(generateAccessToken(user.dataValues));
 }

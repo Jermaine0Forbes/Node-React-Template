@@ -11,9 +11,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Delete from "./pages/Delete";
 import List from "./pages/List";
-import Update from "./pages/Update";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
+import AuthProvider from "./pages/AuthProvider";
 
 const MyTheme = React.createContext(null);
 const queryClient = new QueryClient({
@@ -23,29 +23,34 @@ const queryClient = new QueryClient({
     }
   }
 });
+
 export default function App()
 {
     
     return (
-      <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Home />} />
-                <Route path="create" element={<Create />} />
-                <Route path="study" element={<Study />} />
-                <Route path="test" element={<Test />} />
-                <Route path="account" element={<Account />} />
-                <Route path="login" element={<Login />} />
-                <Route path="register" element={<Register />} />
-                <Route path="delete" element={<Delete />} />
-                <Route path="list" element={<List />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
-              <Route exact path="/user/:id" element={<Profile/>} />
-            </Routes>
-        </BrowserRouter>
-      </QueryClientProvider>
-    )
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Home />} />
+                  <Route path="create" element={<Create />} />
+                  <Route path="study" element={<Study />} />
+                  <Route path="test" element={<Test />} />
+                  <Route path="account" element={<Account />} />
+                  <Route path="login" element={<Login />} />
+                  <Route path="register" element={<Register />} />
+                  <Route path="delete" element={<Delete />} />
+                  <Route path="list" element={<List />} />
+                  <Route path="*" element={<NotFound />} />
+                  <Route exact path="/user/:id" element={<Profile/>} />
+                </Route>
+              </Routes>
+          </BrowserRouter>
+        </QueryClientProvider>
+      </AuthProvider>
+      )
+
+
 }
 
