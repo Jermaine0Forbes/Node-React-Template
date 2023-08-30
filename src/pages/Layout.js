@@ -64,6 +64,13 @@ export default function Layout()
         setOpen(!open);
     });
 
+    const handleLogout = useCallback(() => {
+        logout()
+        setName(null)
+        setUserColor('secondary')
+        redirect('/');
+    })
+
     return (
         <Container>
             <AppBar position="static" color={userColor}>
@@ -113,7 +120,7 @@ export default function Layout()
                                 }}
                             >
                                 <MenuItem><Link to={"/user/"+currentUser?.id}>Profile</Link></MenuItem>
-                                <MenuItem onClick={() => { logout(redirect)}}>Logout</MenuItem>
+                                <MenuItem onClick={() => { handleLogout()}}>Logout</MenuItem>
                             </Menu>
                         </section>
 

@@ -13,7 +13,9 @@ import Delete from "./pages/Delete";
 import List from "./pages/List";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
+import Forbidden from "./pages/Forbidden";
 import AuthProvider from "./pages/AuthProvider";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 const MyTheme = React.createContext(null);
 const queryClient = new QueryClient({
@@ -34,7 +36,11 @@ export default function App()
               <Routes>
                 <Route path="/" element={<Layout />}>
                   <Route index element={<Home />} />
-                  <Route path="create" element={<Create />} />
+                    <Route path="create" element={
+                      <ProtectedRoute level={2}>
+                        <Create />
+                      </ProtectedRoute>
+                  } />
                   <Route path="study" element={<Study />} />
                   <Route path="test" element={<Test />} />
                   <Route path="account" element={<Account />} />
@@ -42,8 +48,9 @@ export default function App()
                   <Route path="register" element={<Register />} />
                   <Route path="delete" element={<Delete />} />
                   <Route path="list" element={<List />} />
+                  <Route path="/user/:id" element={<Profile/>} />
+                  <Route path="/forbidden" element={<Forbidden />} />
                   <Route path="*" element={<NotFound />} />
-                  <Route exact path="/user/:id" element={<Profile/>} />
                 </Route>
               </Routes>
           </BrowserRouter>

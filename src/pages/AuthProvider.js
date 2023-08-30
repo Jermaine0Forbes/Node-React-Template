@@ -10,12 +10,10 @@ export default function AuthProvider ({children}) {
     const [token, setToken] = useState(usr);
     const [currentUser, setCurrentUser] = useState(null);
 
-    const logout = (redirect = null, path = '/') => {
+    const logout = () => {
         setToken('');
         localStorage.removeItem('usr')
-        if(redirect){
-            redirect(path);
-        }
+        setCurrentUser(null);
     }
 
 

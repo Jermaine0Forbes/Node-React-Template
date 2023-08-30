@@ -1,8 +1,9 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useContext} from 'react';
 import { Container, Grid, Box, Typography,TextField, Button, Link, CircularProgress } from '@material-ui/core';
 import { css } from '@emotion/react';
 import { useMutation } from 'react-query';
 import { useNavigate } from "react-router-dom";
+import {AuthContext} from './AuthProvider';
 
 const btnStyle = css`
     margin-top: 1em;
@@ -11,6 +12,7 @@ const btnStyle = css`
 export default function Register()
 {
     const navigate = useNavigate();
+    const {setToken} = useContext(AuthContext);
     const {isLoading, isSuccess, mutate} = useMutation({
         mutationFn: (formData) =>{
             return fetch(process.env.URL+'/api/register', { 

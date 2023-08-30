@@ -41,18 +41,18 @@ async function invalidPassword(pass, user){
 
 module.exports.register = async (req,res) => {
     // needs to check if email and maybe username already exists
-    const { email, username, password, adminLevel}  = req.body;
+    const { email, username, password, adminLevel = 4}  = req.body;
     if(invalidRegister(email, username, password))
        return res.sendStatus(400);
 
     const hashed = await hashPassword(password);
     // console.log(hashed);
     // console.log(req.body);
-    const user = { email, username, adminLevel};
+   
     await Users.create({username, password: hashed, email, adminLevel})
     .then(resp => {
         console.log(resp)
-       
+        const user = { email, username, adminLevel, id: resp.id};
         res.send(generateAccessToken(user));
     })
     .catch(err => console.log(err));
