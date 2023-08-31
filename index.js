@@ -1,5 +1,6 @@
 // require("./mvc/models/db");
 require('dotenv').config();
+require(__dirname+"/utils/global");
 var express = require('express');
 var body = require('body-parser');
 var cookie = require('cookie-parser');

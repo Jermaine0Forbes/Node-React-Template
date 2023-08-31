@@ -1,10 +1,9 @@
-// const 
-// goose = require("mongoose"),
-// User = goose.model("Users");
 const  { Users } = require("../models/index");
+const { logging } = require('../../utils/index');
 
 module.exports.index = async (req,res) => {
    const users = await Users.findAll({ attributes : ['id','username', 'adminLevel']});
+   logging('api', req.originalUrl)
    return res.json({users: users});
     // .then(res => {
     //     console.log(res)
@@ -24,7 +23,7 @@ module.exports.index = async (req,res) => {
 
 module.exports.get = async (req,res) => {
     const id = req.params.id;
-    
+    logging('api', req.originalUrl)
     if( typeof Number(id)  !== "number")
     {
       console.error(id+" is not a number");
@@ -42,7 +41,8 @@ module.exports.get = async (req,res) => {
 
 
 module.exports.put = async (req, res) =>{
-    console.log(req.path)
+    // console.log(req.path)
+    logging('api', req.originalUrl)
     const id = req.params.id;
     console.log(req.body)
     if( typeof Number(id)  !== "number")
@@ -70,6 +70,7 @@ module.exports.put = async (req, res) =>{
 }
 
 module.exports.delete = async (req, res) => {
+  logging('api', req.originalUrl)
   const id = req.params.id;
   console.log("deleting")
   console.log('id: '+id);

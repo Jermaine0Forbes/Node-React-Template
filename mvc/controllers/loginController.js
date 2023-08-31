@@ -1,4 +1,5 @@
 const  { Users } = require("../models/index");
+const { logging } = require('../../utils/index');
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const dotenv = require('dotenv');
@@ -40,6 +41,7 @@ async function invalidPassword(pass, user){
 
 
 module.exports.register = async (req,res) => {
+    logging('api', req.originalUrl)
     // needs to check if email and maybe username already exists
     const { email, username, password, adminLevel = 4}  = req.body;
     if(invalidRegister(email, username, password))
@@ -59,6 +61,7 @@ module.exports.register = async (req,res) => {
 }
 
 module.exports.login = async (req, res) => {
+    logging('api', req.originalUrl)
    const {email, password} = req.body;
 
    console.log(req.body);
@@ -69,7 +72,13 @@ module.exports.login = async (req, res) => {
    {
     return res.status(401).send('Invalid email');
    }
-   const pass = await Users.findOne({where: {email}, attributes: ['password']});
+   const pass = await Users.findOne({
+    where: {email}, 
+    attributes: ['password'],
+    logging: (sql, queryObject) => {
+        logging('sql', sql);
+    }
+    });
 
    if(noUser(pass))
    {
