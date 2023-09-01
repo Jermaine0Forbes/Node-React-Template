@@ -3,7 +3,7 @@ import { Outlet, Link} from "react-router-dom";
 import { 
     Container, AppBar,MenuList, MenuItem, 
     Toolbar, makeStyles, Typography,
-    Button, IconButton, Menu,
+    Button,Menu,
  } from '@material-ui/core';
  import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {AuthContext} from './AuthProvider';
@@ -50,14 +50,11 @@ export default function Layout()
 
     useEffect(() => {
         if(currentUser){
-            // console.log('current user')
-            // console.log(currentUser)
             setName(currentUser.username);
             const color = useColor(currentUser.adminLevel);
             setUserColor(color);
         }
     },[currentUser])
-    // const { username } = currentUser;
 
     const toggleMenu = useCallback((e) => {
         setAnchor(e.currentTarget);
@@ -105,10 +102,6 @@ export default function Layout()
                                 anchorEl={anchor}
                                 open={open}
                                 onClose={(e) => {toggleMenu(e)}}
-                                // anchorPosition={{
-                                //     top:56,
-                                //     left:100,
-                                // }}
                                 getContentAnchorEl={null}
                                 anchorOrigin={{
                                 vertical: 'bottom',

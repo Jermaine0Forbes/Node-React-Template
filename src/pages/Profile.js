@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useRef, useMemo} from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import { 
     Container, Grid, Box, 
     Typography,TextField, Button, 
@@ -16,7 +16,7 @@ import { useQuery, useMutation } from 'react-query';
 
 
 
-export default function Update()
+export default function Profile()
 {
     const { id  } = useParams();
     const [open, setOpen] = useState(false);
@@ -25,44 +25,35 @@ export default function Update()
     const [name, setName] = useState('');
     const formRef = useRef(null);
     const redirect = useNavigate();
-    console.log(id)
 
     const handleClose = useCallback(() => { setOpen(!open)}, [open]);
-    const {isLoading, isSuccess, data, dataUpdatedAt} = useQuery('get-user', () => fetchUser(id), {
+
+    const {isLoading, isSuccess, data} = useQuery('get-user', () => fetchUser(id), {
         refetchOnMount:true,
     });
-
 
     const {mutate, isSuccess : updateSuccess } = useMutation({
         mutationFn: ({id:i, data: d}) => {updateUser(i,d)},
         onSuccess: () => { setOpen(true)}
     })
 
-    const { mutate: deleting , isLoading: deleteLoading, status: deleteStatus, data: del } = useMutation({
+    const { mutate: deleting , isLoading: deleteLoading, data: del } = useMutation({
         mutationFn: (id) =>  deleteUser(id),
         onSuccess: () => {   
-            console.log("delete data is "+del)
             if(del == 200 ){ 
             redirect('/list')
         };
     }
     });
 
-
     const handleSubmit = useCallback((e) => {
         e.preventDefault();
 
-        // console.log(e.target)
-        // console.log("use ref")
-        // console.log(formRef.current)
         const updatedUser = {};
         const form = new FormData(formRef.current);
-        // const form = new FormData(e.target);
         for (const [key, value] of form.entries()){
             updatedUser[key] = value;
         };
-        console.log('data')
-        console.log(updatedUser)
         mutate({ id: id, data: updatedUser});
     },[data]);
 
@@ -82,23 +73,14 @@ export default function Update()
 
     useEffect( () => {
         if(data?.id !== id && data ) {
-            console.log("data updated at:"+dataUpdatedAt)
-          
             setName(data?.username);
             setEmail(data?.email);
             setLevel(data?.adminLevel)
         }
-         console.log(data)
         if(data == 500 || del == 200 ) {
             redirect('/list');
         }
-
-        // console.log(deleteLoading)
-        // console.log("delete data "+del);
-        // connsole.log("data is: ")
-        // console.log(data)
-        // console.log("user currently is: "+data?.username)
-    }, [data, id, dataUpdatedAt, del]);
+    }, [data, id, del]);
 
 
     return (

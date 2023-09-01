@@ -1,9 +1,9 @@
 const  { Users } = require("../models/index");
-const { logging, invalidEmail, 
+const { 
+    logging, invalidEmail, 
     invalidRegister, invalidPassword, noUser,
-    invalidNumber, } = require('../../utils/index');
+} = require('../../utils/index');
 const bcrypt = require("bcrypt");
-const validator = require("validator");
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 
@@ -28,31 +28,27 @@ async function hashPassword(password, saltRounds = 10)
 
 module.exports.register = async (req,res) => {
     logging('api', req.originalUrl)
+
     // needs to check if email and maybe username already exists
     const { email, username, password, adminLevel = 4}  = req.body;
     if(invalidRegister(email, username, password))
        return res.sendStatus(400);
 
     const hashed = await hashPassword(password);
-    // console.log(hashed);
-    // console.log(req.body);
-   
+
     await Users.create({username, password: hashed, email, adminLevel})
     .then(resp => {
-        console.log(resp)
         const user = { email, username, adminLevel, id: resp.id};
         res.send(generateAccessToken(user));
     })
-    .catch(err => console.log(err));
+    .catch(err =>{
+         res.status(400).send(err);
+    });
 }
 
 module.exports.login = async (req, res) => {
     logging('api', req.originalUrl)
    const {email, password} = req.body;
-
-   console.log(req.body);
-
-//    console.log(require('crypto').randomBytes(64).toString('hex')) 
 
    if(invalidEmail(email))
    {
@@ -83,8 +79,6 @@ module.exports.login = async (req, res) => {
         logging('sql', sql);
      }
     });
-
-   console.log(user.dataValues)
 
    return res.send(generateAccessToken(user.dataValues));
 }

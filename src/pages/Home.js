@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect, useCallback}  from 'react';
-import { Container, Grid, Box,Typography } from '@material-ui/core';
+import { Container,Box,Typography } from '@material-ui/core';
 import {AuthContext} from './AuthProvider';
 
 export default function Home()
@@ -10,7 +10,6 @@ export default function Home()
     useEffect(() => {
         if(currentUser){
             setName(currentUser?.username)
-            console.log("bar")
         }
     }, [currentUser]);
     return (

@@ -7,7 +7,6 @@ function logging(fileName, content) {
 
   const logFilePath = path.resolve(__dirname+'/../logs/', fileName+".log")
   const logEntry = `${new Date().toISOString()}: ${content}\n`
-  // console.log(filePath);
 
   fs.appendFile(logFilePath, logEntry, (err) => {
     if (err) {
@@ -16,7 +15,11 @@ function logging(fileName, content) {
       console.log('Log entry added to', logFilePath);
     }
   });
+}
 
+async function sleep (seconds = 5){
+  // equivalent of sleeping
+  await new Promise(resolve => setTimeout(resolve, seconds*1000));
 }
 
 exports.invalidNumber = function invalidNumber(num){
@@ -28,7 +31,7 @@ exports.invalidNumber = function invalidNumber(num){
       return true;
     }
     return false;
-  }
+}
 
 
 exports.invalidRegister =  function invalidRegister(email, user, pass){
@@ -39,8 +42,6 @@ exports.invalidRegister =  function invalidRegister(email, user, pass){
     console.error(msg);
     logging('error', msg);
     return true;
-
-    // return !(validator.isEmail(email) && user && pass);
 }
 
 exports.invalidEmail = function invalidEmail(email){
@@ -51,18 +52,16 @@ exports.invalidEmail = function invalidEmail(email){
     console.error(msg);
     logging('error', msg);
     return true;
-    // return !validator.isEmail(email);
 }
 
 exports.noUser = function noUser(user){
-    if (typeof user !== "object" && user?.id){
+    if (typeof user === "object" && user?.id){
         return false;
     }
-    const msg = `400 Bad Request : user does not exist based on given credentials`;
+    const msg = `400 Bad Request : user does not exist, ${JSON.stringify(user)}, was returned `;
     console.error(msg);
     logging('error', msg);
     return true;
-    // return typeof user !== "object";
 }
 
 exports.invalidPassword = async function invalidPassword(pass, user){
@@ -74,7 +73,7 @@ exports.invalidPassword = async function invalidPassword(pass, user){
   console.error(msg);
   logging('error', msg);
   return true;
-//   return !result;
 }
 
 exports.logging = logging;
+exports.sleep = sleep;

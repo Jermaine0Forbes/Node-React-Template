@@ -24,7 +24,6 @@ export default function List()
         staleTime: Infinity
     });
     useEffect(() => { data?.users?.length && setUsers(data.users)}, [isSuccess]);
-    console.log(data)
     return (
         <Container>
             <Box>

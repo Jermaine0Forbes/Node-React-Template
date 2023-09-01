@@ -17,7 +17,9 @@ module.exports.index = async (req,res) => {
 
 module.exports.get = async (req,res) => {
     const id = req.params.id;
+
     logging('api', req.originalUrl)
+
     if(invalidNumber(id))
     {
       return res.sendStatus(400);
@@ -39,10 +41,10 @@ module.exports.get = async (req,res) => {
 
 
 module.exports.put = async (req, res) =>{
-    // console.log(req.path)
+
     logging('api', req.originalUrl)
     const id = req.params.id;
-    console.log(req.body)
+
     if(invalidNumber(id))
     {
         return res.sendStatus(400);
@@ -54,34 +56,25 @@ module.exports.put = async (req, res) =>{
       }
       })
       .then( (role) => {
-        console.log(role)
+        res.status(200).send(role)
 
       }).catch( (err) => {
-        console.log(err)
+        res.status(400).send(err)
       });
 
     return res.sendStatus(200);
-    //   user.then( resp =>{ 
-    //     console.log(resp)
-    //     res.sendStatus(200);
-    // })
-    //   .catch(err => { console.error(err)})
-
 }
 
 module.exports.delete = async (req, res) => {
   logging('api', req.originalUrl)
   const id = req.params.id;
-  console.log("deleting")
-  console.log('id: '+id);
 
   if(invalidNumber(id))
   {
       return res.sendStatus(400);
   }
 
-  // equivalent of sleeping
-  // await new Promise(resolve => setTimeout(resolve, 5000));
+
   await Users.destroy({
     where: {
       id: id,

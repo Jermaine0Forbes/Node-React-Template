@@ -16,21 +16,13 @@ export default function AuthProvider ({children}) {
         setCurrentUser(null);
     }
 
-
-    console.log('AuthProvider re-rendered')
     useEffect(() =>{
-        // const myToken  = token === '' ? localStorage.getItem('usr') : token; 
-        // const isMyTokenExpired = isExpired(myToken);
         const tokenExpired = isExpired(token);
         
         if( token && !tokenExpired){
             
             try {
-                const myDecodedToken = decodeToken(token);
-                // const myDecodedToken = decodeToken(myToken);
-                    
-            console.log("token decoded")
-            console.log(myDecodedToken)
+            const myDecodedToken = decodeToken(token);
              setCurrentUser(myDecodedToken);
             } catch(err) {
                 console.log("jwt error")
@@ -39,7 +31,6 @@ export default function AuthProvider ({children}) {
         }
 
         if(tokenExpired){
-            console.log('token has expired')
             logout();
         }
 

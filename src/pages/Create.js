@@ -7,7 +7,6 @@ import {
     Snackbar
 } from '@material-ui/core';
 import { Alert } from '@mui/material';
-// import { css } from '@emotion/react';
 import { useMutation } from 'react-query';
 import { faker } from '@faker-js/faker';
 
@@ -22,10 +21,8 @@ export default function Create()
                 method:'POST', 
                 headers:{
                     'Content-Type': "application/json"
-                    // 'Content-Type': "multipart/form-data"
                 },
                 body: JSON.stringify(formData),
-                // body: formData,
             })
             .catch(err => console.error(err));
         },
@@ -40,8 +37,6 @@ export default function Create()
         for (const [key, value] of form.entries()){
             data[key] = value;
         };
-        console.log('data')
-        console.log(data)
         mutate(data)
     }
 

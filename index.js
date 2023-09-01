@@ -9,7 +9,6 @@ var app = express();
 var ip =  process.env.IP || 'localhost'; // change the IP address to get your 
 var cors = require("cors");
 var port = process.env.PORT || 3001;
-// const hbs = require("express-handlebars");
 const routes = require('./mvc/routes/router');
 
 
@@ -21,16 +20,11 @@ app.use(body.urlencoded({extended:true}));
 app.use(cookie());
 
 app.use("/api", routes);
-// app.get('*', (req, res) => res.sendFile(path.resolve('mvc', 'views','home','index.html')));
 app.get('*', (req, res) => res.sendFile(path.resolve('public', 'js','index.html')));
-// app.get('/', (req, res) => {  console.log(req.path); res.sendFile(path.resolve('public', 'js','index.html'))});
 
 app.use(function(err,req,res,next){
-    console.log("status code is")
-    console.log(res.statusCode)
 	if(res.statusCode == 404 ){
 	  return res.sendStatus(404);
-	//   return res.render('error/400', {code:404, errTitle:err});
 	}else{
         return next();
         
@@ -40,8 +34,6 @@ app.use(function(err,req,res,next){
 
 app.use(function(err,req,res,next){
     let path , code ;
-    console.log("status code")
-    console.log(res.statusCode)
      switch(res.statusCode){
          case 500:
             path = "error/500";
