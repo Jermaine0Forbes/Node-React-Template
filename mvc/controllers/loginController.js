@@ -1,5 +1,7 @@
 const  { Users } = require("../models/index");
-const { logging } = require('../../utils/index');
+const { logging, invalidEmail, 
+    invalidRegister, invalidPassword, noUser,
+    invalidNumber, } = require('../../utils/index');
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const dotenv = require('dotenv');
@@ -22,22 +24,6 @@ async function hashPassword(password, saltRounds = 10)
 
 }
 
-function invalidRegister(email, user, pass){
-    return !(validator.isEmail(email) && user && pass);
-}
-
-function invalidEmail(email){
-    return !validator.isEmail(email);
-}
-
-function noUser(user){
-    return typeof user !== "object";
-}
-
-async function invalidPassword(pass, user){
-  const result = await bcrypt.compare(pass, user.password);
-  return !result;
-}
 
 
 module.exports.register = async (req,res) => {
@@ -90,7 +76,13 @@ module.exports.login = async (req, res) => {
     console.error('The users credentials are incorrect');
     return res.status(401).send('The users credentials are incorrect');
    }
-   const user = await Users.findOne({where: {email}, attributes: ['adminLevel','email', 'id', 'username']});
+   const user = await Users.findOne({
+    where: {email}, 
+    attributes: ['adminLevel','email', 'id', 'username'],
+    logging: (sql, queryObject) => {
+        logging('sql', sql);
+     }
+    });
 
    console.log(user.dataValues)
 

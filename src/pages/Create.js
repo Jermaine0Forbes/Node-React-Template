@@ -9,15 +9,13 @@ import {
 import { Alert } from '@mui/material';
 // import { css } from '@emotion/react';
 import { useMutation } from 'react-query';
-import { useNavigate } from "react-router-dom";
 import { faker } from '@faker-js/faker';
 
 export default function Create()
 {
     const [open, setOpen] = useState(false);
     const [level, setLevel] = useState(faker.number.int({max:4,min:1}));
-    const navigate = useNavigate();
-    const firstName = faker.person.firstName();
+    const [firstName, setFirstName] = useState(faker.person.firstName());
     const {isLoading, isSuccess, mutate} = useMutation({
         mutationFn: (formData) =>{
             return fetch(process.env.URL+'/api/register', { 

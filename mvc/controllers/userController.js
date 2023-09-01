@@ -1,37 +1,35 @@
 const  { Users } = require("../models/index");
-const { logging } = require('../../utils/index');
+const { logging, invalidNumber, noUser } = require('../../utils/index');
+
+
 
 module.exports.index = async (req,res) => {
-   const users = await Users.findAll({ attributes : ['id','username', 'adminLevel']});
+   const users = await Users.findAll({ 
+    attributes : ['id','username', 'adminLevel'],
+    logging: (sql, queryObject) => {
+      logging('sql', sql);
+    }
+  });
    logging('api', req.originalUrl)
    return res.json({users: users});
-    // .then(res => {
-    //     console.log(res)
-    //     res.json({users: res});
-    // })
-    // .catch(err => console.log(err))
-    // return res.json({users: [ 'john', 'jacob', 'smith']});
-    // res.render("user/index", {users:[]});
-    // User.find({})
-    // .lean()
-    // .exec((err, users) => {
-    //     if(err) res.send(err)
-    //     console.log(users)
-    //     res.render("user/index", {users:users});
-    // })
+
 }
 
 module.exports.get = async (req,res) => {
     const id = req.params.id;
     logging('api', req.originalUrl)
-    if( typeof Number(id)  !== "number")
+    if(invalidNumber(id))
     {
-      console.error(id+" is not a number");
-      return res.sendStatus(500);
+      return res.sendStatus(400);
     }
-    const user = await Users.findByPk(id,{ attributes: ['adminLevel','email', 'id', 'username']});
+    const user = await Users.findByPk(id,{ 
+      attributes: ['adminLevel','email', 'id', 'username'],
+      logging: (sql, queryObject) => {
+        logging('sql', sql);
+      }
+    });
 
-    if(user === null){
+    if(noUser(user)){
         console.error("cannot find user "+id);
         return res.sendStatus(500);
     }
@@ -45,13 +43,15 @@ module.exports.put = async (req, res) =>{
     logging('api', req.originalUrl)
     const id = req.params.id;
     console.log(req.body)
-    if( typeof Number(id)  !== "number")
+    if(invalidNumber(id))
     {
-       console.error(id+" is not a number");
-        return res.sendStatus(500);
+        return res.sendStatus(400);
     }
     Users.update(req.body, {
-        where: {id:id}
+        where: {id:id},
+        logging: (sql, queryObject) => {
+          logging('sql', sql);
+      }
       })
       .then( (role) => {
         console.log(role)
@@ -75,10 +75,9 @@ module.exports.delete = async (req, res) => {
   console.log("deleting")
   console.log('id: '+id);
 
-  if( typeof Number(id)  !== "number")
+  if(invalidNumber(id))
   {
-     console.error(id+" is not a number");
-      return res.sendStatus(500);
+      return res.sendStatus(400);
   }
 
   // equivalent of sleeping
@@ -86,7 +85,10 @@ module.exports.delete = async (req, res) => {
   await Users.destroy({
     where: {
       id: id,
-    }
+    },
+    logging: (sql, queryObject) => {
+      logging('sql', sql);
+  }
   })
 
   return res.sendStatus(200);
