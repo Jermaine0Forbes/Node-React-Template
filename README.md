@@ -34,6 +34,9 @@ Express & React template
 - create script to either use mongodb or sequelize as database
 - add styling
 - create event system
+- reset password email
+- multi authentication logging
+- login limit
 
 [go back home](home)
 

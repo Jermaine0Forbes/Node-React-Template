@@ -1,6 +1,11 @@
 import React from 'react';
 import { Outlet, Link} from "react-router-dom";
-import { Container, AppBar,MenuList, MenuItem, Toolbar, makeStyles } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
+import AppBar from '@material-ui/core/AppBar';
+import MenuList from '@material-ui/core/MenuList';
+import MenuItem from '@material-ui/core/MenuItem';
+import Toolbar from '@material-ui/core/Toolbar';
+import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
     toolbar: {
@@ -15,7 +20,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-export default function Layout2({children})
+export default function Layout2()
 {
     const classes = useStyles();
 
@@ -27,12 +32,10 @@ export default function Layout2({children})
                         <MenuItem><Link to="/">Home</Link></MenuItem>
                         <MenuItem><Link to="/create">Create</Link></MenuItem>
                         <MenuItem><Link to="/list">List</Link></MenuItem>
-                        <MenuItem><Link to="/update">Update</Link></MenuItem>
-                        <MenuItem><Link to="/delete">Delete</Link></MenuItem>
                     </MenuList>
                 </Toolbar>
             </AppBar>
-            {children}
+            <Outlet/>
         </Container>
     );
 }

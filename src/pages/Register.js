@@ -1,24 +1,23 @@
 import React, {useContext} from 'react';
-import { Container, Grid, Box, Typography,TextField, Button, Link, CircularProgress } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import { useMutation } from 'react-query';
-import { useNavigate } from "react-router-dom";
-import {AuthContext} from './AuthProvider';
+import { useNavigate, Link } from "react-router-dom";
+import {AuthContext} from '../providers/AuthProvider';
+import { registerUser } from '../services/login';
 
 export default function Register()
 {
     const navigate = useNavigate();
     const {setToken} = useContext(AuthContext);
-    const {isLoading, isSuccess, mutate} = useMutation({
-        mutationFn: (formData) =>{
-            return fetch(process.env.URL+'/api/register', { 
-                method:'POST', 
-                headers:{
-                    'Content-Type': "application/json"
-                },
-                body: JSON.stringify(formData),
-            })
-            .catch(err => console.error(err));
-        },
+    const {isLoading, mutate} = useMutation({
+        mutationFn: (data) => registerUser(data),
         onSuccess: async (data) => {
             if(data.status === 200){
                 const token =  await data.text();
@@ -40,7 +39,7 @@ export default function Register()
 
         mutate(data)
     }
-    
+
     return (
         <Container>
             {

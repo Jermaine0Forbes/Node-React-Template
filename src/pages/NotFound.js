@@ -1,8 +1,7 @@
 import React from 'react';
-import { 
-    Container, Grid, Box,
-    Typography 
-} from '@material-ui/core';
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 
 export default function NotFound()
 {

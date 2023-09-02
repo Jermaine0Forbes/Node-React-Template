@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { 
-    Container, Grid, Box,
-    CircularProgress, Typography
-} from '@material-ui/core';
-import { 
-    List as ListContainer,ListItemIcon,
-    ListItemText,ListItemButton,Tooltip  
-} from '@mui/material';
+
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+import ListContainer from '@mui/material/List';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
+import Tooltip from '@mui/material/Tooltip';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link} from "react-router-dom";
 import { useQuery } from 'react-query';
+import { fetchUsers } from '../services/users';
+import { useColor } from '../hooks/users';
 
 
-const fetchUsers = async () => {
-   const res = await fetch(process.env.URL+'/api/users');
-   return res.json();
-}
 
 export default function List()
 {
@@ -40,20 +42,8 @@ export default function List()
                             <ListContainer>
                                 {
                                     users.map((e,i) => {
-                                        let color = 'secondary';
-                                        switch(e.adminLevel){
-                                            case 1:
-                                                color = 'primary'
-                                                break;
-                                            case 2:
-                                                color = 'success'
-                                                break;
-
-                                            case 3:
-                                                color = 'warning'
-                                                break;
-
-                                        }
+                                        let color = useColor(e.adminLevel);
+                                       
                                     return (
                                         <Tooltip key={i} title={"Admin Level "+e.adminLevel}>
                                             <ListItemButton  divider component={Link} to={"/user/"+e.id}>

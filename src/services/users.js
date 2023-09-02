@@ -9,6 +9,11 @@ export const fetchUser = async (id) => {
     return res.status
 };
 
+export const fetchUsers = async () => {
+    const res = await fetch(process.env.URL+'/api/users');
+    return res.json();
+ }
+
 export const updateUser = async (id,data) => {
     return fetch(process.env.URL+'/api/user/'+id, {
         method: "PUT",

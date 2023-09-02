@@ -1,6 +1,8 @@
-import React, {useContext, useState, useEffect, useCallback}  from 'react';
-import { Container,Box,Typography } from '@material-ui/core';
-import {AuthContext} from './AuthProvider';
+import React, {useContext, useState, useEffect}  from 'react';
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import {AuthContext} from '../providers/AuthProvider';
 
 export default function Home()
 {
@@ -10,6 +12,8 @@ export default function Home()
     useEffect(() => {
         if(currentUser){
             setName(currentUser?.username)
+        }else{
+            setName(null);
         }
     }, [currentUser]);
     return (

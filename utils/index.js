@@ -2,6 +2,25 @@ const fs = require('fs');
 const path = require('path');
 const bcrypt = require("bcrypt");
 const validator = require("validator");
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+
+dotenv.config();
+
+function generateAccessToken(user) {
+  return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: '3h' });
+}
+
+async function hashPassword(password, saltRounds = 10)
+{
+ return await bcrypt
+              .genSalt(saltRounds)
+              .then( salt => {
+                  return bcrypt.hash(password, salt)
+              })
+              .catch( err => console.error(err));
+
+}
 
 function logging(fileName, content) {
 
@@ -48,7 +67,7 @@ exports.invalidEmail = function invalidEmail(email){
     if(validator.isEmail(email)){
         return false;
     }
-    const msg = `400 Bad Request : email is not valid`;
+    const msg = `401 Unauthorized : email is not valid`;
     console.error(msg);
     logging('error', msg);
     return true;
@@ -75,5 +94,7 @@ exports.invalidPassword = async function invalidPassword(pass, user){
   return true;
 }
 
+exports.generateAccessToken = generateAccessToken;
+exports.hashPassword = hashPassword;
 exports.logging = logging;
 exports.sleep = sleep;

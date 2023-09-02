@@ -1,28 +1,14 @@
 const  { Users } = require("../models/index");
 const { 
-    logging, invalidEmail, 
-    invalidRegister, invalidPassword, noUser,
+logging, invalidEmail, generateAccessToken,
+invalidRegister, invalidPassword, noUser,
+hashPassword
 } = require('../../utils/index');
 const bcrypt = require("bcrypt");
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 
 dotenv.config();
-
-function generateAccessToken(user) {
-    return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: '3h' });
-  }
-
-async function hashPassword(password, saltRounds = 10)
-{
-   return await bcrypt
-                .genSalt(saltRounds)
-                .then( salt => {
-                    return bcrypt.hash(password, salt)
-                })
-                .catch( err => console.error(err));
-
-}
 
 
 
@@ -62,16 +48,13 @@ module.exports.login = async (req, res) => {
     }
     });
 
-   if(noUser(pass))
-   {
-    return res.status(401).send('There is no user with that email address');
-   }
 
    if(await invalidPassword(password, pass))
    {
     console.error('The users credentials are incorrect');
     return res.status(401).send('The users credentials are incorrect');
    }
+
    const user = await Users.findOne({
     where: {email}, 
     attributes: ['adminLevel','email', 'id', 'username'],
@@ -79,6 +62,11 @@ module.exports.login = async (req, res) => {
         logging('sql', sql);
      }
     });
+
+    if(noUser(user))
+    {
+     return res.status(400).send(`400 Bad Request : user does not exist, ${JSON.stringify(user)}, was returned `);
+    }
 
    return res.send(generateAccessToken(user.dataValues));
 }

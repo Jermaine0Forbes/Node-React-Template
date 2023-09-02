@@ -1,14 +1,17 @@
 import React, {useContext, useState, useEffect, useCallback} from 'react';
-import { Outlet, Link} from "react-router-dom";
-import { 
-    Container, AppBar,MenuList, MenuItem, 
-    Toolbar, makeStyles, Typography,
-    Button,Menu,
- } from '@material-ui/core';
- import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import {AuthContext} from './AuthProvider';
+import { Outlet, Link, useNavigate} from "react-router-dom";
+import Container from '@material-ui/core/Container';
+import AppBar from '@material-ui/core/AppBar';
+import Typography from '@material-ui/core/Typography';
+import Menu from '@material-ui/core/Menu';
+import MenuList from '@material-ui/core/MenuList';
+import MenuItem from '@material-ui/core/MenuItem';
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import {AuthContext} from '../providers/AuthProvider';
 import { useColor } from '../hooks/users';
-import { useNavigate } from "react-router-dom";
+import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
     toolbar: {
@@ -64,6 +67,8 @@ export default function Layout()
     const handleLogout = useCallback(() => {
         logout()
         setName(null)
+        setAnchor(null)
+        setOpen(false)
         setUserColor('secondary')
         redirect('/');
     })

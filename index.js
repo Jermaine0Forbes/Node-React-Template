@@ -27,9 +27,7 @@ app.use(function(err,req,res,next){
 	  return res.sendStatus(404);
 	}else{
         return next();
-        
     }
-
 });
 
 app.use(function(err,req,res,next){
@@ -50,7 +48,6 @@ app.use(function(err,req,res,next){
             path = "error/400";
             code = res.statusCode;
      }
-     res.render(path,{errTitle:err, code:code});
 })
 
 app.listen(port, ip, function(){

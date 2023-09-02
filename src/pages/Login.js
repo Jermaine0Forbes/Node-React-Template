@@ -1,19 +1,15 @@
 import React, {useCallback, useContext} from 'react';
-import { Container, Grid, Box, Typography,TextField, Button, Link } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import { Link} from "react-router-dom";
 import { useMutation } from 'react-query';
 import { useNavigate } from "react-router-dom";
-import {AuthContext} from './AuthProvider';
-
-const loginUser = async (data) => {
-    const resp = await fetch(process.env.URL+'/api/login', {
-        method: "POST",
-        headers:{
-            'Content-Type': "application/json"
-        },
-        body: JSON.stringify(data)
-    });
-    return  resp;
-}
+import {AuthContext} from '../providers/AuthProvider';
+import { loginUser } from '../services/login';
 
 export default function Login()
 {

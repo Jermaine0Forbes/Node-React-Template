@@ -6,7 +6,7 @@ const { logging, invalidNumber, noUser } = require('../../utils/index');
 module.exports.index = async (req,res) => {
    const users = await Users.findAll({ 
     attributes : ['id','username', 'adminLevel'],
-    logging: (sql, queryObject) => {
+    logging: (sql) => {
       logging('sql', sql);
     }
   });
@@ -26,7 +26,7 @@ module.exports.get = async (req,res) => {
     }
     const user = await Users.findByPk(id,{ 
       attributes: ['adminLevel','email', 'id', 'username'],
-      logging: (sql, queryObject) => {
+      logging: (sql) => {
         logging('sql', sql);
       }
     });
@@ -49,9 +49,10 @@ module.exports.put = async (req, res) =>{
     {
         return res.sendStatus(400);
     }
+    // Need to sanitize or check the inputs of req.body
     Users.update(req.body, {
         where: {id:id},
-        logging: (sql, queryObject) => {
+        logging: (sql) => {
           logging('sql', sql);
       }
       })
@@ -74,12 +75,11 @@ module.exports.delete = async (req, res) => {
       return res.sendStatus(400);
   }
 
-
   await Users.destroy({
     where: {
       id: id,
     },
-    logging: (sql, queryObject) => {
+    logging: (sql) => {
       logging('sql', sql);
   }
   })
