@@ -5,9 +5,10 @@ import { Navigate} from "react-router-dom";
 
 export default function ProtectedRoute({children, level = 0})
 {
-    const { currentUser} = useContext(AuthContext);
+    const {getUser, token} = useContext(AuthContext);
+    const user = getUser(token);
 
-    if(currentUser && currentUser?.adminLevel <= level ){
+    if(user && user?.adminLevel <= level ){
         return children;
     }
 

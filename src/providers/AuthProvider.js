@@ -16,6 +16,8 @@ export default function AuthProvider ({children}) {
         setCurrentUser(null);
     }
 
+    const getUser =  (token)  => token && !isExpired(token) ? decodeToken(token): false ;
+
     useEffect(() =>{
         const tokenExpired = isExpired(token);
         
@@ -41,6 +43,7 @@ export default function AuthProvider ({children}) {
         setToken,
         currentUser,
         logout,
+        getUser,
     };
 
     return (

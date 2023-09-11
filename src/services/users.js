@@ -32,3 +32,14 @@ export const deleteUser = async (id) => {
     });
     return await resp.status;
 }
+
+export const postUser = (formData) =>{
+    return fetch(process.env.URL+'/api/register', { 
+        method:'POST', 
+        headers:{
+            'Content-Type': "application/json"
+        },
+        body: JSON.stringify(formData),
+    })
+    .catch(err => console.error(err));
+};

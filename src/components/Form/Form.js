@@ -1,10 +1,6 @@
 import React from 'react';
 import { 
-    Container, Grid, Box, 
-    Typography,TextField, Button, 
-    CircularProgress, FormControl,
-    Select, MenuItem, InputLabel,
-    Snackbar
+ Box 
 } from '@material-ui/core';
 
-export const Form = ({children, attr }) => <Box component={'form'} {...attr}>{children}</Box>
+export const Form = ({children, attr, onSubmit }) => <Box component={'form'} {...attr} onSubmit={(e) => onSubmit(e)}>{children}</Box>

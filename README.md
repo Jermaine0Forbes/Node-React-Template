@@ -14,7 +14,7 @@ Express & React template
 
 ## Current Tasks
 
-- clean up code (get rid of comments or code not being used)
+- ~~clean up code (get rid of comments or code not being used)~~
 - refactor components/node
 - create middleware for api
 - create tests
