@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import TextField from '@material-ui/core/TextField';
 
 
-export default function GenericField({readyOnly, onChange, value, testId}) {
+export default function GenericField({readOnly, onChange, value, testId, label}) {
 
     return (
         <>
             {
-                readyOnly ?
-                <TextField data-test-id={testId} label="email" name="email" type='email' defaultValue={value} />
+                readOnly ?
+                <TextField data-test-id={testId} label={label} name={label} type={label} defaultValue={value} />
                 :
-                <TextField data-test-id={testId} label="email" name="email" type='email' value={value} onChange={(e) => {onChange(e)}}/>
+                <TextField data-test-id={testId} label={label} name={label} type={label} value={value} onChange={(e) => {onChange(e)}}/>
             }
         </>
     )

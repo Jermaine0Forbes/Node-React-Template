@@ -18,6 +18,7 @@ export default function Create()
     const [open, setOpen] = useState(false);
     const [level, setLevel] = useState(faker.number.int({max:4,min:1}));
     const [firstName, setFirstName] = useState(faker.person.firstName());
+    const [lastName, setLastName] = useState(faker.person.lastName());
     const {isLoading, isSuccess, mutate} = useMutation({
         mutationFn: (data) => postUser(data),
     });
@@ -43,8 +44,8 @@ export default function Create()
                         <Typography variant="h3">Create</Typography>
                         <Box component={'form'} onSubmit={(e) => handleSubmit(e)} xs={3} >
                             <Grid item xs={3}>
-                                <TextField label="email" name="email" type='email' defaultValue={firstName+"@example.com"}></TextField>
-                                <TextField label="username" name="username" defaultValue={firstName+" "+faker.person.lastName()}></TextField>
+                                <EmailField readOnly={true}  value={firstName+"@example.com"}/>
+                                <UsernameField readOnly={true} value={firstName+" "+lastName}/>
                             </Grid >
                             <Grid item xs={3}>
                                 <SelectAdminLevel
