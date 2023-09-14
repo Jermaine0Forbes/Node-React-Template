@@ -3,7 +3,9 @@ import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
+import EmailField from '../components/Form/EmailField';
+import UsernameField from '../components/Form/UsernameField';
+import PasswordField from '../components/Form/PasswordField';
 import Button from '@material-ui/core/Button';
 import Section from '../components/Section';
 import { useMutation } from 'react-query';
@@ -19,6 +21,10 @@ export default function Create()
     const [level, setLevel] = useState(faker.number.int({max:4,min:1}));
     const [firstName, setFirstName] = useState(faker.person.firstName());
     const [lastName, setLastName] = useState(faker.person.lastName());
+    const [showPass, setShowPass ] = useState(false);
+
+    const togglePass = () => { setShowPass(!showPass)};
+
     const {isLoading, isSuccess, mutate} = useMutation({
         mutationFn: (data) => postUser(data),
     });
@@ -44,8 +50,8 @@ export default function Create()
                         <Typography variant="h3">Create</Typography>
                         <Box component={'form'} onSubmit={(e) => handleSubmit(e)} xs={3} >
                             <Grid item xs={3}>
-                                <EmailField readOnly={true}  value={firstName+"@example.com"}/>
-                                <UsernameField readOnly={true} value={firstName+" "+lastName}/>
+                                <EmailField readOnly value={firstName+"@example.com"}/>
+                                <UsernameField readOnly value={firstName+" "+lastName}/>
                             </Grid >
                             <Grid item xs={3}>
                                 <SelectAdminLevel
@@ -54,10 +60,10 @@ export default function Create()
                                 />
                             </Grid >
                             <Grid >
-                                <TextField label="password" name="password" type="password" value="123"></TextField>
+                                <PasswordField  value="123" showPassword={showPass} handleShowPassword={togglePass}/>
                             </Grid>
                             <Grid>
-                                <Button   type='submit' variant='contained' color="secondary">Submit</Button>
+                                <Button type='submit' variant='contained' color="secondary">Submit</Button>
                             </Grid>
                         </Box>
                     </Section>
