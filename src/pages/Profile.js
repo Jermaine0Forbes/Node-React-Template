@@ -3,27 +3,24 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@mui/material/Alert';
-import LoadingButton from '@mui/lab/LoadingButton';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useColor } from '../hooks/users';
 import {fetchUser,updateUser, deleteUser} from '../services/users';
 import { useParams,useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from 'react-query';
+import WhileLoading from '../components/Loading/WhileLoading';
+import Section from '../components/Section';
+import SelectAdminLevel from '../components/Form/SelectAdminLevel';
+import EmailField from '../components/Form/EmailField';
+import UsernameField from '../components/Form/UsernameField';
+import ConfirmButton from '../components/Button/ConfirmButton';
 
 
 
 export default function Profile()
 {
-    const { id  } = useParams();
+    const { id } = useParams();
     const [open, setOpen] = useState(false);
     const [level, setLevel] = useState(1);
     const [email, setEmail] = useState('');
@@ -91,64 +88,61 @@ export default function Profile()
     return (
         <Container>
             <Typography variant="h3">Profile</Typography>
-
-                    {
-                        isLoading && (
-                            <CircularProgress color="secondary" />
-                        ) 
-                    }
-                    {
-                        isSuccess && data && (
-                            <>
-                                <AccountCircleIcon color={useColor(level)} sx={{fontSize:'90px'}}/>
-                                <Box component={'form'} ref={formRef} >
-                                    <Grid item xs={4}>
-                                        <Grid>
-                                            <TextField label="email" name="email" type='email' value={email} onChange={(e) => {handleChange(e)}}></TextField>
-                                        </Grid>    
-                                        <Grid>
-                                            <TextField label="username" name="username" value={name} onChange={(e) => {handleChange(e)}} ></TextField>
-                                        </Grid>                    
-                                        <Grid >
-                                            <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Admin Level</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                label="adminLevel"
-                                                name="adminLevel"
-                                                value={level}
-                                                onChange={ (e) =>{ setLevel(e.target.value)} }
-                                            >
-                                                <MenuItem value={1}>Admin I</MenuItem>
-                                                <MenuItem value={2}>Admin II</MenuItem>
-                                                <MenuItem value={3}>Admin III</MenuItem>
-                                                <MenuItem value={4}>Admin IV</MenuItem>
-                                            </Select>
-                                            </FormControl>
-                                        </Grid>
-                                        <Box component={'section'}  sx={{my:'16px'}}>
-                                            <Grid container spacing={2} gap={2}>
-                                                <Grid item>
-                                                    <Button type='submit' variant='contained' color="secondary"  onClick={(e) => handleSubmit(e)}>Save</Button>
-                                                </Grid>
-                                                <Grid item>
-                                                    <LoadingButton type='delete' loading={deleteLoading} variant='contained'  onClick={(e) => handleDelete(e)}>Delete</LoadingButton>
-                                                </Grid>
+                <WhileLoading isLoading={isLoading}>
+                        {
+                             data ? (
+                                <>
+                                    <AccountCircleIcon color={useColor(level)} sx={{fontSize:'90px'}}/>
+                                    <Box component={'form'} ref={formRef} >
+                                        <Grid item xs={4}>
+                                            <Grid>
+                                                <EmailField value={email} onChange={handleChange}/>
+                                            </Grid>    
+                                            <Grid>
+                                                <UsernameField value={name} onChange={handleChange}/>
+                                            </Grid>                    
+                                            <Grid >
+                                                <SelectAdminLevel
+                                                    level={level}
+                                                    setLevel={setLevel}
+                                                />
                                             </Grid>
-                                        </Box>
-                                    </Grid>
-                                </Box>
-                            </>
-                        )
-                    }
+                                            <Section  sx={{my:'16px'}}>
+                                                <Grid container spacing={2} gap={4}>
+                                                    <Grid item>
+                                                        <Button type='submit' variant='contained' color="secondary"  onClick={(e) => handleSubmit(e)}>Save</Button>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <ConfirmButton
+                                                            type='delete'
+                                                            loading={deleteLoading}
+                                                            dialogTitle={`Delete ${name}?`}
+                                                            dialogDescription={'Are you sure you want to delete this user?'}
+                                                            handleConfirmation={handleDelete}
+                                                        >
+                                                            Delete    
+                                                        </ConfirmButton>    
+                                                    </Grid>
+                                                </Grid>
+                                            </Section>
+                                        </Grid>
+                                    </Box>
+                                </>
+                            )
+                            :
+                            <span> something went wrong</span>
+                        }
+                    </WhileLoading>
                     {
                         updateSuccess && (
-                            <Snackbar open={open} autoHideDuration={10000} onClose={handleClose} >
-                                <Alert  severity="success" sx={{ width: '100%' }}>
-                                    <strong>{name}</strong> has been updated!
-                                </Alert>
-                            </Snackbar>
+                            <UserAlert
+                                isOpen={open} 
+                                duration={10000} 
+                                onClose={handleClose}
+                                status="success"
+                                >
+                                <strong>{name}</strong> has been updated!
+                            </UserAlert>
                         )
                     }
 

@@ -4,8 +4,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 
-export default function SelectAdminLevel({level, setLevel, testId }) 
-{
+export default function SelectAdminLevel({level, setLevel, testId, readOnly }) 
+{   const readOrWrite = readOnly ? {defaultValue: level} : {value: level}
     return (
         <FormControl fullWidth>
             <InputLabel id="admin-level-label">Admin Level</InputLabel>
@@ -15,7 +15,7 @@ export default function SelectAdminLevel({level, setLevel, testId })
                 label="adminLevel"
                 name="adminLevel"
                 data-test-id={testId}
-                defaultValue={level}
+                {...readOrWrite}
                 onChange={ (e) =>{ setLevel(e.target.value)} }
             >
                 <MenuItem value={1}>Admin I</MenuItem>

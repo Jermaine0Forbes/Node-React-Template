@@ -12,6 +12,7 @@ export default function UserNameField({readOnly, onChange, value}) {
                     label="username" 
                     name="username" 
                     type='text' 
+                    InputProps={{readOnly}}
                     defaultValue={value} 
                 />
                 :

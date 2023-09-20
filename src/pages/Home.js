@@ -21,7 +21,7 @@ export default function Home()
             <Box>
                 <main>
                     { name ? 
-                        ( <Typography component="h4">Welcome, {name}!</Typography>)
+                        <Typography component="h4">Welcome, {name}!</Typography>
                         :
                         <div>Home pages</div>
                     }

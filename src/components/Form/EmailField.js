@@ -8,9 +8,10 @@ export default function EmailField({readOnly, onChange, value}) {
         <>
             {
                 readOnly ?
-                <TextField data-test-id="email-field" readOnly={readOnly} label="email" name="email" type='email' defaultValue={value} />
+                <TextField data-test-id="email-field" InputProps={{readOnly}} label="email" name="email" type='email' defaultValue={value} />
                 :
-                <TextField data-test-id="email-field" label="email" name="email" type='email' value={value} onChange={(e) => {onChange(e)}}/>
+                <TextField data-test-id="email-fields" label="email" name="email" type='email' value={value} onChange={(e) => {onChange(e)}}/>
+                
             }
         </>
     )

@@ -3,10 +3,12 @@ import Box from '@material-ui/core/Box';
 
 
 
-export default function Section({ testId, children}) 
-{
+export default function Section(props) 
+{  
+    const {children, ...other} = props;
+    
     return (
-        <Box component={'section'} data-test-id={testId}>
+        <Box component={'section'} {...other}>
             {children}
         </Box>
     )

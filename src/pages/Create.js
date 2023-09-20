@@ -28,7 +28,8 @@ export default function Create()
     const {isLoading, isSuccess, mutate} = useMutation({
         mutationFn: (data) => postUser(data),
     });
-    useEffect(() => isSuccess && setOpen(!open) , [isSuccess])
+
+    useEffect(() => isSuccess && setOpen(!open) , [isSuccess]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -57,10 +58,11 @@ export default function Create()
                                 <SelectAdminLevel
                                     level={level}
                                     setLevel={setLevel}
+                                    readOnly
                                 />
                             </Grid >
                             <Grid >
-                                <PasswordField  value="123" showPassword={showPass} handleShowPassword={togglePass}/>
+                                <PasswordField readOnly value="123" showPassword={showPass} handleShowPassword={togglePass}/>
                             </Grid>
                             <Grid>
                                 <Button type='submit' variant='contained' color="secondary">Submit</Button>
@@ -81,7 +83,6 @@ export default function Create()
                     </UserAlert>
                 )
             }
-
         </Container>
     );
 }
