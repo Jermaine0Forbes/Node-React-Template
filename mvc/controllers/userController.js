@@ -2,7 +2,6 @@ const  { Users } = require("../models/index");
 const { logging, invalidNumber, noUser } = require('../../utils/index');
 
 
-
 module.exports.index = async (req,res) => {
    const users = await Users.findAll({ 
     attributes : ['id','username', 'adminLevel'],

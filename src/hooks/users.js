@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import React from 'react';
 
 export const  useColor = (adminLevel) => {
     let color = 'secondary';

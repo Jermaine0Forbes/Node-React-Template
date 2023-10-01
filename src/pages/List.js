@@ -3,15 +3,12 @@ import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import ListContainer from '@mui/material/List';
 import { useQuery } from 'react-query';
 import { fetchUsers } from '../services/users';
 import { useColor } from '../hooks/users';
 import UserListItem from "../components/List/UserListItem";
 import WhileLoading from '../components/Loading/WhileLoading';
-
-
 
 export default function List()
 {

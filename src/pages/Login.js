@@ -1,11 +1,12 @@
-import React, {useCallback, useContext} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { Link} from "react-router-dom";
+import Link from '@material-ui/core/Link';
+import PasswordField from '../components/Form/PasswordField';
 import { useMutation } from 'react-query';
 import { useNavigate } from "react-router-dom";
 import {AuthContext} from '../providers/AuthProvider';
@@ -17,6 +18,14 @@ export default function Login()
 
     const {setToken} = useContext(AuthContext);
     const redirect = useNavigate();
+    const [showPass, setShowPass ] = useState(true);
+    const [pass, setPass] = useState('password');
+
+    const togglePass = () => { setShowPass(!showPass)};
+
+    const handlePass = (e) => {
+        setPass(e.target.value);
+    }
 
     const {mutate} = useMutation({
         mutationFn: (user) => loginUser(user),
@@ -44,12 +53,12 @@ export default function Login()
     return (
         <Container>
             <Box component={'form'} onSubmit={(e) => handleSubmit(e)}  >
-                <Typography variant="h1">Login</Typography>
+                <Typography variant="h3">Login</Typography>
                 <Grid>
                     <TextField label="username or email" name="email"></TextField>
                 </Grid>
                 <Grid>
-                    <TextField label="password" name="password"></TextField>
+                    <PasswordField  value={pass} onChange={handlePass} showPassword={showPass} handleShowPassword={togglePass}/>
                 </Grid>
                 <Grid >
                     <Button type='submit' variant='contained' color="secondary">Submit</Button>
