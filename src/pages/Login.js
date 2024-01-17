@@ -20,6 +20,7 @@ export default function Login()
     const redirect = useNavigate();
     const [showPass, setShowPass ] = useState(true);
     const [pass, setPass] = useState('password');
+    const [err, setErr] = useState(null);
 
     const togglePass = () => { setShowPass(!showPass)};
 
@@ -30,11 +31,19 @@ export default function Login()
     const {mutate} = useMutation({
         mutationFn: (user) => loginUser(user),
         onSuccess: async (data) => { 
+            let error;
             if(data.status === 200){
+                setErr(null)
                 const token =  await data.text();
                 setToken(token)
                 localStorage.setItem('usr', token);
                 redirect('/');
+            }else if (data.status === 401){
+                error = await data.text();
+                setErr(error);
+            }else if (data.status === 400){
+                error = await data.json();
+                setErr(error)
             }
          }
     })
@@ -52,13 +61,16 @@ export default function Login()
     
     return (
         <Container>
-            <Box component={'form'} onSubmit={(e) => handleSubmit(e)}  >
+            <Box component={'form'} onSubmit={(e) => handleSubmit(e)}>
                 <Typography variant="h3">Login</Typography>
+                
                 <Grid>
-                    <TextField label="username or email" name="email"></TextField>
+                    <TextField label="email" name="email"></TextField>
+                    <Typography variant="h6" color="error">{err?.email}</Typography>
                 </Grid>
                 <Grid>
                     <PasswordField  value={pass} onChange={handlePass} showPassword={showPass} handleShowPassword={togglePass}/>
+                    <Typography variant="h6" color="error">{err?.password}</Typography>
                 </Grid>
                 <Grid >
                     <Button type='submit' variant='contained' color="secondary">Submit</Button>

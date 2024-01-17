@@ -17,7 +17,7 @@ Express & React template
 - ~~clean up code (get rid of comments or code not being used)~~
 - ~~refactor components/node~~
 - create middleware for api
-- create tests
+- create email and upload functionality
 - create theme
 
 [go back home](home)
@@ -25,7 +25,6 @@ Express & React template
 ## Other Tasks
 - create apilog function that would have info about url, method, body, etc
 - create dashboard for admins that will have settings, traffic, permissions, image gallery, theme colors, events?
-- create email and upload functionality
 - add linter and prettier as commands
 - track user information, url, os, mobile, dimension, ip address
 - add password confirmation & strength validation in register
@@ -37,6 +36,7 @@ Express & React template
 - reset password email
 - multi authentication logging
 - login limit
+- create tests
 
 [go back home](home)
 

@@ -16,8 +16,11 @@ import { registerUser } from '../services/login';
 
 export default function Register()
 {
+    const defaultErrMsg = { password: '', email: '', username: ''};
     const navigate = useNavigate();
     const [showPass, setShowPass ] = useState(false);
+    const [errors, setErrors] = useState(defaultErrMsg)
+    const [pass, setPass ] = useState('pa');
     const {setToken} = useContext(AuthContext);
     const {isLoading, mutate} = useMutation({
         mutationFn: (data) => registerUser(data),
@@ -27,11 +30,21 @@ export default function Register()
                 setToken(token)
                 localStorage.setItem('usr', token);
                 navigate('/');
+            } else if (data.status === 400){
+                const errArr = await data.json();
+                console.log(errArr);
+                setErrors(errArr);
             }
+        },
+        onError: async (err) => {
+            console.log('foo')
+            console.log(err)
         }
     });
 
-    
+    const changePass = (e) => {
+        setPass(e.target.value);
+    }
 
     const togglePass = () => { setShowPass(!showPass)};
 
@@ -43,7 +56,6 @@ export default function Register()
         for (const [key, value] of form.entries()){
             data[key] = value;
         };
-
         mutate(data)
     }
 
@@ -58,12 +70,15 @@ export default function Register()
                     <Typography variant="h3">Register</Typography>
                     <Grid>
                         <TextField label="email" name="email" type='email'></TextField>
+                        <div >{errors?.email}</div>
                     </Grid>    
                     <Grid>
                         <TextField label="username" name="username"></TextField>
+                        <div>{errors?.username}</div>
                     </Grid>
                     <Grid>
-                        <PasswordField readOnly value="password" showPassword={showPass} handleShowPassword={togglePass}/>
+                        <PasswordField   value={pass} onChange={changePass} showPassword={showPass} handleShowPassword={togglePass}/>
+                        <div>{errors?.password}</div>
                     </Grid>
                     <Grid >
                         <Button   type='submit' variant='contained' color="secondary">Submit</Button>

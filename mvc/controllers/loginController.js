@@ -2,8 +2,9 @@ const  { Users } = require("../models/index");
 const { 
 logging, invalidEmail, generateAccessToken,
 invalidRegister, invalidPassword, noUser,
-hashPassword
+hashPassword, getValidationErrors, 
 } = require('../../utils/index');
+const { validationResult } = require('express-validator');
 const bcrypt = require("bcrypt");
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
@@ -14,6 +15,14 @@ dotenv.config();
 
 module.exports.register = async (req,res) => {
     logging('api', req.originalUrl)
+
+    const invalid = validationResult(req);
+
+    if(!invalid.isEmpty())
+    {
+        const errMsgs = getValidationErrors(invalid.array())
+        return res.status(400).send(errMsgs);
+    }
 
     // needs to check if email and maybe username already exists
     const { email, username, password, adminLevel = 4}  = req.body;
@@ -35,10 +44,20 @@ module.exports.register = async (req,res) => {
 module.exports.login = async (req, res) => {
     logging('api', req.originalUrl)
    const {email, password} = req.body;
+   const invalid = validationResult(req);
+   let errMsgs;
+
+   if(!invalid.isEmpty())
+   {
+       errMsgs = getValidationErrors(invalid.array())
+       return res.status(400).send(errMsgs);
+   }
 
    if(invalidEmail(email))
    {
-    return res.status(401).send('Invalid email');
+    console.error('Invalid email')
+    errMsgs = getValidationErrors([{ path: 'email', msg: 'Invalid email'}])
+    return res.status(401).send(errMsgs);
    }
    const pass = await Users.findOne({
     where: {email}, 
@@ -52,7 +71,8 @@ module.exports.login = async (req, res) => {
    if(await invalidPassword(password, pass))
    {
     console.error('The users credentials are incorrect');
-    return res.status(401).send('The users credentials are incorrect');
+    errMsgs = getValidationErrors([{ path: 'password', msg: 'The users credentials are incorrect'}])
+    return res.status(401).send(errMsgs);
    }
 
    const user = await Users.findOne({

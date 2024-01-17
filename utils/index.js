@@ -94,6 +94,25 @@ exports.invalidPassword = async function invalidPassword(pass, user){
   return true;
 }
 
+exports.getValidationErrors = (validErrs) => {
+  errMsgs = {}
+  validErrs.forEach(e => {
+      switch(e?.path)
+      {
+          case 'email':
+              errMsgs.email = e.msg;
+              break;
+          case 'username':
+              errMsgs.username = e.msg;
+              break;
+          case 'password':
+              errMsgs.password = e.msg;
+              break;
+      }
+  })
+  return errMsgs;
+} 
+
 exports.generateAccessToken = generateAccessToken;
 exports.hashPassword = hashPassword;
 exports.logging = logging;

@@ -14,11 +14,18 @@ router.route('/user/:id')
 
 router.post("/register",
       [
-       body('email').isEmail().trim().escape(), 
-       body('username').trim().escape()
+       body('email').isEmail().trim().escape().withMessage('Not a valid email address'), 
+       body('username').notEmpty().trim().escape().withMessage('Not a valid username'),
+       body('password').isLength({min:3}).notEmpty().trim().escape().withMessage('Not a valid password'),
       ] ,
        loginCtr.register);
-router.post("/login",loginCtr.login);
+       
+router.post("/login",
+      [
+      body('email').isEmail().trim().escape().withMessage('Not a valid email address'), 
+      body('password').isLength({min:3}).notEmpty().trim().escape().withMessage('Not a valid password'),
+      ],
+      loginCtr.login);
 
 
 module.exports = router;
