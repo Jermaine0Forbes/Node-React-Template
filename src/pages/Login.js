@@ -50,6 +50,7 @@ export default function Login()
 
     const handleSubmit = useCallback( (e) => {
         e.preventDefault();
+        setErr(null)
 
         const user = {};
         const form = new FormData(e.target);
@@ -63,19 +64,19 @@ export default function Login()
         <Container>
             <Box component={'form'} onSubmit={(e) => handleSubmit(e)}>
                 <Typography variant="h3">Login</Typography>
-                
+                <Typography variant="subtitle2" color="error">{err?.other}</Typography>
                 <Grid>
                     <TextField label="email" name="email"></TextField>
-                    <Typography variant="h6" color="error">{err?.email}</Typography>
+                    <Typography variant="subtitle2" color="error">{err?.email}</Typography>
                 </Grid>
                 <Grid>
                     <PasswordField  value={pass} onChange={handlePass} showPassword={showPass} handleShowPassword={togglePass}/>
-                    <Typography variant="h6" color="error">{err?.password}</Typography>
+                    <Typography variant="subtitle2" color="error">{err?.password}</Typography>
                 </Grid>
                 <Grid >
-                    <Button type='submit' variant='contained' color="secondary">Submit</Button>
+                    <Button type='submit' variant='contained' color="secondary" >Submit</Button>
                 </Grid>
-                <Link href='/register' color="secondary">Don't have an account? Sign up here</Link>
+                <Link href='/register' variant="subtitle1" color="secondary">Don't have an account? Sign up here</Link>
             </Box>
         </Container>
     );

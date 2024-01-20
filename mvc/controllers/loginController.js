@@ -11,8 +11,6 @@ const jwt = require('jsonwebtoken');
 
 dotenv.config();
 
-
-
 module.exports.register = async (req,res) => {
     logging('api', req.originalUrl)
 
@@ -46,6 +44,7 @@ module.exports.login = async (req, res) => {
    const {email, password} = req.body;
    const invalid = validationResult(req);
    let errMsgs;
+   let msg;
 
    if(!invalid.isEmpty())
    {
@@ -55,10 +54,12 @@ module.exports.login = async (req, res) => {
 
    if(invalidEmail(email))
    {
-    console.error('Invalid email')
-    errMsgs = getValidationErrors([{ path: 'email', msg: 'Invalid email'}])
-    return res.status(401).send(errMsgs);
+    msg = 'Invalid email';
+    console.error(msg)
+    errMsgs = getValidationErrors([{ path: 'email', msg: msg}])
+    return res.status(400).send(errMsgs);
    }
+
    const pass = await Users.findOne({
     where: {email}, 
     attributes: ['password'],
@@ -70,9 +71,10 @@ module.exports.login = async (req, res) => {
 
    if(await invalidPassword(password, pass))
    {
-    console.error('The users credentials are incorrect');
-    errMsgs = getValidationErrors([{ path: 'password', msg: 'The users credentials are incorrect'}])
-    return res.status(401).send(errMsgs);
+    msg = 'The users credentials are incorrect';
+    console.error(msg);
+    errMsgs = getValidationErrors([{ path: 'password', msg: msg}])
+    return res.status(400).send(errMsgs);
    }
 
    const user = await Users.findOne({
@@ -85,7 +87,9 @@ module.exports.login = async (req, res) => {
 
     if(noUser(user))
     {
-     return res.status(400).send(`400 Bad Request : user does not exist, ${JSON.stringify(user)}, was returned `);
+        msg = `user does not exist, ${JSON.stringify(user)}, was returned `;
+        console.error(msg)
+     return res.status(400).send(msg);
     }
 
    return res.send(generateAccessToken(user.dataValues));

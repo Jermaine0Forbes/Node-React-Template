@@ -50,6 +50,7 @@ export default function Register()
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setErrors(null);
 
         const data = {};
         const form = new FormData(e.target);
@@ -70,7 +71,7 @@ export default function Register()
                     <Typography variant="h3">Register</Typography>
                     <Grid>
                         <TextField label="email" name="email" type='email'></TextField>
-                        <div >{errors?.email}</div>
+                        <Typography variant="subtitle2" color="error">{err?.email}</Typography>
                     </Grid>    
                     <Grid>
                         <TextField label="username" name="username"></TextField>
@@ -78,12 +79,12 @@ export default function Register()
                     </Grid>
                     <Grid>
                         <PasswordField   value={pass} onChange={changePass} showPassword={showPass} handleShowPassword={togglePass}/>
-                        <div>{errors?.password}</div>
+                        <Typography variant="subtitle2" color="error">{err?.password}</Typography>
                     </Grid>
                     <Grid >
                         <Button   type='submit' variant='contained' color="secondary">Submit</Button>
                     </Grid>
-                    <Link href='/login' color="secondary">Have an account? Sign in here</Link>
+                    <Link href='/login' variant="subtitle1" color="secondary">Have an account? Sign in here</Link>
                 </Box>
                 )
             }

@@ -84,7 +84,7 @@ exports.noUser = function noUser(user){
 }
 
 exports.invalidPassword = async function invalidPassword(pass, user){
-  const result = await bcrypt.compare(pass, user.password);
+  const result = user?.password ? await bcrypt.compare(pass, user.password) : false;
   if(result){
     return false;
   }
@@ -108,6 +108,8 @@ exports.getValidationErrors = (validErrs) => {
           case 'password':
               errMsgs.password = e.msg;
               break;
+          default:
+            errMsgs.other = e.msg
       }
   })
   return errMsgs;
