@@ -20,7 +20,7 @@ export default function Login()
     const redirect = useNavigate();
     const [showPass, setShowPass ] = useState(true);
     const [pass, setPass] = useState('password');
-    const [err, setErr] = useState(null);
+    const [errors, setErrors] = useState(null);
 
     const togglePass = () => { setShowPass(!showPass)};
 
@@ -33,24 +33,24 @@ export default function Login()
         onSuccess: async (data) => { 
             let error;
             if(data.status === 200){
-                setErr(null)
+                setErrors(null)
                 const token =  await data.text();
                 setToken(token)
                 localStorage.setItem('usr', token);
                 redirect('/');
             }else if (data.status === 401){
                 error = await data.text();
-                setErr(error);
+                setErrors(error);
             }else if (data.status === 400){
                 error = await data.json();
-                setErr(error)
+                setErrors(error)
             }
          }
     })
 
     const handleSubmit = useCallback( (e) => {
         e.preventDefault();
-        setErr(null)
+        setErrors(null)
 
         const user = {};
         const form = new FormData(e.target);
@@ -64,14 +64,14 @@ export default function Login()
         <Container>
             <Box component={'form'} onSubmit={(e) => handleSubmit(e)}>
                 <Typography variant="h3">Login</Typography>
-                <Typography variant="subtitle2" color="error">{err?.other}</Typography>
+                <Typography variant="subtitle2" color="error">{errors?.other}</Typography>
                 <Grid>
                     <TextField label="email" name="email"></TextField>
-                    <Typography variant="subtitle2" color="error">{err?.email}</Typography>
+                    <Typography variant="subtitle2" color="error">{errors?.email}</Typography>
                 </Grid>
                 <Grid>
                     <PasswordField  value={pass} onChange={handlePass} showPassword={showPass} handleShowPassword={togglePass}/>
-                    <Typography variant="subtitle2" color="error">{err?.password}</Typography>
+                    <Typography variant="subtitle2" color="error">{errors?.password}</Typography>
                 </Grid>
                 <Grid >
                     <Button type='submit' variant='contained' color="secondary" >Submit</Button>

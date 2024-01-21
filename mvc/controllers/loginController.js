@@ -15,17 +15,24 @@ module.exports.register = async (req,res) => {
     logging('api', req.originalUrl)
 
     const invalid = validationResult(req);
+    let msg;
+    let errMsgs;
 
     if(!invalid.isEmpty())
     {
-        const errMsgs = getValidationErrors(invalid.array())
+        console.error(invalid.array())
+        errMsgs = getValidationErrors(invalid.array());
         return res.status(400).send(errMsgs);
     }
 
     // needs to check if email and maybe username already exists
     const { email, username, password, adminLevel = 4}  = req.body;
     if(invalidRegister(email, username, password))
-       return res.sendStatus(400);
+    {
+        msg = `registration fields need to be filled in or corrected`;
+        errMsgs = getValidationErrors([{type: 'other', msg }]);
+        return res.sendStatus(400).send(errMsgs);
+    }   
 
     const hashed = await hashPassword(password);
 
@@ -48,6 +55,7 @@ module.exports.login = async (req, res) => {
 
    if(!invalid.isEmpty())
    {
+        console.error(invalid.array())
        errMsgs = getValidationErrors(invalid.array())
        return res.status(400).send(errMsgs);
    }
@@ -56,7 +64,7 @@ module.exports.login = async (req, res) => {
    {
     msg = 'Invalid email';
     console.error(msg)
-    errMsgs = getValidationErrors([{ path: 'email', msg: msg}])
+    errMsgs = getValidationErrors([{ type: 'email', msg: msg}])
     return res.status(400).send(errMsgs);
    }
 
@@ -73,7 +81,7 @@ module.exports.login = async (req, res) => {
    {
     msg = 'The users credentials are incorrect';
     console.error(msg);
-    errMsgs = getValidationErrors([{ path: 'password', msg: msg}])
+    errMsgs = getValidationErrors([{ type: 'password', msg: msg}])
     return res.status(400).send(errMsgs);
    }
 

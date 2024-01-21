@@ -16,10 +16,9 @@ import { registerUser } from '../services/login';
 
 export default function Register()
 {
-    const defaultErrMsg = { password: '', email: '', username: ''};
     const navigate = useNavigate();
     const [showPass, setShowPass ] = useState(false);
-    const [errors, setErrors] = useState(defaultErrMsg)
+    const [errors, setErrors] = useState(null)
     const [pass, setPass ] = useState('pa');
     const {setToken} = useContext(AuthContext);
     const {isLoading, mutate} = useMutation({
@@ -37,7 +36,6 @@ export default function Register()
             }
         },
         onError: async (err) => {
-            console.log('foo')
             console.log(err)
         }
     });
@@ -69,17 +67,18 @@ export default function Register()
 
                 <Box component={'form'} onSubmit={(e) => handleSubmit(e)} >
                     <Typography variant="h3">Register</Typography>
+                    <Typography variant="subtitle2" color="error">{errors?.other}</Typography>
                     <Grid>
                         <TextField label="email" name="email" type='email'></TextField>
-                        <Typography variant="subtitle2" color="error">{err?.email}</Typography>
+                        <Typography variant="subtitle2" color="error">{errors?.email}</Typography>
                     </Grid>    
                     <Grid>
                         <TextField label="username" name="username"></TextField>
-                        <div>{errors?.username}</div>
+                        <Typography variant="subtitle2" color="error">{errors?.username}</Typography>
                     </Grid>
                     <Grid>
                         <PasswordField   value={pass} onChange={changePass} showPassword={showPass} handleShowPassword={togglePass}/>
-                        <Typography variant="subtitle2" color="error">{err?.password}</Typography>
+                        <Typography variant="subtitle2" color="error">{errors?.password}</Typography>
                     </Grid>
                     <Grid >
                         <Button   type='submit' variant='contained' color="secondary">Submit</Button>

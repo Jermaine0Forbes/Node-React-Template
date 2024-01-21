@@ -57,7 +57,7 @@ exports.invalidRegister =  function invalidRegister(email, user, pass){
     if (validator.isEmail(email) && user && pass){
         return false;
     }
-    const msg = `400 Bad Request : registration fields need to be filled in or corrected`;
+    const msg = `registration fields need to be filled in or corrected`;
     console.error(msg);
     logging('error', msg);
     return true;
@@ -67,7 +67,7 @@ exports.invalidEmail = function invalidEmail(email){
     if(validator.isEmail(email)){
         return false;
     }
-    const msg = `401 Unauthorized : email is not valid`;
+    const msg = `email is not valid`;
     console.error(msg);
     logging('error', msg);
     return true;
@@ -77,7 +77,7 @@ exports.noUser = function noUser(user){
     if (typeof user === "object" && user?.id){
         return false;
     }
-    const msg = `400 Bad Request : user does not exist, ${JSON.stringify(user)}, was returned `;
+    const msg = `user does not exist, ${JSON.stringify(user)}, was returned `;
     console.error(msg);
     logging('error', msg);
     return true;
@@ -97,7 +97,8 @@ exports.invalidPassword = async function invalidPassword(pass, user){
 exports.getValidationErrors = (validErrs) => {
   errMsgs = {}
   validErrs.forEach(e => {
-      switch(e?.path)
+     let type = e?.path || e.type;
+      switch(type)
       {
           case 'email':
               errMsgs.email = e.msg;
