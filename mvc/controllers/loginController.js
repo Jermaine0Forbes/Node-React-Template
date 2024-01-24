@@ -31,7 +31,7 @@ module.exports.register = async (req,res) => {
     {
         msg = `registration fields need to be filled in or corrected`;
         errMsgs = getValidationErrors([{type: 'other', msg }]);
-        return res.sendStatus(400).send(errMsgs);
+        return res.status(400).send(errMsgs);
     }   
 
     const hashed = await hashPassword(password);

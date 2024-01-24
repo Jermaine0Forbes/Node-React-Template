@@ -7,11 +7,11 @@ const jwt = require('jsonwebtoken');
 
 dotenv.config();
 
-function generateAccessToken(user) {
+exports.generateAccessToken =  function (user) {
   return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: '3h' });
 }
 
-async function hashPassword(password, saltRounds = 10)
+exports.hashPassword = async function (password, saltRounds = 10)
 {
  return await bcrypt
               .genSalt(saltRounds)
@@ -22,7 +22,7 @@ async function hashPassword(password, saltRounds = 10)
 
 }
 
-function logging(fileName, content) {
+exports.logging = function (fileName, content) {
 
   const logFilePath = path.resolve(__dirname+'/../logs/', fileName+".log")
   const logEntry = `${new Date().toISOString()}: ${content}\n`
@@ -36,7 +36,7 @@ function logging(fileName, content) {
   });
 }
 
-async function sleep (seconds = 5){
+exports.sleep = async function (seconds = 5){
   // equivalent of sleeping
   await new Promise(resolve => setTimeout(resolve, seconds*1000));
 }
@@ -115,8 +115,3 @@ exports.getValidationErrors = (validErrs) => {
   })
   return errMsgs;
 } 
-
-exports.generateAccessToken = generateAccessToken;
-exports.hashPassword = hashPassword;
-exports.logging = logging;
-exports.sleep = sleep;

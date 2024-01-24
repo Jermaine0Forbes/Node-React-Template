@@ -1,5 +1,6 @@
 const  { Users } = require("../models/index");
 const { logging, invalidNumber, noUser } = require('../../utils/index');
+const { validationResult } = require('express-validator');
 
 
 module.exports.index = async (req,res) => {
@@ -16,13 +17,23 @@ module.exports.index = async (req,res) => {
 
 module.exports.get = async (req,res) => {
     const id = req.params.id;
+    const invalid = validationResult(req);
 
     logging('api', req.originalUrl)
 
+    if(!invalid.isEmpty())
+    {
+        console.error(invalid.array())
+        return res.status(400).send(invalid.array());
+    }
+
     if(invalidNumber(id))
     {
-      return res.sendStatus(400);
+      msg = `id:${id} is invalid`;
+      console.error(msg);
+      return res.status(400).send(msg);
     }
+    
     const user = await Users.findByPk(id,{ 
       attributes: ['adminLevel','email', 'id', 'username'],
       logging: (sql) => {
@@ -31,8 +42,9 @@ module.exports.get = async (req,res) => {
     });
 
     if(noUser(user)){
-        console.error("cannot find user "+id);
-        return res.sendStatus(500);
+        msg = "cannot find user "+id
+        console.error(msg);
+        return res.status(400).send(msg);
     }
 
     return res.json(user);

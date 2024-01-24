@@ -31,7 +31,6 @@ export default function Register()
                 navigate('/');
             } else if (data.status === 400){
                 const errArr = await data.json();
-                console.log(errArr);
                 setErrors(errArr);
             }
         },

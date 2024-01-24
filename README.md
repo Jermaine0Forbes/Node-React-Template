@@ -16,7 +16,7 @@ Express & React template
 
 - ~~clean up code (get rid of comments or code not being used)~~
 - ~~refactor components/node~~
-- create middleware for api
+- create middleware for form api
 - create email and upload functionality
 - create theme
 
