@@ -32,6 +32,12 @@ export default function Profile()
 
     const {isLoading, isSuccess, data} = useQuery('get-user', () => fetchUser(id), {
         refetchOnMount:true,
+        onError: ( e) => {
+            console.log('error foo')
+        },
+        onSuccess: (e) => {
+            console.log('success foo')
+        }
     });
 
     const {mutate, isSuccess : updateSuccess } = useMutation({

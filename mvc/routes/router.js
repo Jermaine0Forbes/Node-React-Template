@@ -7,8 +7,8 @@ const loginCtr = require("../controllers/loginController");
 
 router.get("/users", userCtr.index);
 
-router.route('/user/:id', param('id').isNumeric().trim())
-      .get(userCtr.get)
+router.route('/user/:id', )
+      .get(param('id').isNumeric().trim(),userCtr.get)
       .put(userCtr.put)
       .delete(userCtr.delete)
 

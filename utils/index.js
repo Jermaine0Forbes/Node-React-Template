@@ -22,7 +22,7 @@ exports.hashPassword = async function (password, saltRounds = 10)
 
 }
 
-exports.logging = function (fileName, content) {
+exports.logging = function logging (fileName, content) {
 
   const logFilePath = path.resolve(__dirname+'/../logs/', fileName+".log")
   const logEntry = `${new Date().toISOString()}: ${content}\n`
@@ -34,15 +34,17 @@ exports.logging = function (fileName, content) {
       console.log('Log entry added to', logFilePath);
     }
   });
-}
-
-exports.sleep = async function (seconds = 5){
+ }
+  
+exports.sleep = async function sleep (seconds = 5) {
   // equivalent of sleeping
   await new Promise(resolve => setTimeout(resolve, seconds*1000));
 }
 
+
 exports.invalidNumber = function invalidNumber(num){
-    if( typeof Number(num)  !== "number")
+  const id = Number(num);
+    if(isNaN(id))
     {
       const msg = `400 Bad Request : ${id} is not a number`;
       console.error(msg);
