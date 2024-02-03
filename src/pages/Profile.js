@@ -32,12 +32,6 @@ export default function Profile()
 
     const {isLoading, isSuccess, data} = useQuery('get-user', () => fetchUser(id), {
         refetchOnMount:true,
-        onError: ( e) => {
-            console.log('error foo')
-        },
-        onSuccess: (e) => {
-            console.log('success foo')
-        }
     });
 
     const {mutate, isSuccess : updateSuccess } = useMutation({
@@ -85,7 +79,7 @@ export default function Profile()
             setEmail(data?.email);
             setLevel(data?.adminLevel)
         }
-        if(data == 500 || del == 200 ) {
+        if(data == 400 || del == 200 ) {
             redirect('/list');
         }
     }, [data, id, del]);
