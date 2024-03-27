@@ -2,12 +2,25 @@
 const defaultArgs = {
     begin:1,
     end:1000,
+    debug:true,
 };
 
 const getRandBtwn = (begin, end) => {
     return Math.floor(Math.random() * end) + begin;
 
 };
+
+export const convStat = (stat) => {
+    return (stat * 0.1).toFixed(1);
+}
+
+export const getInch = (meter) => {
+    return Math.floor(convStat(meter) * 39.36);
+}
+
+export const getPound = (weight) => {
+    return Math.floor(convStat(weight) * 2.2);
+}
 
 export const getDiffNumArr = (amount, args)  => {
     
@@ -61,6 +74,9 @@ export const getPokemon = async (amount, setPokemon,  args = defaultArgs) => {
         pokeArr.push(pokemon);
         amount--;
     }
+  }
+  if(args?.debug){
+    console.log(pokeArr);
   }
 
   setPokemon(pokeArr);

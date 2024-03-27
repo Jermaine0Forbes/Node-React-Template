@@ -14,11 +14,11 @@ Express & React template
 
 ## Current Tasks
 
-- ~~clean up code (get rid of comments or code not being used)~~
-- ~~refactor components/node~~
-- create middleware for form api
-- create email and upload functionality
-- create theme
+- ~~get public api, and have it list out at least 10 items~~
+- have a scrolling count down timer, that will redirect to another page when it hits 0
+- have a scrolling button, that can redirect you before timer runs out
+- have redirect page to allow items to ordered with drag and drop feature
+- create a settings page that can change the amount of items or timer
 
 [go back home](home)
 

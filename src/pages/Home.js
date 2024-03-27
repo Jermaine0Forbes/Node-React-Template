@@ -1,9 +1,10 @@
 import React, {useContext, useState, useEffect}  from 'react';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
+import {List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar} from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import {AuthContext} from '../providers/AuthProvider';
-import {getDiffNumArr, getPokemon} from '../services/publicApi';
+import {getInch, getPound, convStat, getPokemon} from '../services/publicApi';
 
 export default function Home()
 {
@@ -19,7 +20,7 @@ export default function Home()
             setName(null);
         }
         if(poke.length === 0){
-            getPokemon(10, setPoke);
+            getPokemon(100, setPoke);
         }
     }, [currentUser, poke ]);
     return (
@@ -34,15 +35,43 @@ export default function Home()
 
                     }
                     {
-                        poke.length && (
-                            <ul>
-                                {
-                                    poke.map((e,i) => {
+                        poke.length  > 0 && (
+                            <>
+                                <List>
+                                    {
+                                        poke.map((e,i) => {
 
-                                        return (<li key={i}>{e.name}</li>);
-                                    })
-                                }
-                            </ul>
+                                            return (
+                                            <>
+                                            <ListItem  key={i} alignItems='flex-start'>
+                                                <ListItemAvatar>
+                                                    <Avatar src={e?.sprites?.front_default} />
+                                                </ListItemAvatar>
+                                                <ListItemText
+                                                    primary={e.name}
+                                                    secondary={
+                                                        <>
+                                                        <Typography component="span" sx={{display: 'block'}}>id: {e.order}</Typography>
+                                                        <br/>
+                                                        <Typography component="span">
+                                                            height: {convStat(e.height)} meters | {getInch(e.height)} inches
+                                                        </Typography>
+                                                        <br/>
+                                                        <Typography component="span">
+                                                            weight: {convStat(e.weight)} kilograms | {getPound(e.weight)} pounds
+                                                        </Typography>
+                                                        </>
+                                                    }
+                                                />
+                                            </ListItem>
+                                            <Divider key={(i+1)*3.54} />
+                                            
+                                            </>
+                                            );
+                                        })
+                                    }
+                                </List>
+                            </>
                         )
                     }
                 </main>
