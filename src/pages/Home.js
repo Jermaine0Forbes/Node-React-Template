@@ -1,17 +1,22 @@
 import React, {useContext, useState, useEffect}  from 'react';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
-import {List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar} from '@material-ui/core';
+import {List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar, BottomNavigation, BottomNavigationAction} from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import {AuthContext} from '../providers/AuthProvider';
 import {getInch, getPound, convStat, getPokemon} from '../services/publicApi';
+import WhileLoading from '../components/Loading/WhileLoading';
+import Timer from '../components/Time/Timer';
+import { AccessTime } from '@mui/icons-material';
 
 export default function Home()
 {
     const { currentUser} = useContext(AuthContext);
     const [name, setName] = useState(null);
     const [poke, setPoke] = useState([]);
-
+    const [value, setValue] = useState([]);
+    const isLoading = !!(poke.length == 0);
+    const hasLoaded = !isLoading;
    
     useEffect(() => {
         if(currentUser){
@@ -20,7 +25,7 @@ export default function Home()
             setName(null);
         }
         if(poke.length === 0){
-            getPokemon(100, setPoke);
+            getPokemon(10, setPoke);
         }
     }, [currentUser, poke ]);
     return (
@@ -34,46 +39,63 @@ export default function Home()
 
 
                     }
-                    {
-                        poke.length  > 0 && (
-                            <>
-                                <List>
-                                    {
-                                        poke.map((e,i) => {
+                    <WhileLoading isLoading={isLoading}>
+                        {
+                            hasLoaded && (
+                                <>
+                                    <List>
+                                        {
+                                            poke.map((e,i) => {
 
-                                            return (
-                                            <>
-                                            <ListItem  key={i} alignItems='flex-start'>
-                                                <ListItemAvatar>
-                                                    <Avatar src={e?.sprites?.front_default} />
-                                                </ListItemAvatar>
-                                                <ListItemText
-                                                    primary={e.name}
-                                                    secondary={
-                                                        <>
-                                                        <Typography component="span" sx={{display: 'block'}}>id: {e.order}</Typography>
-                                                        <br/>
-                                                        <Typography component="span">
-                                                            height: {convStat(e.height)} meters | {getInch(e.height)} inches
-                                                        </Typography>
-                                                        <br/>
-                                                        <Typography component="span">
-                                                            weight: {convStat(e.weight)} kilograms | {getPound(e.weight)} pounds
-                                                        </Typography>
-                                                        </>
-                                                    }
-                                                />
-                                            </ListItem>
-                                            <Divider key={(i+1)*3.54} />
-                                            
-                                            </>
-                                            );
-                                        })
-                                    }
-                                </List>
-                            </>
-                        )
-                    }
+                                                return (
+                                                <>
+                                                <ListItem  key={i} alignItems='flex-start'>
+                                                    <ListItemAvatar>
+                                                        <Avatar src={e?.sprites?.front_default} />
+                                                    </ListItemAvatar>
+                                                    <ListItemText
+                                                        primary={e.name}
+                                                        secondary={
+                                                            <>
+                                                            <Typography component="span" sx={{display: 'block'}}>id: {e.order}</Typography>
+                                                            <br/>
+                                                            <Typography component="span">
+                                                                height: {convStat(e.height)} meters | {getInch(e.height)} inches
+                                                            </Typography>
+                                                            <br/>
+                                                            <Typography component="span">
+                                                                weight: {convStat(e.weight)} kilograms | {getPound(e.weight)} pounds
+                                                            </Typography>
+                                                            </>
+                                                        }
+                                                    />
+                                                </ListItem>
+                                                <Divider key={(i+1000)*3.54} />
+                                                
+                                                </>
+                                                );
+                                            })
+                                        }
+
+                                    </List>
+                                </>
+                            )
+                        }
+                    </WhileLoading>
+                    <Box sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+                        <BottomNavigation 
+                            showLabels
+                            value={value}
+                            onChange={(event, newValue) => {
+                            setValue(newValue);
+                            }}
+                        >
+                            <BottomNavigationAction label="Timer" icon={<AccessTime/>}/>
+                            <BottomNavigationAction label={<Timer seconds={30} />} />
+                        </BottomNavigation>
+
+
+                    </Box>
                 </main>
             </Box>
         </Container>

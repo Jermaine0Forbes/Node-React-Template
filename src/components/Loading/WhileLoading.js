@@ -5,7 +5,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default function WhileLoading ({isLoading, testId, children}) 
 {
-
     return (
         <>
             {
