@@ -1,12 +1,13 @@
 
 import React, {useState, useEffect, useRef}  from 'react';
+import { usePrevious } from '../../hooks/state';
 
 export default function Timer ({minutes = 0, seconds = 0, finished}) {
     const [timer, setTimer] = useState("");
     const [count, setCount] = useState(0);
     const totalSeconds = (minutes * 60) + seconds;
     const [timeRemaining, setTimeRemaining] = useState(totalSeconds);
-    const prevTime = useRef(totalSeconds);
+    const prevTime = usePrevious(timeRemaining);
     
 
     const getSeconds = (secondsLeft) => {
@@ -39,18 +40,22 @@ export default function Timer ({minutes = 0, seconds = 0, finished}) {
         if(timer === ""){
             updateTimer();
             setTimeout(() => countDown(totalSeconds),1000);
-        }else if( timeRemaining != prevTime.current && timeRemaining >= 0 ){
+        }else if( timeRemaining != prevTime && timeRemaining >= 0 ){
+        // }else if( timeRemaining != prevTime.current && timeRemaining >= 0 ){
             updateTimer();
             setTimeout(() => countDown(timeRemaining),1000);
            
-        }else{
+        }
+        
+        if(timeRemaining < 0){
+            finished(true);
             // console.log("count:"+ count);
             // console.log("total seconds:"+ totalSeconds);
             // console.log("time remaining:"+ timeRemaining);
             // console.log(timeRemaining == (totalSeconds - count));
             // console.log('foo');
         }
-        prevTime.current = timeRemaining
+        // prevTime.current = timeRemaining
 
     },[timer, timeRemaining, count])
     

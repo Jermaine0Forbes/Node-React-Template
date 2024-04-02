@@ -2,6 +2,7 @@ import React, {useContext, useState, useEffect}  from 'react';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import {List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar, BottomNavigation, BottomNavigationAction} from '@material-ui/core';
+import { useNavigate } from "react-router-dom";
 import Typography from '@material-ui/core/Typography';
 import {AuthContext} from '../providers/AuthProvider';
 import {getInch, getPound, convStat, getPokemon} from '../services/publicApi';
@@ -12,9 +13,11 @@ import { AccessTime } from '@mui/icons-material';
 export default function Home()
 {
     const { currentUser} = useContext(AuthContext);
+    const redirect = useNavigate();
     const [name, setName] = useState(null);
     const [poke, setPoke] = useState([]);
     const [value, setValue] = useState([]);
+    const [isFinished, setIsFinished] = useState(false);
     const isLoading = !!(poke.length == 0);
     const hasLoaded = !isLoading;
    
@@ -27,7 +30,11 @@ export default function Home()
         if(poke.length === 0){
             getPokemon(10, setPoke);
         }
-    }, [currentUser, poke ]);
+        if(isFinished){
+            // redirect('/test');
+            console.log('redirected')
+        }
+    }, [currentUser, poke, isFinished ]);
     return (
         <Container>
             <Box>
@@ -91,7 +98,7 @@ export default function Home()
                             }}
                         >
                             <BottomNavigationAction label="Timer" icon={<AccessTime/>}/>
-                            <BottomNavigationAction label={<Timer seconds={30} />} />
+                            <BottomNavigationAction label={<Timer seconds={355} finished={setIsFinished} />} />
                         </BottomNavigation>
 
 
