@@ -10,6 +10,8 @@ const getRandBtwn = (begin, end) => {
 
 };
 
+export const uniqueKey = () => Date.now() * Math.random();
+
 export const convStat = (stat) => {
     return (stat * 0.1).toFixed(1);
 }

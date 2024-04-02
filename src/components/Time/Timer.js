@@ -1,8 +1,8 @@
 
-import React, {useState, useEffect, useRef}  from 'react';
+import React, {useState, useEffect}  from 'react';
 import { usePrevious } from '../../hooks/state';
 
-export default function Timer ({minutes = 0, seconds = 0, finished}) {
+export default function Timer ({minutes = 0, seconds = 0, loaded = false, finished}) {
     const [timer, setTimer] = useState("");
     const [count, setCount] = useState(0);
     const totalSeconds = (minutes * 60) + seconds;
@@ -21,13 +21,9 @@ export default function Timer ({minutes = 0, seconds = 0, finished}) {
     }
     const updateTimer = () => {
         const secondsLeft = timeRemaining % 60;
-        // console.log("seconds left "+ secondsLeft)
         const hasMinutes = totalSeconds >= 60 ;
-        // console.log("has minutes "+ hasMinutes)
         const actualMinute = hasMinutes ? ((timeRemaining - secondsLeft) / 60).toFixed(0) : 0;
-        // console.log("actual minute "+ actualMinute)
         const actualSeconds = getSeconds(secondsLeft);
-        // console.log("actual seconds "+ actualSeconds)
         setTimer(actualMinute+actualSeconds);
     };
 
@@ -37,11 +33,10 @@ export default function Timer ({minutes = 0, seconds = 0, finished}) {
     }
 
     useEffect(() => {
-        if(timer === ""){
+        if(timer === "" && loaded){
             updateTimer();
             setTimeout(() => countDown(totalSeconds),1000);
-        }else if( timeRemaining != prevTime && timeRemaining >= 0 ){
-        // }else if( timeRemaining != prevTime.current && timeRemaining >= 0 ){
+        }else if( timeRemaining != prevTime && timeRemaining >= 0  && loaded){
             updateTimer();
             setTimeout(() => countDown(timeRemaining),1000);
            
@@ -49,15 +44,9 @@ export default function Timer ({minutes = 0, seconds = 0, finished}) {
         
         if(timeRemaining < 0){
             finished(true);
-            // console.log("count:"+ count);
-            // console.log("total seconds:"+ totalSeconds);
-            // console.log("time remaining:"+ timeRemaining);
-            // console.log(timeRemaining == (totalSeconds - count));
-            // console.log('foo');
         }
-        // prevTime.current = timeRemaining
 
-    },[timer, timeRemaining, count])
+    },[timer, timeRemaining, count, loaded])
     
 
  return (

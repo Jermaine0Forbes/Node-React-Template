@@ -1,11 +1,11 @@
-import React, {useContext, useState, useEffect}  from 'react';
+import React, {useContext, useState, useEffect, Fragment}  from 'react';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import {List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar, BottomNavigation, BottomNavigationAction} from '@material-ui/core';
 import { useNavigate } from "react-router-dom";
 import Typography from '@material-ui/core/Typography';
 import {AuthContext} from '../providers/AuthProvider';
-import {getInch, getPound, convStat, getPokemon} from '../services/publicApi';
+import {getInch, getPound, convStat, getPokemon, uniqueKey} from '../services/publicApi';
 import WhileLoading from '../components/Loading/WhileLoading';
 import Timer from '../components/Time/Timer';
 import { AccessTime } from '@mui/icons-material';
@@ -28,7 +28,7 @@ export default function Home()
             setName(null);
         }
         if(poke.length === 0){
-            getPokemon(10, setPoke);
+            getPokemon(100, setPoke);
         }
         if(isFinished){
             // redirect('/test');
@@ -55,31 +55,30 @@ export default function Home()
                                             poke.map((e,i) => {
 
                                                 return (
-                                                <>
-                                                <ListItem  key={i} alignItems='flex-start'>
-                                                    <ListItemAvatar>
-                                                        <Avatar src={e?.sprites?.front_default} />
-                                                    </ListItemAvatar>
-                                                    <ListItemText
-                                                        primary={e.name}
-                                                        secondary={
-                                                            <>
-                                                            <Typography component="span" sx={{display: 'block'}}>id: {e.order}</Typography>
-                                                            <br/>
-                                                            <Typography component="span">
-                                                                height: {convStat(e.height)} meters | {getInch(e.height)} inches
-                                                            </Typography>
-                                                            <br/>
-                                                            <Typography component="span">
-                                                                weight: {convStat(e.weight)} kilograms | {getPound(e.weight)} pounds
-                                                            </Typography>
-                                                            </>
-                                                        }
-                                                    />
-                                                </ListItem>
-                                                <Divider key={(i+1000)*3.54} />
-                                                
-                                                </>
+                                                <Fragment  key={'fragment-'+uniqueKey()}>
+                                                    <ListItem   alignItems='flex-start'>
+                                                        <ListItemAvatar>
+                                                            <Avatar  src={e?.sprites?.front_default} />
+                                                        </ListItemAvatar>
+                                                        <ListItemText 
+                                                            primary={e.name}
+                                                            secondary={
+                                                                <>
+                                                                <Typography  component="span" sx={{display: 'block'}}>id: {e.order}</Typography>
+                                                                <br/>
+                                                                <Typography component="span">
+                                                                    height: {convStat(e.height)} meters | {getInch(e.height)} inches
+                                                                </Typography>
+                                                                <br/>
+                                                                <Typography  component="span">
+                                                                    weight: {convStat(e.weight)} kilograms | {getPound(e.weight)} pounds
+                                                                </Typography>
+                                                                </>
+                                                            }
+                                                        />
+                                                    </ListItem>
+                                                    <Divider/>
+                                                </Fragment>
                                                 );
                                             })
                                         }
@@ -98,10 +97,8 @@ export default function Home()
                             }}
                         >
                             <BottomNavigationAction label="Timer" icon={<AccessTime/>}/>
-                            <BottomNavigationAction label={<Timer seconds={355} finished={setIsFinished} />} />
+                            <BottomNavigationAction label={<Timer seconds={355} loaded={hasLoaded} finished={setIsFinished} />} />
                         </BottomNavigation>
-
-
                     </Box>
                 </main>
             </Box>
