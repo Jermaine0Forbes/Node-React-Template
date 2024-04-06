@@ -64,7 +64,7 @@ export default function Home()
                                                             primary={e.name}
                                                             secondary={
                                                                 <>
-                                                                <Typography  component="span" sx={{display: 'block'}}>id: {e.order}</Typography>
+                                                                <Typography  component="span" sx={{display: 'block'}}>id: {e.id}</Typography>
                                                                 <br/>
                                                                 <Typography component="span">
                                                                     height: {convStat(e.height)} meters | {getInch(e.height)} inches
@@ -97,7 +97,7 @@ export default function Home()
                             }}
                         >
                             <BottomNavigationAction label="Timer" icon={<AccessTime/>}/>
-                            <BottomNavigationAction label={<Timer seconds={355} loaded={hasLoaded} finished={setIsFinished} />} />
+                            <BottomNavigationAction label={<Timer minutes={1} seconds={355} loaded={hasLoaded} finished={setIsFinished} />} />
                         </BottomNavigation>
                     </Box>
                 </main>

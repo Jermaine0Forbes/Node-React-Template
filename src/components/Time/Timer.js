@@ -1,6 +1,7 @@
 
 import React, {useState, useEffect}  from 'react';
 import { usePrevious } from '../../hooks/state';
+import Box from '@material-ui/core/Box';
 
 export default function Timer ({minutes = 0, seconds = 0, loaded = false, finished}) {
     const [timer, setTimer] = useState("");
@@ -50,8 +51,10 @@ export default function Timer ({minutes = 0, seconds = 0, loaded = false, finish
     
 
  return (
-    <h2>
-        {timer}
-    </h2>
+    <Box>
+        <h2>
+            {timer}
+        </h2>
+    </Box>
  );
 }; 
