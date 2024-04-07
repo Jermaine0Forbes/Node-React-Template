@@ -15,9 +15,9 @@ Express & React template
 ## Current Tasks
 
 - ~~get public api, and have it list out at least 10 items~~
-- have a scrolling count down timer, that will redirect to another page when it hits 0
-- have a scrolling button, that can redirect you before timer runs out
-- have redirect page to allow items to ordered with drag and drop feature
+- ~~have a scrolling count down timer, that will redirect to another page when it hits 0~~
+- ~~have a scrolling button, that can redirect you before timer runs out~~
+- have redirect page to allow items to ordered with [drag and drop feature](https://github.com/atlassian/react-beautiful-dnd)
 - create a settings page that can change the amount of items or timer
 
 [go back home](home)

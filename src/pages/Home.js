@@ -8,7 +8,8 @@ import {AuthContext} from '../providers/AuthProvider';
 import {getInch, getPound, convStat, getPokemon, uniqueKey} from '../services/publicApi';
 import WhileLoading from '../components/Loading/WhileLoading';
 import Timer from '../components/Time/Timer';
-import { AccessTime } from '@mui/icons-material';
+// import { AccessTime } from '@mui/icons-material';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
 export default function Home()
 {
@@ -96,8 +97,9 @@ export default function Home()
                             setValue(newValue);
                             }}
                         >
-                            <BottomNavigationAction label="Timer" icon={<AccessTime/>}/>
-                            <BottomNavigationAction label={<Timer minutes={1} seconds={355} loaded={hasLoaded} finished={setIsFinished} />} />
+                            {/* <BottomNavigationAction label="Timer" icon={<AccessTime/>}/> */}
+                            <BottomNavigationAction label={<Timer  seconds={20} loaded={hasLoaded} finished={setIsFinished} />} />
+                            <BottomNavigationAction label="Ready" icon={<ArrowCircleRightIcon/>} onClick={() => setIsFinished(true)}/>
                         </BottomNavigation>
                     </Box>
                 </main>

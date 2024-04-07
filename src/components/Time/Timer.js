@@ -1,6 +1,7 @@
 
 import React, {useState, useEffect}  from 'react';
 import { usePrevious } from '../../hooks/state';
+import { AccessTime } from '@mui/icons-material';
 import Box from '@material-ui/core/Box';
 
 export default function Timer ({minutes = 0, seconds = 0, loaded = false, finished}) {
@@ -51,9 +52,10 @@ export default function Timer ({minutes = 0, seconds = 0, loaded = false, finish
     
 
  return (
-    <Box>
+    <Box sx={{display:'flex', alignItems: 'center', gridGap: '0.5em'}}>
+        <AccessTime/>
         <h2>
-            {timer}
+            {timer.length === 0 ? "0:00" : timer}
         </h2>
     </Box>
  );
