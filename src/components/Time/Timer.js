@@ -21,6 +21,7 @@ export default function Timer ({minutes = 0, seconds = 0, loaded = false, finish
         }
         return ":"+secondsLeft;
     }
+
     const updateTimer = () => {
         const secondsLeft = timeRemaining % 60;
         const hasMinutes = totalSeconds >= 60 ;
@@ -34,13 +35,16 @@ export default function Timer ({minutes = 0, seconds = 0, loaded = false, finish
         setCount(count + 1);
     }
 
+    const runTimer = (time) => {
+        updateTimer();
+        setTimeout(() => countDown(time),1000);
+    }
+
     useEffect(() => {
         if(timer === "" && loaded){
-            updateTimer();
-            setTimeout(() => countDown(totalSeconds),1000);
+            runTimer(totalSeconds);
         }else if( timeRemaining != prevTime && timeRemaining >= 0  && loaded){
-            updateTimer();
-            setTimeout(() => countDown(timeRemaining),1000);
+            runTimer(timeRemaining);
            
         }
         

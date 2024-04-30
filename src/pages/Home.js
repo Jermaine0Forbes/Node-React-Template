@@ -32,8 +32,8 @@ export default function Home()
             getPokemon(100, setPoke);
         }
         if(isFinished){
-            // redirect('/test');
-            console.log('redirected')
+            redirect('/test');
+            // console.log('redirected')
         }
     }, [currentUser, poke, isFinished ]);
     return (
