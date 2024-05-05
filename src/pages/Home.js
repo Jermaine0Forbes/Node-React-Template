@@ -8,6 +8,7 @@ import {AuthContext} from '../providers/AuthProvider';
 import {getInch, getPound, convStat, getPokemon, uniqueKey} from '../services/publicApi';
 import WhileLoading from '../components/Loading/WhileLoading';
 import Timer from '../components/Time/Timer';
+import { toJson } from '../services/util';
 // import { AccessTime } from '@mui/icons-material';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
@@ -16,11 +17,11 @@ export default function Home()
     const { currentUser} = useContext(AuthContext);
     const redirect = useNavigate();
     const [name, setName] = useState(null);
-    const [poke, setPoke] = useState([]);
+    const [pokemon, setPokemon] = useState([]);
     const seconds = 10;
     const [value, setValue] = useState([]);
     const [isFinished, setIsFinished] = useState(false);
-    const isLoading = !!(poke.length == 0);
+    const isLoading = !!(pokemon.length == 0);
     const hasLoaded = !isLoading;
    
     useEffect(() => {
@@ -29,16 +30,16 @@ export default function Home()
         }else{
             setName(null);
         }
-        if(poke.length === 0){
-            getPokemon(10, setPoke);
+        if(pokemon.length === 0){
+            getPokemon(10, setPokemon);
         }
         if(isFinished){
             sessionStorage.gotPokemon = true;
-            sessionStorage.setItem('test', { seconds, pokemon })
+            sessionStorage.setItem('test', toJson({ seconds, pokemon }));
             redirect('/test');
             // console.log('redirected')
         }
-    }, [currentUser, poke, isFinished ]);
+    }, [currentUser, pokemon, isFinished ]);
     return (
         <Container>
             <Box>
@@ -56,7 +57,7 @@ export default function Home()
                                 <>
                                     <List>
                                         {
-                                            poke.map((e,i) => {
+                                            pokemon.map((e,i) => {
 
                                                 return (
                                                 <Fragment  key={'fragment-'+uniqueKey()}>
