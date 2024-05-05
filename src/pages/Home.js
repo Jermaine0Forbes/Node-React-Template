@@ -17,6 +17,7 @@ export default function Home()
     const redirect = useNavigate();
     const [name, setName] = useState(null);
     const [poke, setPoke] = useState([]);
+    const seconds = 10;
     const [value, setValue] = useState([]);
     const [isFinished, setIsFinished] = useState(false);
     const isLoading = !!(poke.length == 0);
@@ -29,9 +30,11 @@ export default function Home()
             setName(null);
         }
         if(poke.length === 0){
-            getPokemon(100, setPoke);
+            getPokemon(10, setPoke);
         }
         if(isFinished){
+            sessionStorage.gotPokemon = true;
+            sessionStorage.setItem('test', { seconds, pokemon })
             redirect('/test');
             // console.log('redirected')
         }
@@ -98,7 +101,7 @@ export default function Home()
                             }}
                         >
                             {/* <BottomNavigationAction label="Timer" icon={<AccessTime/>}/> */}
-                            <BottomNavigationAction label={<Timer  seconds={20} loaded={hasLoaded} finished={setIsFinished} />} />
+                            <BottomNavigationAction label={<Timer  seconds={seconds} loaded={hasLoaded} finished={setIsFinished} />} />
                             <BottomNavigationAction label="Ready" icon={<ArrowCircleRightIcon/>} onClick={() => setIsFinished(true)}/>
                         </BottomNavigation>
                     </Box>

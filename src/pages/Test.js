@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
-import {List, ListItem, Divider, ListItemText, ListItemAvatar} from '@material-ui/core';
+import {List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar} from '@material-ui/core';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import {getInch, getPound, convStat, getPokemon, uniqueKey} from '../services/publicApi';
 
@@ -10,11 +10,11 @@ export default function Test()
     const [pokemon, setPokemon] = useState([]);
 
 // fake data generator    
-const getItems = count =>
-  Array.from({ length: count }, (v, k) => k).map(k => ({
-    id: `item-${k}`,
-    content: `item ${k}`
-  }));
+// const getItems = count =>
+//   Array.from({ length: count }, (v, k) => k).map(k => ({
+//     id: `item-${k}`,
+//     content: `item ${k}`
+//   }));
 
   // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -25,7 +25,7 @@ const reorder = (list, startIndex, endIndex) => {
     return result;
   }
 
-  const [items, setItems] = useState(getItems(10));
+//   const [items, setItems] = useState(getItems(10));
   
   
   
@@ -36,18 +36,22 @@ const reorder = (list, startIndex, endIndex) => {
     }
 
     const reorderedItems = reorder(
-      items,
+      pokemon,
       result.source.index,
       result.destination.index
     );
 
-    setItems(reorderedItems);
+    setPokemon(reorderedItems);
   }
 
   useEffect(() => {
 
     if(pokemon.length === 0){
-        getPokemon(100, setPokemon);
+        if(sessionStorage?.gotPokemon){
+            console.log('session storage data')
+            console.log(sessionStorage.getItem('test'))
+        }
+        getPokemon(10, setPokemon);
     }
     }, [pokemon]);
     
@@ -66,35 +70,20 @@ const reorder = (list, startIndex, endIndex) => {
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
                                     >{
-                                        pokemon.map((item,index) => (
-                                            <Draggable key={uniqueKey()} draggableId={uniqueKey()} index={index}>
+                                        pokemon.map((e,index) => (
+                                            <Draggable key={uniqueKey()} draggableId={'drag-'+index} index={index}>
                                                 {(provided) => (
-                                                    // <li
-                                                    // ref={provided.innerRef}
-                                                    // {...provided.draggableProps}
-                                                    // {...provided.dragHandleProps}
-                                                    // >
-                                                    //     {item.content}
-                                                    // </li>
-                                                <ListItem   alignItems='flex-start'>
+                                                <ListItem   
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                    alignItems='flex-start'
+                                                >
                                                 <ListItemAvatar>
                                                     <Avatar  src={e?.sprites?.front_default} />
                                                 </ListItemAvatar>
                                                 <ListItemText 
                                                     primary={e.name}
-                                                    secondary={
-                                                        <>
-                                                        <Typography  component="span" sx={{display: 'block'}}>id: {e.id}</Typography>
-                                                        <br/>
-                                                        <Typography component="span">
-                                                            height: {convStat(e.height)} meters | {getInch(e.height)} inches
-                                                        </Typography>
-                                                        <br/>
-                                                        <Typography  component="span">
-                                                            weight: {convStat(e.weight)} kilograms | {getPound(e.weight)} pounds
-                                                        </Typography>
-                                                        </>
-                                                    }
                                                 />
                                                 </ListItem>
                                                 )}
@@ -106,8 +95,6 @@ const reorder = (list, startIndex, endIndex) => {
                                 )}
                                 </Droppable>
                             </DragDropContext>
-
-
 
                         )
                     }
