@@ -10,6 +10,26 @@ const getRandBtwn = (begin, end) => {
 
 };
 
+export const randomizeArr = (arr) => {
+    const last = arr.length - 1;
+    const entries = [];
+    const randArr = [];
+    let x = 0;
+
+    while( x < arr.length){
+
+        let rand = getRandBtwn(0, last);
+        if(entries.some((e) => e == rand)){
+            continue;
+        }
+        entries.push(rand);
+        randArr.push(arr[rand]);
+        x++;
+    }
+
+    return randArr;
+}
+
 export const uniqueKey = () => Date.now() * Math.random();
 
 export const convStat = (stat) => {

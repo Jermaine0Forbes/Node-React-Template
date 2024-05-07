@@ -19,6 +19,8 @@ Express & React template
 - ~~have a scrolling button, that can redirect you before timer runs out~~
 - have redirect page to allow items to ordered with [drag and drop feature](https://github.com/atlassian/react-beautiful-dnd)
 - create a settings page that can change the amount of items or timer
+- save info if you got the answers correct/incorrect
+- create a pokemon service file
 
 [go back home](home)
 
