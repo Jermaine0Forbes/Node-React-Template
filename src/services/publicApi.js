@@ -6,26 +6,33 @@ const defaultArgs = {
 };
 
 const getRandBtwn = (begin, end) => {
-    return Math.floor(Math.random() * end) + begin;
+    return Math.ceil(Math.random() * end) + begin;
 
 };
 
+export const getNames = (arr) => arr.map((e) => e.name);
+
 export const randomizeArr = (arr) => {
-    const last = arr.length - 1;
+    const length = arr.length - 1;
     const entries = [];
     const randArr = [];
     let x = 0;
+    let rand = 0;
+    let last = length;
 
-    while( x < arr.length){
+    for(x; x <= length; x++){
+        last =  arr.length - 1;  
+        rand = getRandBtwn( 0, last);
 
-        let rand = getRandBtwn(0, last);
-        if(entries.some((e) => e == rand)){
-            continue;
-        }
+        // if(entries.some((e) => e == rand)){
+        //     continue;
+        // }
         entries.push(rand);
         randArr.push(arr[rand]);
-        x++;
+        arr.splice(rand,1);
     }
+    console.log('entries')
+    console.log(entries)
 
     return randArr;
 }

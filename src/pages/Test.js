@@ -3,7 +3,7 @@ import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import {List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar} from '@material-ui/core';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-import {randomizeArr, getPokemon, uniqueKey} from '../services/publicApi';
+import {randomizeArr, getNames, getPokemon, uniqueKey} from '../services/publicApi';
 import {parse} from "../services/util";
 
 export default function Test()
@@ -45,6 +45,8 @@ const reorder = (list, startIndex, endIndex) => {
     setPokemon(reorderedItems);
   }
 
+  const arr = [ 1, 2,3,4,5,6,7];
+
   useEffect(() => {
 
     if(pokemon.length === 0){
@@ -53,12 +55,14 @@ const reorder = (list, startIndex, endIndex) => {
             // console.log(parse(sessionStorage.getItem('test')))
             const test = parse(sessionStorage.getItem('test'));
             setPokemon(test?.pokemon);
-            console.log(test)
-            // console.log(randomizeArr(test?.pokemon))
-            console.log('foo');
+            let names = getNames(test?.pokemon)
+            console.log(names);
+            console.log(randomizeArr(names))
 
         }
         // getPokemon(10, setPokemon);
+        // console.log(arr);
+        // console.log(randomizeArr(arr))
     }
     }, [pokemon]);
     
