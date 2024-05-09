@@ -19,6 +19,11 @@ export const randomizeArr = (arr) => {
     let x = 0;
     let rand = 0;
     let last = length;
+    let split = x.length % 2 === 0 ? x.length/2 : Math.floor(x.length/2)+x.length % 2 ;
+    const firstHalf = shouldReverse(arr.slice(0, split));
+    const secondHalf = shouldReverse(arr.slice(split));
+
+
 
     for(x; x <= length; x++){
         last =  arr.length - 1;  
@@ -35,6 +40,10 @@ export const randomizeArr = (arr) => {
     console.log(entries)
 
     return randArr;
+}
+
+const shouldReverse = (arr) => {
+   return  getRandBtwn(1, 50) > 25? arr.reverse() : arr; 
 }
 
 export const uniqueKey = () => Date.now() * Math.random();
