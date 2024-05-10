@@ -1,21 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
-import {List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar} from '@material-ui/core';
+import {List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar, BottomNavigation, BottomNavigationAction} from '@material-ui/core';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-import {randomizeArr, getNames, getPokemon, uniqueKey} from '../services/publicApi';
+import {randomizeArr, getNames, uniqueKey} from '../services/publicApi';
 import {parse} from "../services/util";
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
 export default function Test()
 {
     const [pokemon, setPokemon] = useState([]);
-
-// fake data generator    
-// const getItems = count =>
-//   Array.from({ length: count }, (v, k) => k).map(k => ({
-//     id: `item-${k}`,
-//     content: `item ${k}`
-//   }));
+    const [value, setValue] = useState([]);
 
   // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -54,10 +49,11 @@ const reorder = (list, startIndex, endIndex) => {
             console.log('session storage data')
             // console.log(parse(sessionStorage.getItem('test')))
             const test = parse(sessionStorage.getItem('test'));
-            setPokemon(test?.pokemon);
+            // setPokemon(test?.pokemon);
             let names = getNames(test?.pokemon)
             console.log(names);
-            console.log(randomizeArr(names))
+            // console.log(randomizeArr(names))
+            setPokemon(randomizeArr(test?.pokemon));
 
         }
         // getPokemon(10, setPokemon);
@@ -109,6 +105,18 @@ const reorder = (list, startIndex, endIndex) => {
 
                         )
                     }
+                    <Box sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+                        <BottomNavigation 
+                            showLabels
+                            value={value}
+                            onChange={(event, newValue) => {
+                            setValue(newValue);
+                            }}
+                        >
+                            {/* <BottomNavigationAction label="Timer" icon={<AccessTime/>}/> */}
+                            <BottomNavigationAction label="Done" icon={<ArrowCircleRightIcon/>} onClick={() => console.log('saved')}/>
+                        </BottomNavigation>
+                    </Box>
                 </main>
             </Box>
         </Container>

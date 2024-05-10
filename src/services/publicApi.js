@@ -13,33 +13,41 @@ const getRandBtwn = (begin, end) => {
 export const getNames = (arr) => arr.map((e) => e.name);
 
 export const randomizeArr = (arr) => {
+    
+    let split = arr.length % 2 === 0 ? arr.length/2 : Math.floor(arr.length/2)+arr.length % 2 ;
+    let totalArr = [];
+    let randArr = [];
+
+    totalArr = totalArr.concat(shuffleArr(arr.slice(0, split)));
+    totalArr = totalArr.concat(shuffleArr(arr.slice(split)));
+    console.log(totalArr)
+
+    randArr = shuffleArr(totalArr);
+
+    // console.log('rand array are')
+    return randArr;
+}
+
+const shuffleArr = (arr) => {
     const length = arr.length - 1;
     const entries = [];
-    const randArr = [];
+    const shuffle = [];
     let x = 0;
-    let rand = 0;
     let last = length;
-    let split = x.length % 2 === 0 ? x.length/2 : Math.floor(x.length/2)+x.length % 2 ;
-    const firstHalf = shouldReverse(arr.slice(0, split));
-    const secondHalf = shouldReverse(arr.slice(split));
-
-
+    let rand = 0;
 
     for(x; x <= length; x++){
         last =  arr.length - 1;  
         rand = getRandBtwn( 0, last);
 
-        // if(entries.some((e) => e == rand)){
-        //     continue;
-        // }
         entries.push(rand);
-        randArr.push(arr[rand]);
+        shuffle.push(arr[rand]);
         arr.splice(rand,1);
     }
-    console.log('entries')
-    console.log(entries)
+    // console.log('entries')
+    // console.log(entries)
 
-    return randArr;
+    return shuffle;
 }
 
 const shouldReverse = (arr) => {

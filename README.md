@@ -21,6 +21,8 @@ Express & React template
 - create a settings page that can change the amount of items or timer
 - save info if you got the answers correct/incorrect
 - create a pokemon service file
+- migrate functions that should be in a util file
+- add stop timer to test page 
 
 [go back home](home)
 

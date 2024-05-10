@@ -31,7 +31,7 @@ export default function Home()
             setName(null);
         }
         if(pokemon.length === 0){
-            getPokemon(30, setPokemon);
+            getPokemon(10, setPokemon);
         }
         if(isFinished){
             sessionStorage.gotPokemon = true;
