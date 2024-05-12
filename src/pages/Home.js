@@ -1,13 +1,11 @@
 import React, {useContext, useState, useEffect, Fragment}  from 'react';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
-import {List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar, BottomNavigation, BottomNavigationAction} from '@material-ui/core';
+import {List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar, BottomNavigation, BottomNavigationAction, TextField} from '@material-ui/core';
 import { useNavigate } from "react-router-dom";
 import Typography from '@material-ui/core/Typography';
 import {AuthContext} from '../providers/AuthProvider';
 import {getInch, getPound, convStat, getPokemon, uniqueKey} from '../services/publicApi';
-import WhileLoading from '../components/Loading/WhileLoading';
-import Timer from '../components/Time/Timer';
 import { toJson } from '../services/util';
 // import { AccessTime } from '@mui/icons-material';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
@@ -51,49 +49,26 @@ export default function Home()
 
 
                     }
-                    <WhileLoading isLoading={isLoading}>
-                        {
-                            hasLoaded && (
-                                <>
-                                    <List>
-                                        {
-                                            pokemon.map((e,i) => {
+                    <Box component="section">
+                    <TextField
+                        label="With normal TextField"
+                        id="outlined-start-adornment"
+                        sx={{ m: 1, width: '25ch' }}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">kg</InputAdornment>,
+                        }}
+                    />
+                    <TextField
+                    label="With normal TextField"
+                    id="outlined-start-adornment"
+                    sx={{ m: 1, width: '25ch' }}
+                    InputProps={{
+                        startAdornment: <InputAdornment position="start">kg</InputAdornment>,
+                    }}
+                    />
+                    </Box>
 
-                                                return (
-                                                <Fragment  key={'fragment-'+uniqueKey()}>
-                                                    <ListItem   alignItems='flex-start'>
-                                                        <ListItemAvatar>
-                                                            <Avatar  src={e?.sprites?.front_default} />
-                                                        </ListItemAvatar>
-                                                        <ListItemText 
-                                                            primary={e.name}
-                                                            secondary={
-                                                                <>
-                                                                <Typography  component="span" sx={{display: 'block'}}>id: {e.id}</Typography>
-                                                                <br/>
-                                                                <Typography component="span">
-                                                                    height: {convStat(e.height)} meters | {getInch(e.height)} inches
-                                                                </Typography>
-                                                                <br/>
-                                                                <Typography  component="span">
-                                                                    weight: {convStat(e.weight)} kilograms | {getPound(e.weight)} pounds
-                                                                </Typography>
-                                                                </>
-                                                            }
-                                                        />
-                                                    </ListItem>
-                                                    <Divider/>
-                                                </Fragment>
-                                                );
-                                            })
-                                        }
-
-                                    </List>
-                                </>
-                            )
-                        }
-                    </WhileLoading>
-                    <Box sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+                    {/* <Box sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
                         <BottomNavigation 
                             showLabels
                             value={value}
@@ -101,11 +76,10 @@ export default function Home()
                             setValue(newValue);
                             }}
                         >
-                            {/* <BottomNavigationAction label="Timer" icon={<AccessTime/>}/> */}
                             <BottomNavigationAction label={<Timer  seconds={seconds} loaded={hasLoaded} finished={setIsFinished} />} />
                             <BottomNavigationAction label="Ready" icon={<ArrowCircleRightIcon/>} onClick={() => setIsFinished(true)}/>
                         </BottomNavigation>
-                    </Box>
+                    </Box> */}
                 </main>
             </Box>
         </Container>

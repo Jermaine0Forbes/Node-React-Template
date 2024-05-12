@@ -40,13 +40,13 @@ const reorder = (list, startIndex, endIndex) => {
     setPokemon(reorderedItems);
   }
 
-  const arr = [ 1, 2,3,4,5,6,7];
+//   const arr = [ 1, 2,3,4,5,6,7];
 
   useEffect(() => {
 
     if(pokemon.length === 0){
         if(sessionStorage?.gotPokemon){
-            console.log('session storage data')
+            // console.log('session storage data')
             // console.log(parse(sessionStorage.getItem('test')))
             const test = parse(sessionStorage.getItem('test'));
             // setPokemon(test?.pokemon);

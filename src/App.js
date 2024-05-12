@@ -12,6 +12,7 @@ import List from "./pages/List";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import Forbidden from "./pages/Forbidden";
+import Settings from "./pages/Settings";
 import AuthProvider from "./providers/AuthProvider";
 import ProtectedRoute from "./pages/ProtectedRoute";
 
@@ -32,7 +33,7 @@ export default function App()
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Layout />}>
-                  <Route index element={<Home />} />
+                  <Route index element={<Settings />} />
                     <Route path="create" element={
                       <ProtectedRoute level={2}>
                         <Create />
