@@ -1,14 +1,14 @@
-import React, {useContext, useState, useEffect, Fragment}  from 'react';
+import React, {useContext, useState, useEffect, useRef}  from 'react';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
-import { TextField, InputAdornment, Grid, FormControl, FormGroup} from '@material-ui/core';
+import {InputAdornment, Grid, FormControl, FormGroup} from '@material-ui/core';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import Typography from '@material-ui/core/Typography';
 import {AuthContext} from '../providers/AuthProvider';
 import {getInch, getPound, convStat, getPokemon, uniqueKey} from '../services/publicApi';
 import { toJson } from '../services/util';
-// import { AccessTime } from '@mui/icons-material';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
 export default function Home()
 {
@@ -17,42 +17,67 @@ export default function Home()
     const [name, setName] = useState(null);
     const [pokemon, setPokemon] = useState([]);
     const seconds = 10;
-    const [value, setValue] = useState([]);
+    const [values, setValues] = useState({});
     const [isFinished, setIsFinished] = useState(false);
     const isLoading = !!(pokemon.length == 0);
     const hasLoaded = !isLoading;
-   
-    // useEffect(() => {
+    const formRef = useRef(null);
 
-    // }, [ ]);
+    const handleChange = (evt) => {
+        const {name , value} = evt.target;
+        console.log(evt.target)
+        setValues({...values, [name]: parseInt(value)});
+        console.log(values);
+    }
+
+    const handleClick = (evt) => {
+        evt.preventDefault();
+        if(['amount', 'time'].some((item) => !Object.hasOwn(values, item)))
+         {
+
+            return;
+         }  
+         redirect('/list'); 
+
+        // const options = {};
+        // const form = new FormData(formRef.current);
+        // for (const [key, value] of form.entries()){
+        //     options[key] = value;
+        // };
+    }
+   
+    useEffect(() => {
+
+    }, [ ]);
     return (
         <Container>
             <Box>
                 <main>
-                    <Typography component="h3">Settings</Typography>
+                    <Typography variant="h3" >Settings</Typography>
 
-                    <Box component="form">
-                        <Grid container style={{display: "flow"}}>
-                            {/* <FormControl> */}
-                                <TextField
-                                    label="Number of Pokemon"
-                                    id="outlined-start-adornment"
-                                    sx={{ m: 1, width: '25ch' }}
-                                    type="number"
-                                />
-                            {/* </FormControl> */}
-                            {/* <FormControl> */}
-                                <TextField
-                                    label="Time to memorize"
-                                    id="outlined-start-adornment-2"
-                                    sx={{ m: 1, width: '25ch' }}
-                                    InputProps={{
-                                        startAdornment: <InputAdornment position="start">seconds</InputAdornment>,
-                                    }}
-                                />
-                            {/* </FormControl> */}
-                        </Grid>
-
+                    <Box component="form" ref={formRef}>
+                                    <TextField
+                                        label="Number of Pokemon"
+                                        id="outlined-start-adornment"
+                                        sx={{ m: 1, width: '25ch' }}
+                                        type="number"
+                                        name="amount"
+                                        onChange={handleChange}
+                                    />
+                                    <TextField
+                                        label="Time to memorize"
+                                        id="outlined-start-adornment-2"
+                                        name="time"
+                                        onChange={handleChange}
+                                        sx={{ m: 1, width: '25ch' }}
+                                        InputProps={{
+                                            startAdornment: <InputAdornment position="start">seconds</InputAdornment>,
+                                        }}
+                                    />
+                             <Grid>
+                                <Button variant="contained"  onClick={handleClick}>Submit</Button>
+                                
+                            </Grid>           
                     </Box>
                 </main>
             </Box>
