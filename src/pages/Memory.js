@@ -8,17 +8,17 @@ import {AuthContext} from '../providers/AuthProvider';
 import {getInch, getPound, convStat, getPokemon, uniqueKey} from '../services/publicApi';
 import WhileLoading from '../components/Loading/WhileLoading';
 import Timer from '../components/Time/Timer';
-import { toJson } from '../services/util';
+import { toJson, parse } from '../services/util';
 // import { AccessTime } from '@mui/icons-material';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
-export default function Home()
+export default function Memory()
 {
     const { currentUser} = useContext(AuthContext);
     const redirect = useNavigate();
     const [name, setName] = useState(null);
     const [pokemon, setPokemon] = useState([]);
-    const seconds = 10;
+    const [seconds, setSeconds] = useState(30);
     const [value, setValue] = useState([]);
     const [isFinished, setIsFinished] = useState(false);
     const isLoading = !!(pokemon.length == 0);
@@ -31,7 +31,14 @@ export default function Home()
             setName(null);
         }
         if(pokemon.length === 0){
-            getPokemon(10, setPokemon);
+            const settings = parse(sessionStorage.getItem('settings')) ?? false;
+            if(settings){
+                setSeconds(settings?.time)
+                getPokemon(settings?.amount, setPokemon);
+            }else{
+
+                getPokemon(10, setPokemon);
+            }
         }
         if(isFinished){
             sessionStorage.gotPokemon = true;

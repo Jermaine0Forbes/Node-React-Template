@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import Forbidden from "./pages/Forbidden";
 import Settings from "./pages/Settings";
+import Memory from "./pages/Memory";
 import AuthProvider from "./providers/AuthProvider";
 import ProtectedRoute from "./pages/ProtectedRoute";
 
@@ -40,6 +41,7 @@ export default function App()
                       </ProtectedRoute>
                   } />
                   <Route path="test" element={<Test />} />
+                  <Route path="memory" element={<Memory />} />
                   <Route path="account" element={<Account />} />
                   <Route path="login" element={<Login />} />
                   <Route path="register" element={<Register />} />

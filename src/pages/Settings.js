@@ -34,10 +34,11 @@ export default function Home()
         evt.preventDefault();
         if(['amount', 'time'].some((item) => !Object.hasOwn(values, item)))
          {
-
+            console.log("at least one field hasn't been filled")
             return;
-         }  
-         redirect('/list'); 
+         }
+         sessionStorage.setItem('settings', toJson(values));  
+         redirect('/memory'); 
 
         // const options = {};
         // const form = new FormData(formRef.current);
