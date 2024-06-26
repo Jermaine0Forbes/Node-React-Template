@@ -18,7 +18,9 @@ export default function Memory()
     const redirect = useNavigate();
     const [name, setName] = useState(null);
     const [pokemon, setPokemon] = useState([]);
-    const [seconds, setSeconds] = useState(30);
+    const [seconds, setSeconds] = useState(0);
+    const defaultSeconds = 30;
+    const defaultPokeNum = 10;
     const [value, setValue] = useState([]);
     const [isFinished, setIsFinished] = useState(false);
     const isLoading = !!(pokemon.length == 0);
@@ -36,8 +38,8 @@ export default function Memory()
                 setSeconds(settings?.time)
                 getPokemon(settings?.amount, setPokemon);
             }else{
-
-                getPokemon(10, setPokemon);
+                setSeconds(defaultSeconds)
+                getPokemon(defaultPokeNum, setPokemon);
             }
         }
         if(isFinished){
@@ -109,6 +111,7 @@ export default function Memory()
                             }}
                         >
                             {/* <BottomNavigationAction label="Timer" icon={<AccessTime/>}/> */}
+
                             <BottomNavigationAction label={<Timer  seconds={seconds} loaded={hasLoaded} finished={setIsFinished} />} />
                             <BottomNavigationAction label="Ready" icon={<ArrowCircleRightIcon/>} onClick={() => setIsFinished(true)}/>
                         </BottomNavigation>

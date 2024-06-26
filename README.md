@@ -18,11 +18,12 @@ Express & React template
 - ~~have a scrolling count down timer, that will redirect to another page when it hits 0~~
 - ~~have a scrolling button, that can redirect you before timer runs out~~
 - ~~have redirect page to allow items to ordered with [drag and drop feature](https://github.com/atlassian/react-beautiful-dnd)~~
-- create a settings page that can change the amount of items or timer
+- ~~create a settings page that can change the amount of items or timer~~
 - save info if you got the answers correct/incorrect
 - create a pokemon service file
 - migrate functions that should be in a util file
 - add stop timer to test page 
+- extract api values so it's a lot easier to store a large set in session storage
 
 [go back home](home)
 

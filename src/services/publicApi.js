@@ -12,6 +12,9 @@ const getRandBtwn = (begin, end) => {
 
 export const getNames = (arr) => arr.map((e) => e.name);
 
+
+export const getIdOrder = (arr) => arr.map((e) => e.id);
+
 export const randomizeArr = (arr) => {
     
     let split = arr.length % 2 === 0 ? arr.length/2 : Math.floor(arr.length/2)+arr.length % 2 ;

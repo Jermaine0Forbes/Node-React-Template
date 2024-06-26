@@ -10,18 +10,11 @@ import {AuthContext} from '../providers/AuthProvider';
 import {getInch, getPound, convStat, getPokemon, uniqueKey} from '../services/publicApi';
 import { toJson } from '../services/util';
 
-export default function Home()
+export default function Settings()
 {
     const { currentUser} = useContext(AuthContext);
     const redirect = useNavigate();
-    const [name, setName] = useState(null);
-    const [pokemon, setPokemon] = useState([]);
-    const seconds = 10;
     const [values, setValues] = useState({});
-    const [isFinished, setIsFinished] = useState(false);
-    const isLoading = !!(pokemon.length == 0);
-    const hasLoaded = !isLoading;
-    const formRef = useRef(null);
 
     const handleChange = (evt) => {
         const {name , value} = evt.target;
@@ -40,45 +33,36 @@ export default function Home()
          sessionStorage.setItem('settings', toJson(values));  
          redirect('/memory'); 
 
-        // const options = {};
-        // const form = new FormData(formRef.current);
-        // for (const [key, value] of form.entries()){
-        //     options[key] = value;
-        // };
     }
    
-    useEffect(() => {
-
-    }, [ ]);
     return (
         <Container>
             <Box>
                 <main>
                     <Typography variant="h3" >Settings</Typography>
 
-                    <Box component="form" ref={formRef}>
-                                    <TextField
-                                        label="Number of Pokemon"
-                                        id="outlined-start-adornment"
-                                        sx={{ m: 1, width: '25ch' }}
-                                        type="number"
-                                        name="amount"
-                                        onChange={handleChange}
-                                    />
-                                    <TextField
-                                        label="Time to memorize"
-                                        id="outlined-start-adornment-2"
-                                        name="time"
-                                        onChange={handleChange}
-                                        sx={{ m: 1, width: '25ch' }}
-                                        InputProps={{
-                                            startAdornment: <InputAdornment position="start">seconds</InputAdornment>,
-                                        }}
-                                    />
-                             <Grid>
-                                <Button variant="contained"  onClick={handleClick}>Submit</Button>
-                                
-                            </Grid>           
+                    <Box component="form">
+                        <TextField
+                            label="Number of Pokemon"
+                            id="outlined-start-adornment"
+                            sx={{ m: 1, width: '25ch' }}
+                            type="number"
+                            name="amount"
+                            onChange={handleChange}
+                        />
+                        <TextField
+                            label="Time to memorize"
+                            id="outlined-start-adornment-2"
+                            name="time"
+                            onChange={handleChange}
+                            sx={{ m: 1, width: '25ch' }}
+                            InputProps={{
+                                startAdornment: <InputAdornment position="start">seconds</InputAdornment>,
+                            }}
+                        />
+                        <Grid>
+                            <Button variant="contained"  onClick={handleClick}>Submit</Button>
+                        </Grid>           
                     </Box>
                 </main>
             </Box>
