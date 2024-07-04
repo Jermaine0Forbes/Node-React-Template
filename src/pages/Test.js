@@ -11,6 +11,7 @@ export default function Test()
 {
     const [pokemon, setPokemon] = useState([]);
     const [value, setValue] = useState([]);
+    const [pokeOrder, setPokeOrder] = useState({});
 
   // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -50,14 +51,17 @@ const reorder = (list, startIndex, endIndex) => {
             // console.log(parse(sessionStorage.getItem('test')))
             const test = parse(sessionStorage.getItem('test'));
             // setPokemon(test?.pokemon);
-            let names = getNames(test?.pokemon)
-            console.log(names);
+            const originNames = getNames(test?.pokemon)
+            console.log(originNames);
             // console.log(randomizeArr(names))
-            setPokemon(randomizeArr(test?.pokemon));
+            const randPokemon = randomizeArr(test?.pokemon);
+            const randNames = getNames(randPokemon);
+            setPokemon(randPokemon);
+            setPokeOrder({originNames, randNames});
 
         }
         // getPokemon(10, setPokemon);
-        // console.log(arr);
+        console.log(pokeOrder);
         // console.log(randomizeArr(arr))
     }
     }, [pokemon]);
