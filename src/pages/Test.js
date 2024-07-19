@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import {List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar, BottomNavigation, BottomNavigationAction} from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import {randomizeArr, getNames, uniqueKey} from '../services/publicApi';
 import {parse} from "../services/util";
@@ -70,7 +71,7 @@ const reorder = (list, startIndex, endIndex) => {
         <Container>
             <Box>
                 <main>
-                    tests page
+                    <Typography variant="h3" >Test</Typography>
 
                     {
                         pokemon.length > 0 && (

@@ -56,7 +56,7 @@ export default function Memory()
                     { name ? 
                         <Typography component="h4">Welcome, {name}!</Typography>
                         :
-                        <div>Memory</div>
+                        <Typography variant="h3" >Memory</Typography>
 
 
                     }
