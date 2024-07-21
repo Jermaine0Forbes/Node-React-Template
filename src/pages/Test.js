@@ -1,18 +1,18 @@
 import React, {useState, useEffect} from 'react';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
-import {List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar, BottomNavigation, BottomNavigationAction} from '@material-ui/core';
+import {List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar, BottomNavigation, BottomNavigationAction, Button} from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import {randomizeArr, getNames, uniqueKey} from '../services/publicApi';
-import {parse} from "../services/util";
+import {parse, compare} from "../services/util";
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
 export default function Test()
 {
     const [pokemon, setPokemon] = useState([]);
     const [value, setValue] = useState([]);
-    const [pokeOrder, setPokeOrder] = useState({});
+    const [pokeOrder, setPokeOrder] = useState([]);
 
   // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -53,18 +53,27 @@ const reorder = (list, startIndex, endIndex) => {
             const test = parse(sessionStorage.getItem('test'));
             // setPokemon(test?.pokemon);
             const originNames = getNames(test?.pokemon)
+            console.log('original order of pokemon names')
             console.log(originNames);
             // console.log(randomizeArr(names))
             const randPokemon = randomizeArr(test?.pokemon);
             const randNames = getNames(randPokemon);
+            console.log('randomized order of pokemon')
+            console.log(randNames);
             setPokemon(randPokemon);
-            setPokeOrder({originNames, randNames});
+            setPokeOrder(originNames);
 
         }
         // getPokemon(10, setPokemon);
         console.log(pokeOrder);
         // console.log(randomizeArr(arr))
+    }else{
+       const currentNames = getNames(pokemon);
+       console.log('current names');
+       console.log(currentNames)
+       console.log("the current order is "+ compare( pokeOrder, currentNames))
     }
+
     }, [pokemon]);
     
     return (
@@ -91,6 +100,7 @@ const reorder = (list, startIndex, endIndex) => {
                                                     {...provided.dragHandleProps}
                                                     alignItems='flex-start'
                                                 >
+                                                <Typography variant="h5" >{index+1}.</Typography>
                                                 <ListItemAvatar>
                                                     <Avatar  src={e?.sprites?.front_default} />
                                                 </ListItemAvatar>
@@ -115,9 +125,11 @@ const reorder = (list, startIndex, endIndex) => {
                             showLabels
                             value={value}
                             onChange={(event, newValue) => {
-                            setValue(newValue);
+                                setValue(newValue);
                             }}
                         >
+                            {/* <Button color='secondary' variant={'contained'} onClick={() => console.log('saved')}> Submit</Button> */}
+                           
                             {/* <BottomNavigationAction label="Timer" icon={<AccessTime/>}/> */}
                             <BottomNavigationAction label="Done" icon={<ArrowCircleRightIcon/>} onClick={() => console.log('saved')}/>
                         </BottomNavigation>

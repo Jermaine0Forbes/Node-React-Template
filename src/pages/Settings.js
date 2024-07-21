@@ -18,9 +18,9 @@ export default function Settings()
 
     const handleChange = (evt) => {
         const {name , value} = evt.target;
-        console.log(evt.target)
+        // console.log(evt.target)
         setValues({...values, [name]: parseInt(value)});
-        console.log(values);
+        // console.log(values);
     }
 
     const handleClick = (evt) => {

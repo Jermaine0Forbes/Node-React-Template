@@ -23,7 +23,7 @@ export const randomizeArr = (arr) => {
 
     totalArr = totalArr.concat(shuffleArr(arr.slice(0, split)));
     totalArr = totalArr.concat(shuffleArr(arr.slice(split)));
-    console.log(totalArr)
+    // console.log(totalArr)
 
     randArr = shuffleArr(totalArr);
 

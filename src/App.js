@@ -27,6 +27,8 @@ const queryClient = new QueryClient({
 
 export default function App()
 {
+
+  window['__react-beautiful-dnd-disable-dev-warnings'] = true;
     
     return (
       <AuthProvider>
