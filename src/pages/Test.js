@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import {randomizeArr, getNames, uniqueKey} from '../services/publicApi';
 import {parse, compare} from "../services/util";
+import { useNavigate } from "react-router-dom";
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
 export default function Test()
@@ -13,7 +14,7 @@ export default function Test()
     const [pokemon, setPokemon] = useState([]);
     const [value, setValue] = useState([]);
     const [pokeOrder, setPokeOrder] = useState([]);
-
+    const redirect = useNavigate();
   // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -67,14 +68,24 @@ const reorder = (list, startIndex, endIndex) => {
         // getPokemon(10, setPokemon);
         console.log(pokeOrder);
         // console.log(randomizeArr(arr))
-    }else{
-       const currentNames = getNames(pokemon);
-       console.log('current names');
-       console.log(currentNames)
-       console.log("the current order is "+ compare( pokeOrder, currentNames))
+    // }else{
+       
+    //    console.log('current names');
+    //    console.log(currentNames)
+    //    console.log("the current order is "+ compare( pokeOrder, currentNames))
     }
 
     }, [pokemon]);
+
+    const handleClick = () => {
+        console.log('saved')
+        const guessOrder = getNames(pokemon);
+        sessionStorage.setItem('results', toJson({
+            original: pokeOrder,
+            guesses: guessOrder
+        }));
+        redirect('/results');
+    }
     
     return (
         <Container>
@@ -131,7 +142,7 @@ const reorder = (list, startIndex, endIndex) => {
                             {/* <Button color='secondary' variant={'contained'} onClick={() => console.log('saved')}> Submit</Button> */}
                            
                             {/* <BottomNavigationAction label="Timer" icon={<AccessTime/>}/> */}
-                            <BottomNavigationAction label="Done" icon={<ArrowCircleRightIcon/>} onClick={() => console.log('saved')}/>
+                            <BottomNavigationAction label="Done" icon={<ArrowCircleRightIcon/>} onClick={handleClick}/>
                         </BottomNavigation>
                     </Box>
                 </main>
