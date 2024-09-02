@@ -8,12 +8,14 @@ export default function AuthProvider ({children}) {
 
     const usr = localStorage.getItem('usr') ?? '';
     const [token, setToken] = useState(usr);
+    const [oldToken, setOldToken] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
 
     const logout = () => {
         setToken('');
         localStorage.removeItem('usr')
         setCurrentUser(null);
+        setOldToken(null);
     }
 
     const getUser =  (token)  => token && !isExpired(token) ? decodeToken(token): false ;
@@ -21,11 +23,12 @@ export default function AuthProvider ({children}) {
     useEffect(() =>{
         const tokenExpired = isExpired(token);
         
-        if( token && !tokenExpired){
+        if( (token && !tokenExpired) || token != oldToken){
             
             try {
             const myDecodedToken = decodeToken(token);
              setCurrentUser(myDecodedToken);
+             setOldToken(token);
             } catch(err) {
                 console.log("jwt error")
                 console.log(err)

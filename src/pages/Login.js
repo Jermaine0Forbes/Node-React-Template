@@ -39,10 +39,11 @@ export default function Login()
                 localStorage.setItem('usr', token);
                 redirect('/');
             }else if (data.status === 401){
-                error = await data.text();
+                error = await data.json();
                 setErrors(error);
             }else if (data.status === 400){
                 error = await data.json();
+                console.log(error)
                 setErrors(error)
             }
          }

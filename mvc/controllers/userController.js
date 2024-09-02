@@ -1,5 +1,5 @@
 const  { Users } = require("../models/index");
-const { logging, invalidNumber, noUser } = require('../../utils/index');
+const { logging, invalidNumber, noUser, generateAccessToken } = require('../../utils/index');
 const { validationResult } = require('express-validator');
 
 
@@ -61,18 +61,35 @@ module.exports.put = async (req, res) =>{
         return res.sendStatus(400);
     }
     // Need to sanitize or check the inputs of req.body
-    Users.update(req.body, {
+   Users.update(req.body, {
         where: {id:id},
         logging: (sql) => {
           logging('sql', sql);
       }
       })
-      .then( (role) => {
-        res.status(200).send(role)
+      // .then( (role) => {
+      //   res.status(200).send(role)
 
-      }).catch( (err) => {
-        res.status(400).send(err)
+      // }).catch( (err) => {
+      //   res.status(400).send(err)
+      // });
+
+
+
+    if(req.body?.currentUser){
+
+      const user = await Users.findByPk(id,{ 
+        attributes: ['adminLevel','email', 'id', 'username'],
+        logging: (sql) => {
+          logging('sql', sql);
+        }
       });
+
+      console.log('user data')
+      console.log(user.dataValues)
+
+      return res.send(generateAccessToken(user.dataValues));
+    }
 
     return res.sendStatus(200);
 }

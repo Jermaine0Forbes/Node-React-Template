@@ -65,7 +65,7 @@ module.exports.login = async (req, res) => {
     msg = 'Invalid email';
     console.error(msg)
     errMsgs = getValidationErrors([{ type: 'email', msg: msg}])
-    return res.status(400).send(errMsgs);
+    return res.status(401).send(errMsgs);
    }
 
    const pass = await Users.findOne({
@@ -82,7 +82,7 @@ module.exports.login = async (req, res) => {
     msg = 'The users credentials are incorrect';
     console.error(msg);
     errMsgs = getValidationErrors([{ type: 'password', msg: msg}])
-    return res.status(400).send(errMsgs);
+    return res.status(401).send(errMsgs);
    }
 
    const user = await Users.findOne({

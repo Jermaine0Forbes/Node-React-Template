@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useRef} from 'react';
+import React, {useEffect, useState, useCallback, useRef, useContext} from 'react';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -15,6 +15,8 @@ import SelectAdminLevel from '../components/Form/SelectAdminLevel';
 import EmailField from '../components/Form/EmailField';
 import UsernameField from '../components/Form/UsernameField';
 import ConfirmButton from '../components/Button/ConfirmButton';
+import {AuthContext} from '../providers/AuthProvider';
+import UserAlert from '../components/Snackbar/UserAlert';
 
 
 
@@ -22,21 +24,35 @@ export default function Profile()
 {
     const { id } = useParams();
     const [open, setOpen] = useState(false);
-    const [level, setLevel] = useState(1);
+    const [level, setLevel] = useState(4);
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const formRef = useRef(null);
     const redirect = useNavigate();
+    const { currentUser, setToken} = useContext(AuthContext);
+
+    console.log('currentUser')
+    console.log(currentUser)
 
     const handleClose = useCallback(() => { setOpen(!open)}, [open]);
 
     const {isLoading, isSuccess, data} = useQuery('get-user', () => fetchUser(id), {
-        refetchOnMount:true,
+        // refetchOnMount:true,
     });
 
     const {mutate, isSuccess : updateSuccess } = useMutation({
         mutationFn: ({id:i, data: d}) => {updateUser(i,d)},
-        onSuccess: () => { setOpen(true)}
+        onSuccess: (data) => { 
+            
+            if(data.status === 200){
+                console.log(data)
+                const token =  data.text();
+                setToken(token)
+                localStorage.setItem('usr', token);
+                setOpen(true)
+            }
+
+        }
     })
 
     const { mutate: deleting , isLoading: deleteLoading, data: del } = useMutation({
@@ -56,6 +72,9 @@ export default function Profile()
         for (const [key, value] of form.entries()){
             updatedUser[key] = value;
         };
+        if(currentUser?.username == name){
+            updatedUser.currentUser = true;
+        }
         mutate({ id: id, data: updatedUser});
     },[data]);
 
@@ -92,7 +111,7 @@ export default function Profile()
                         {
                              data ? (
                                 <>
-                                    <AccountCircleIcon color={useColor(level)} sx={{fontSize:'90px'}}/>
+                                    <AccountCircleIcon style={{ color: useColor(level)}} sx={{fontSize:'90px'}}/>
                                     <Box component={'form'} ref={formRef} >
                                         <Grid item xs={4}>
                                             <Grid>
@@ -107,24 +126,29 @@ export default function Profile()
                                                     setLevel={setLevel}
                                                 />
                                             </Grid>
-                                            <Section  sx={{my:'16px'}}>
-                                                <Grid container spacing={2} gap={4}>
-                                                    <Grid item>
-                                                        <Button type='submit' variant='contained' color="secondary"  onClick={(e) => handleSubmit(e)}>Save</Button>
+                                            { currentUser && (currentUser?.adminLevel <= level || currentUser?.username == name ) && (
+
+                                                <Section  sx={{my:'16px'}}>
+                                                    <Grid container spacing={2} gap={4}>
+                                                        <Grid item>
+                                                            <Button type='submit' variant='contained' color="secondary"  onClick={(e) => handleSubmit(e)}>Update</Button>
+                                                        </Grid>
+                                                        <Grid item>
+                                                            <ConfirmButton
+                                                                type='delete'
+                                                                loading={deleteLoading}
+                                                                dialogTitle={`Delete ${name}?`}
+                                                                dialogDescription={'Are you sure you want to delete this user?'}
+                                                                handleConfirmation={handleDelete}
+                                                            >
+                                                                Delete    
+                                                            </ConfirmButton>    
+                                                        </Grid>
                                                     </Grid>
-                                                    <Grid item>
-                                                        <ConfirmButton
-                                                            type='delete'
-                                                            loading={deleteLoading}
-                                                            dialogTitle={`Delete ${name}?`}
-                                                            dialogDescription={'Are you sure you want to delete this user?'}
-                                                            handleConfirmation={handleDelete}
-                                                        >
-                                                            Delete    
-                                                        </ConfirmButton>    
-                                                    </Grid>
-                                                </Grid>
-                                            </Section>
+                                                </Section>
+                                            )
+
+                                            }
                                         </Grid>
                                     </Box>
                                 </>

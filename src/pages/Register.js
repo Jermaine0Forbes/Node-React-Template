@@ -19,7 +19,7 @@ export default function Register()
     const navigate = useNavigate();
     const [showPass, setShowPass ] = useState(false);
     const [errors, setErrors] = useState(null)
-    const [pass, setPass ] = useState('pa');
+    const [pass, setPass ] = useState('password');
     const {setToken} = useContext(AuthContext);
     const {isLoading, mutate} = useMutation({
         mutationFn: (data) => registerUser(data),

@@ -12,7 +12,7 @@ export default function UserListItem({ level, id, color, name})
         <Tooltip  title={"Admin Level "+level}>
         <ListItemButton  divider component={Link} to={"/user/"+id}>
             <ListItemIcon>
-                <AccountCircleIcon color={color} />
+                <AccountCircleIcon style={{ color: color}} />
             </ListItemIcon>
             <ListItemText>
                 {name}

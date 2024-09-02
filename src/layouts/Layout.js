@@ -46,7 +46,7 @@ export default function Layout()
     const classes = useStyles();
     const { currentUser, logout} = useContext(AuthContext);
     const [name, setName] = useState(null);
-    const [userColor, setUserColor] = useState('secondary');
+    const [userColor, setUserColor] = useState(useColor());
     const [open, setOpen] = useState(false);
     const [anchor, setAnchor] = useState(null);
     const redirect = useNavigate();
@@ -54,8 +54,7 @@ export default function Layout()
     useEffect(() => {
         if(currentUser){
             setName(currentUser.username);
-            const color = useColor(currentUser.adminLevel);
-            setUserColor(color);
+            setUserColor(useColor(currentUser.adminLevel));
         }
     },[currentUser])
 
@@ -75,7 +74,7 @@ export default function Layout()
 
     return (
         <Container>
-            <AppBar position="static" color={userColor}>
+            <AppBar position="static"  style={{backgroundColor: userColor}}>
                 <Toolbar disableGutters >
                     <MenuList className={classes.toolbar}>
                         <MenuItem><Link to="/">Home</Link></MenuItem>
