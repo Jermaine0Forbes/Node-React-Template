@@ -22,7 +22,7 @@ export const updateUser = async (id,data) => {
         },
         body: JSON.stringify(data)
     })
-    .then(res => res.json())
+    // .then(res => res.json())
     .catch(err => err);
 };
 

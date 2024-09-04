@@ -55,6 +55,8 @@ module.exports.put = async (req, res) =>{
 
     logging('api', req.originalUrl)
     const id = req.params.id;
+    console.log('req.body')
+    console.log(req.body)
 
     if(invalidNumber(id))
     {
@@ -88,7 +90,12 @@ module.exports.put = async (req, res) =>{
       console.log('user data')
       console.log(user.dataValues)
 
-      return res.send(generateAccessToken(user.dataValues));
+      const usr = generateAccessToken(user.dataValues);
+      console.log('usr')
+      console.log(usr)
+
+      res.status(200).send(usr);
+      // return res.status(200).send(usr);
     }
 
     return res.sendStatus(200);

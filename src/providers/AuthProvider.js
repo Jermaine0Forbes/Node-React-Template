@@ -24,6 +24,10 @@ export default function AuthProvider ({children}) {
         const tokenExpired = isExpired(token);
         
         if( (token && !tokenExpired) || token != oldToken){
+             console.log("token:")
+             console.log(token)
+             console.log("old token:")
+             console.log(oldToken)
             
             try {
             const myDecodedToken = decodeToken(token);

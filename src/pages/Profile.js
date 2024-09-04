@@ -40,12 +40,15 @@ export default function Profile()
         // refetchOnMount:true,
     });
 
-    const {mutate, isSuccess : updateSuccess } = useMutation({
+    const {mutate, isSuccess : updateSuccess, data: updateData } = useMutation({
         mutationFn: ({id:i, data: d}) => {updateUser(i,d)},
         onSuccess: (data) => { 
-            
-            if(data.status === 200){
-                console.log(data)
+            console.log("profile data:")
+            console.log(data)
+            if(data?.status === 200){
+
+                // console.log("profile data:")
+                // console.log(data)
                 const token =  data.text();
                 setToken(token)
                 localStorage.setItem('usr', token);
@@ -73,6 +76,7 @@ export default function Profile()
             updatedUser[key] = value;
         };
         if(currentUser?.username == name){
+            console.log('this is the current user')
             updatedUser.currentUser = true;
         }
         mutate({ id: id, data: updatedUser});
@@ -101,7 +105,11 @@ export default function Profile()
         if(data == 400 || del == 200 ) {
             redirect('/list');
         }
-    }, [data, id, del]);
+        if(updateData){
+            console.log('updateData')
+            console.log(updateData)
+        }
+    }, [data, id, del, updateData]);
 
 
     return (
