@@ -15,15 +15,15 @@ export const fetchUsers = async () => {
  }
 
 export const updateUser = async (id,data) => {
-    return fetch(process.env.URL+'/api/user/'+id, {
+    return await fetch(process.env.URL+'/api/user/'+id, {
         method: "PUT",
         headers:{
             'Content-Type': "application/json"
         },
         body: JSON.stringify(data)
     })
-    // .then(res => res.json())
-    .catch(err => err);
+    .then(res => res.text())
+    .catch(err => console.error(err));
 };
 
 export const deleteUser = async (id) => {

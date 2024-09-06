@@ -63,7 +63,7 @@ module.exports.put = async (req, res) =>{
         return res.sendStatus(400);
     }
     // Need to sanitize or check the inputs of req.body
-   Users.update(req.body, {
+   await Users.update(req.body, {
         where: {id:id},
         logging: (sql) => {
           logging('sql', sql);
@@ -94,7 +94,7 @@ module.exports.put = async (req, res) =>{
       console.log('usr')
       console.log(usr)
 
-      res.status(200).send(usr);
+      return res.send(usr);
       // return res.status(200).send(usr);
     }
 

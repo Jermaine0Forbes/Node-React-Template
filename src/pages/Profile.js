@@ -31,8 +31,6 @@ export default function Profile()
     const redirect = useNavigate();
     const { currentUser, setToken} = useContext(AuthContext);
 
-    console.log('currentUser')
-    console.log(currentUser)
 
     const handleClose = useCallback(() => { setOpen(!open)}, [open]);
 
@@ -42,14 +40,14 @@ export default function Profile()
 
     const {mutate, isSuccess : updateSuccess, data: updateData } = useMutation({
         mutationFn: ({id:i, data: d}) => {updateUser(i,d)},
-        onSuccess: (data) => { 
+        onSuccess: async (data) => { 
             console.log("profile data:")
             console.log(data)
             if(data?.status === 200){
 
                 // console.log("profile data:")
                 // console.log(data)
-                const token =  data.text();
+                const token = await data.text();
                 setToken(token)
                 localStorage.setItem('usr', token);
                 setOpen(true)
@@ -75,7 +73,7 @@ export default function Profile()
         for (const [key, value] of form.entries()){
             updatedUser[key] = value;
         };
-        if(currentUser?.username == name){
+        if(currentUser?.id == id){
             console.log('this is the current user')
             updatedUser.currentUser = true;
         }
@@ -96,6 +94,8 @@ export default function Profile()
 
     const handleDelete = useCallback((e) => { e.preventDefault(); deleting(id)},[id]);
 
+
+
     useEffect( () => {
         if(data?.id !== id && data ) {
             setName(data?.username);
@@ -109,6 +109,9 @@ export default function Profile()
             console.log('updateData')
             console.log(updateData)
         }
+        console.log('currentUser')
+        console.log(currentUser)
+    
     }, [data, id, del, updateData]);
 
 
@@ -134,7 +137,7 @@ export default function Profile()
                                                     setLevel={setLevel}
                                                 />
                                             </Grid>
-                                            { currentUser && (currentUser?.adminLevel <= level || currentUser?.username == name ) && (
+                                            { (currentUser?.adminLevel <= level || currentUser?.id == id ) && (
 
                                                 <Section  sx={{my:'16px'}}>
                                                     <Grid container spacing={2} gap={4}>
