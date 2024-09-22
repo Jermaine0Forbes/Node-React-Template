@@ -39,10 +39,11 @@ export default function Profile()
     });
 
     const {mutate, isSuccess : updateSuccess, data: updateData } = useMutation({
-        mutationFn: ({id:i, data: d}) => {updateUser(i,d)},
+        mutationFn: ({id:i, data: d}) => updateUser(i,d),
         onSuccess: async (data) => { 
             console.log("profile data:")
-            console.log(data)
+             const d = await data;
+            console.log(d)
             if(data?.status === 200){
 
                 // console.log("profile data:")

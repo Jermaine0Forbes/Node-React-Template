@@ -16,7 +16,7 @@ Express & React template
 
 - ~~clean up code (get rid of comments or code not being used)~~
 - ~~refactor components/node~~
-- need to use id in profile page in order to determine if logged in user is editing his own page
+- ~~need to use id in profile page in order to determine if logged in user is editing his own page~~
 - fixing the profile page so that when you upgrade your own user, it will change the token
 - create email and upload functionality
 - connect s3 to app
