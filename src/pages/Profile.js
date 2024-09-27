@@ -4,6 +4,8 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useColor } from '../hooks/users';
 import {fetchUser,updateUser, deleteUser} from '../services/users';
@@ -27,6 +29,7 @@ export default function Profile()
     const [level, setLevel] = useState(4);
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
+    const [openDialog, setOpenDialog] = useState(false);
     const formRef = useRef(null);
     const redirect = useNavigate();
     const { currentUser, setToken} = useContext(AuthContext);
@@ -41,13 +44,10 @@ export default function Profile()
     const {mutate, isSuccess : updateSuccess, data: updateData } = useMutation({
         mutationFn: ({id:i, data: d}) => updateUser(i,d),
         onSuccess: async (data) => { 
-            console.log("profile data:")
-             const d = await data;
-            console.log(d)
             if(data?.status === 200){
 
-                // console.log("profile data:")
-                // console.log(data)
+                console.log("profile data:")
+                console.log(data)
                 const token = await data.text();
                 setToken(token)
                 localStorage.setItem('usr', token);
@@ -115,6 +115,7 @@ export default function Profile()
     
     }, [data, id, del, updateData]);
 
+    const handleDialog = () => setOpenDialog(!openDialog);
 
     return (
         <Container>
@@ -123,7 +124,19 @@ export default function Profile()
                         {
                              data ? (
                                 <>
-                                    <AccountCircleIcon style={{ color: useColor(level)}} sx={{fontSize:'90px'}}/>
+                                    <div>
+
+                                        <AccountCircleIcon 
+                                        style={{ color: useColor(level)}} 
+                                        sx={{fontSize:'90px'}}
+                                        onClick={handleDialog}
+                                        />
+                                        <Dialog open={openDialog} onClose={handleDialog}>
+                                            <DialogTitle>Upload an image</DialogTitle>
+                                            <input type="file" />
+                                        </Dialog>
+
+                                    </div>
                                     <Box component={'form'} ref={formRef} >
                                         <Grid item xs={4}>
                                             <Grid>

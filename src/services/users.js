@@ -24,11 +24,13 @@ export const updateUser = async (id,data) => {
     })
     // .then(res => res.text())
     .catch(err => console.error(err));
-    console.log(res)
-    if(res.ok){
+
+    return res;
+    // console.log(res)
+    // if(res.ok){
         
-        return res.text();
-    }
+    //     return res.text();
+    // }
 };
 
 export const deleteUser = async (id) => {
