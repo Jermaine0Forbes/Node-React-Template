@@ -6,6 +6,9 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import TextField from '@material-ui/core/TextField';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useColor } from '../hooks/users';
 import {fetchUser,updateUser, deleteUser} from '../services/users';
@@ -133,7 +136,15 @@ export default function Profile()
                                         />
                                         <Dialog open={openDialog} onClose={handleDialog}>
                                             <DialogTitle>Upload an image</DialogTitle>
-                                            <input type="file" />
+                                            <DialogContent>
+                                                <DialogContentText> Drag and Drop</DialogContentText>
+                                                <DialogContentText>OR</DialogContentText>
+                                                <Button variant="contained" color="primary" component="span">
+                                                    Upload
+                                                    <TextField type="file" hidden="true" onChange={(e) => ( console.log(e.target))}/>
+
+                                                </Button>
+                                            </DialogContent>
                                         </Dialog>
 
                                     </div>
