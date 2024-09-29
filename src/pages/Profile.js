@@ -9,6 +9,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import TextField from '@material-ui/core/TextField';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useColor } from '../hooks/users';
 import {fetchUser,updateUser, deleteUser} from '../services/users';
@@ -37,6 +40,12 @@ export default function Profile()
     const redirect = useNavigate();
     const { currentUser, setToken} = useContext(AuthContext);
 
+    const handleProfileImage = (evt) => {
+        const target = evt.target;
+        console.log('file')
+        console.log(target);
+        
+    };
 
     const handleClose = useCallback(() => { setOpen(!open)}, [open]);
 
@@ -134,14 +143,35 @@ export default function Profile()
                                         sx={{fontSize:'90px'}}
                                         onClick={handleDialog}
                                         />
-                                        <Dialog open={openDialog} onClose={handleDialog}>
-                                            <DialogTitle>Upload an image</DialogTitle>
-                                            <DialogContent>
-                                                <DialogContentText> Drag and Drop</DialogContentText>
-                                                <DialogContentText>OR</DialogContentText>
-                                                <Button variant="contained" color="primary" component="span">
-                                                    Upload
-                                                    <TextField type="file" hidden="true" onChange={(e) => ( console.log(e.target))}/>
+                                        <Dialog open={openDialog}
+                                         maxWidth="md"
+                                         fullWidth
+                                        onClose={handleDialog}
+                                        >
+                                            <DialogTitle style={{ padding:'1em'}}>Upload an image</DialogTitle>
+                                                <IconButton
+                                                    aria-label="close"
+                                                    onClick={handleDialog}
+                                                    sx={(theme) => ({
+                                                        position: 'absolute',
+                                                        right: 8,
+                                                        top: 8,
+                                                        color: theme.palette.grey[500],
+                                                    })}
+                                                    >
+                                                <CloseIcon />
+                                            </IconButton>
+                                            <DialogContent dividers>
+                                                {/* <DialogContentText> Drag and Drop</DialogContentText>
+                                                <DialogContentText>OR</DialogContentText> */}
+                                                <Button 
+                                                variant="contained" 
+                                                color="primary" 
+                                                component="label"
+                                                startIcon={<CloudUploadIcon />}
+                                                >
+                                                    Upload Profile Image
+                                                    <input type="file" hidden onChange={handleProfileImage}/>
 
                                                 </Button>
                                             </DialogContent>
