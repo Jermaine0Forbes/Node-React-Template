@@ -14,7 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useColor } from '../hooks/users';
-import {fetchUser,updateUser, deleteUser} from '../services/users';
+import {fetchUser,updateUser, deleteUser, postProfImage} from '../services/users';
 import { useParams,useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from 'react-query';
 import WhileLoading from '../components/Loading/WhileLoading';
@@ -40,10 +40,18 @@ export default function Profile()
     const redirect = useNavigate();
     const { currentUser, setToken} = useContext(AuthContext);
 
+    const { mutate: uploadProfImage, isSuccess: imageUploaded, data: uploadData } = useMutation({
+        mutationFn: (data) => postProfImage(data),
+        onSuccess: (data) => {
+            console.log(data)
+        }
+    });
+
     const handleProfileImage = (evt) => {
         const target = evt.target;
         console.log('file')
-        console.log(target);
+        console.log(target.files);
+        // uploadProfImage(target.files[0]);
         
     };
 

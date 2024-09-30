@@ -50,3 +50,15 @@ export const postUser = (formData) =>{
     })
     .catch(err => console.error(err));
 };
+
+export const postProfImage = (data) => {
+
+    return fetch(process.env.URL+'/api/upload/profile', { 
+        method:'POST', 
+        headers:{
+            'Content-Type': "application/json"
+        },
+        body: JSON.stringify(data),
+    })
+    .catch(err => console.error(err));
+};

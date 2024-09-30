@@ -27,5 +27,5 @@ router.post("/login",
       ],
       loginCtr.login);
 
-
+router.post("/upload/profile",[], userCtr.profImage);
 module.exports = router;
