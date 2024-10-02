@@ -3,6 +3,9 @@ const { param, body } = require('express-validator');
 const router = express.Router();
 const userCtr = require("../controllers/userController");
 const loginCtr = require("../controllers/loginController");
+const multer = require('multer');
+const path = require('path')
+const upload = multer({dest:  path.resolve('public/upload')});
 
 
 router.get("/users", userCtr.index);
@@ -27,5 +30,5 @@ router.post("/login",
       ],
       loginCtr.login);
 
-router.post("/upload/profile",[], userCtr.profImage);
+router.post("/upload/profile",upload.single('file'), userCtr.profImage);
 module.exports = router;

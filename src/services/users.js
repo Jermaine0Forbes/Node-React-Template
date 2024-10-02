@@ -55,10 +55,7 @@ export const postProfImage = (data) => {
 
     return fetch(process.env.URL+'/api/upload/profile', { 
         method:'POST', 
-        headers:{
-            'Content-Type': "application/json"
-        },
-        body: JSON.stringify(data),
+        body:data,
     })
     .catch(err => console.error(err));
 };

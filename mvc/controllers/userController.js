@@ -124,4 +124,5 @@ module.exports.delete = async (req, res) => {
 
 module.exports.profImage = (req, res) => {
 
+  console.log(req.file);
 }

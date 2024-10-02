@@ -49,9 +49,23 @@ export default function Profile()
 
     const handleProfileImage = (evt) => {
         const target = evt.target;
+        const formData = new FormData();
+        const file = target.files[0];
+        const allowedFiles = [
+            'image/jpeg',
+            'image/png',
+            'image/gif'
+        ];
+        formData.append('file',file);
         console.log('file')
         console.log(target.files);
-        // uploadProfImage(target.files[0]);
+        if(allowedFiles.includes(file.type)){
+
+            uploadProfImage(formData);
+        }else{
+            // Need to create alert 
+            console.log("we don't upload "+file.type)
+        }
         
     };
 
