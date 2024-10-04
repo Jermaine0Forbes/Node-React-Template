@@ -25,6 +25,7 @@ import UsernameField from '../components/Form/UsernameField';
 import ConfirmButton from '../components/Button/ConfirmButton';
 import {AuthContext} from '../providers/AuthProvider';
 import UserAlert from '../components/Snackbar/UserAlert';
+import Avatar from '@mui/material/Avatar';
 
 
 
@@ -44,6 +45,9 @@ export default function Profile()
         mutationFn: (data) => postProfImage(data),
         onSuccess: (data) => {
             console.log(data)
+            if(data.ok) {
+                setOpenDialog(false);
+            }
         }
     });
 
@@ -57,6 +61,7 @@ export default function Profile()
             'image/gif'
         ];
         formData.append('file',file);
+        formData.append('id', id);
         console.log('file')
         console.log(target.files);
         if(allowedFiles.includes(file.type)){
@@ -159,6 +164,11 @@ export default function Profile()
                              data ? (
                                 <>
                                     <div>
+                                        <Avatar 
+                                         alt="Remy Sharp" 
+                                         src="/static/images/avatar/1.jpg" 
+                                         sx={{ width:80, height:80}}
+                                         />
 
                                         <AccountCircleIcon 
                                         style={{ color: useColor(level)}} 
