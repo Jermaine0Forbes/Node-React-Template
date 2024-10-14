@@ -36,6 +36,7 @@ export default function Profile()
     const [level, setLevel] = useState(4);
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
+    const [profImage, setProfImage]= useState(null);
     const [openDialog, setOpenDialog] = useState(false);
     const formRef = useRef(null);
     const redirect = useNavigate();
@@ -140,7 +141,8 @@ export default function Profile()
         if(data?.id !== id && data ) {
             setName(data?.username);
             setEmail(data?.email);
-            setLevel(data?.adminLevel)
+            setLevel(data?.adminLevel);
+            setProfImage(data?.profImage);
         }
         if(data == 400 || del == 200 ) {
             redirect('/list');
@@ -164,17 +166,24 @@ export default function Profile()
                              data ? (
                                 <>
                                     <div>
-                                        <Avatar 
-                                         alt="Remy Sharp" 
-                                         src="/static/images/avatar/1.jpg" 
-                                         sx={{ width:80, height:80}}
-                                         />
+                                        {
+                                            profImage ?
+                                            <Avatar 
+                                            alt={name} 
+                                            src={`/public/upload/${profImage}.jpg`} 
+                                            sx={{ width:80, height:80}}
+                                            onClick={handleDialog}
+                                            />
 
-                                        <AccountCircleIcon 
-                                        style={{ color: useColor(level)}} 
-                                        sx={{fontSize:'90px'}}
-                                        onClick={handleDialog}
-                                        />
+                                            :
+                                            <AccountCircleIcon 
+                                            style={{ color: useColor(level)}} 
+                                            sx={{fontSize:'90px'}}
+                                            onClick={handleDialog}
+                                            />
+
+                                        }
+
                                         <Dialog open={openDialog}
                                          maxWidth="md"
                                          fullWidth

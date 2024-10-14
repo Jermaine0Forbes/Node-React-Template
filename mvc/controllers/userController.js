@@ -88,7 +88,7 @@ module.exports.put = async (req, res) =>{
       })
       .then( user => console.log(user))
       .catch( err => logging('error', err))
-      ;
+      ;WSDW
 
       console.log('user data')
       console.log(user.dataValues)
@@ -128,10 +128,10 @@ module.exports.delete = async (req, res) => {
 module.exports.profImage = (req, res) => {
 
   console.log(req.file);
-  const {path} = req.file;
+  const {filename} = req.file;
   const {id} = req.body;
 
-  Users.update({ profImage: path}, {
+  Users.update({ profImage: filename}, {
     where: {id:id},
     logging: (sql) => {
       logging('sql', sql);

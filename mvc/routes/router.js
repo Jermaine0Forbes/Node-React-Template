@@ -5,7 +5,14 @@ const userCtr = require("../controllers/userController");
 const loginCtr = require("../controllers/loginController");
 const multer = require('multer');
 const path = require('path')
-const upload = multer({dest:  path.resolve('public/upload')});
+const storage = multer.diskStorage({
+      destination: path.resolve('public/upload'),
+      filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+      }
+});
+const upload = multer({storage});
 
 
 router.get("/users", userCtr.index);
