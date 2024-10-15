@@ -35,7 +35,7 @@ module.exports.get = async (req,res) => {
     }
     
     const user = await Users.findByPk(id,{ 
-      attributes: ['adminLevel','email', 'id', 'username'],
+      attributes: ['adminLevel','email', 'id', 'username', 'profileImage'],
       logging: (sql) => {
         logging('sql', sql);
       }
@@ -87,8 +87,7 @@ module.exports.put = async (req, res) =>{
         }
       })
       .then( user => console.log(user))
-      .catch( err => logging('error', err))
-      ;WSDW
+      .catch( err => logging('error', err));
 
       console.log('user data')
       console.log(user.dataValues)
@@ -125,21 +124,26 @@ module.exports.delete = async (req, res) => {
   return res.sendStatus(200);
 }
 
-module.exports.profImage = (req, res) => {
+module.exports.profImage = async (req, res) => {
 
   console.log(req.file);
   const {filename} = req.file;
   const {id} = req.body;
+  console.log( `id is ${id}`)
 
-  Users.update({ profImage: filename}, {
+  await Users.update({ profileImage: filename}, {
     where: {id:id},
     logging: (sql) => {
       logging('sql', sql);
   }
   })
-  .then( user => console.log(user))
+  .then( user =>{ 
+    
+    console.log(user)
+    logging('api', req.originalUrl)
+    res.send(filename);
+  })
   .catch( err => logging('error', err));
 
-  logging('api', req.originalUrl)
-  res.sendStatus(200);
+
 }

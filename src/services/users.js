@@ -51,7 +51,7 @@ export const postUser = (formData) =>{
     .catch(err => console.error(err));
 };
 
-export const postProfImage = (data) => {
+export const postProfImage = async (data) => {
 
     return fetch(process.env.URL+'/api/upload/profile', { 
         method:'POST', 

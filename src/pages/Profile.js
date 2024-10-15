@@ -44,10 +44,13 @@ export default function Profile()
 
     const { mutate: uploadProfImage, isSuccess: imageUploaded, data: uploadData } = useMutation({
         mutationFn: (data) => postProfImage(data),
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
             console.log(data)
             if(data.ok) {
                 setOpenDialog(false);
+                let img = await data.text();
+                console.log(img);
+                setProfImage(img);
             }
         }
     });
@@ -170,7 +173,7 @@ export default function Profile()
                                             profImage ?
                                             <Avatar 
                                             alt={name} 
-                                            src={`/public/upload/${profImage}.jpg`} 
+                                            src={`upload/${profImage}`} 
                                             sx={{ width:80, height:80}}
                                             onClick={handleDialog}
                                             />
