@@ -22,6 +22,7 @@ Express & React template
 - connect s3 to app
 - create middleware for form api
 - create theme
+- update readme from reference notes
 
 [go back home](home)
 
@@ -63,6 +64,10 @@ find all the different data types [here](https://sequelize.org/docs/v6/moved/dat
 
 ### To migrate files
 `npx sequelize-cli db:migrate`
+
+### To migrate one file
+
+`npx sequelize-cli db:migrate --name insertNameOfFile`
 
 ### To create a seed
 `npx sequelize-cli seed:generate --name demo-user`

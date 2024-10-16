@@ -128,20 +128,20 @@ module.exports.profImage = async (req, res) => {
 
   console.log(req.file);
   const {filename} = req.file;
+  const image = req.get('referer')+'public/upload/'+filename;
   const {id} = req.body;
-  console.log( `id is ${id}`)
-
-  await Users.update({ profileImage: filename}, {
+  console.log(image)
+  await Users.update({ profileImage: image}, {
     where: {id:id},
     logging: (sql) => {
       logging('sql', sql);
-  }
+    }
   })
   .then( user =>{ 
     
     console.log(user)
     logging('api', req.originalUrl)
-    res.send(filename);
+    res.send(image);
   })
   .catch( err => logging('error', err));
 

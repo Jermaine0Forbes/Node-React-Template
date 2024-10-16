@@ -1,3 +1,7 @@
+## 10/16/24
+Need to remind myself that when you add a column to an existing table, you need to update the model so that the column can be 
+modified when doing CRUD actions
+
 ## 5/21/23
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
 - [async function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)

@@ -145,7 +145,7 @@ export default function Profile()
             setName(data?.username);
             setEmail(data?.email);
             setLevel(data?.adminLevel);
-            setProfImage(data?.profImage);
+            setProfImage(data?.profileImage);
         }
         if(data == 400 || del == 200 ) {
             redirect('/list');
@@ -173,7 +173,7 @@ export default function Profile()
                                             profImage ?
                                             <Avatar 
                                             alt={name} 
-                                            src={`upload/${profImage}`} 
+                                            src={profImage} 
                                             sx={{ width:80, height:80}}
                                             onClick={handleDialog}
                                             />
