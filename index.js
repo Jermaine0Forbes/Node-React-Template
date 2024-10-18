@@ -12,7 +12,18 @@ var port = process.env.PORT || 3001;
 const routes = require('./mvc/routes/router');
 
 
-app.use(cors());
+var whitelist = ['http://localhost:3200', 'http://localhost:4000']
+var corsOptionsDelegate = function (req, callback) {
+  var corsOptions;
+  if (whitelist.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false } // disable CORS for this request
+  }
+  callback(null, corsOptions) // callback expects two parameters: error and options
+}
+
+app.use(cors(corsOptionsDelegate));
 app.set("views",path.join(__dirname,"mvc/views")); // setting the views path
 app.use(express.static(path.join(__dirname,'public/js/')));
 app.use(body.json());

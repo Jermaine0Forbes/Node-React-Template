@@ -128,7 +128,9 @@ module.exports.profImage = async (req, res) => {
 
   console.log(req.file);
   const {filename} = req.file;
-  const image = req.get('referer')+'public/upload/'+filename;
+  // const image = req.get('referer')+'public/upload/'+filename;
+
+  const image = uploadPath+filename;
   const {id} = req.body;
   console.log(image)
   await Users.update({ profileImage: image}, {
