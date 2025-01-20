@@ -82,6 +82,7 @@ export default function Layout()
                         <MenuItem><Link to="/list">List</Link></MenuItem>
                         <MenuItem><Link to="/login">Login</Link></MenuItem>
                         <MenuItem><Link to="/register">Register</Link></MenuItem>
+                        <MenuItem><Link to="/topic/list">Topics</Link></MenuItem>
                     </MenuList>
                     {
                         name && (
