@@ -14,7 +14,7 @@ Express & React template
 
 ## Current Tasks
 
-- Create Quiz, Topic, and Entry pages
+- ~~Create Quiz, Topic, and Entry pages~~
 - Create form in topic page and make sure it saves when signed in
 - Create an entry form and make sure it saves
 
