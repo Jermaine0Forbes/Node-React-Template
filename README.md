@@ -14,15 +14,9 @@ Express & React template
 
 ## Current Tasks
 
-- ~~clean up code (get rid of comments or code not being used)~~
-- ~~refactor components/node~~
-- ~~need to use id in profile page in order to determine if logged in user is editing his own page~~
-- ~~fixing the profile page so that when you upgrade your own user, it will change the token~~
-- create email and upload functionality
-- connect s3 to app
-- create middleware for form api
-- create theme
-- update readme from reference notes
+- Create Quiz, Topic, and Entry pages
+- Create form in topic page and make sure it saves when signed in
+- Create an entry form and make sure it saves
 
 [go back home](home)
 
@@ -53,6 +47,14 @@ Express & React template
 [go back home](home)
 
 ## Sequelize Commands
+
+### To check which files have been migrated
+
+`npx sequelize-cli db:migrate:status`
+
+### To undo a recent migration
+
+`npx sequelize-cli db:migrate:undo`
 
 ### To create a model
 

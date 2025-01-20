@@ -75,9 +75,10 @@ function invalidRegister(email, user, pass){
 }
 
  function logging (fileName, content) {
-
-  const logFilePath = path.resolve(__dirname+'/../logs/', fileName+".log")
-  const logEntry = `${new Date().toISOString()}: ${content}\n`
+  const date = new Date();
+  const dateStr = date.toDateString().split(' ').join('_');
+  const logFilePath = path.resolve(__dirname+'/../logs/',`${fileName}_${dateStr}.log`);
+  const logEntry = `${date.toISOString()}: ${content}\n`
 
   fs.appendFile(logFilePath, logEntry, (err) => {
     if (err) {

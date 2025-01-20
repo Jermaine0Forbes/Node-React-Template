@@ -22,6 +22,33 @@ module.exports = {
       testId: {
         type: Sequelize.INTEGER
       },
+      quizId: {
+        type: Sequelize.INTEGER,
+        // unique: true,
+        references: {
+          model: "Quizzes",
+          key: 'id'
+        }
+      },
+      entryId: {
+        type: Sequelize.INTEGER,
+        // unique: true,
+        references: {
+          model: "Entries",
+          key: 'id'
+        }
+      },
+      topicId: {
+        type: Sequelize.INTEGER,
+        // unique: true,
+        references: {
+          model: "Topics",
+          key: 'id'
+        }
+      },
+      answer: {
+        type: Sequelize.TEXT,
+      },
       userId: {
         type: Sequelize.INTEGER
       },
@@ -36,6 +63,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    }, {
+       indexes: [
+
+         {
+           fields: ['topicId', 'entryId', 'quizId'],
+         }
+       ]
     });
   },
   async down(queryInterface, Sequelize) {

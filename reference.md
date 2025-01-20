@@ -1,3 +1,42 @@
+## 1-11-25
+
+Need to create a simple app that will allow me to create categories which which will have topics and even subtopics. Within the topcis or subtopics
+there will be a question with an answer that is hidden. The user will have to write down what the answer is, then look at the answer and 
+verify if the answer he wrote matches up to the predefined answer. He may choose the option right, wrong, mostly right, mostly wrong. These topics 
+of questions will be generated in a quiz and after the quiz, the results will be counted.
+
+Tables I need
+
+Topics
+- id
+- subtopic
+- parent topic id
+- user id
+- title
+
+Questions
+- id
+- topic id
+- quiz id
+- entry id
+- answer
+
+Quiz
+- id
+- user id
+- result
+
+Entries 
+- id
+- title
+- entry
+- topic id
+
+
+
+
+
+
 ## 10/16/24
 Need to remind myself that when you add a column to an existing table, you need to update the model so that the column can be 
 modified when doing CRUD actions
