@@ -44,6 +44,7 @@
     "react-jwt": "^1.2.0",
     "react-query": "^3.39.3",
     "sequelize": "^6.29.3",
+    "sequelize-auto": "^0.8.8",
     "socket.io": "^4.1.3",
     "validator": "^13.9.0"
   },

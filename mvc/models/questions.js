@@ -1,8 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
+const {Model} = require('sequelize');
+module.exports = function(sequelize, DataTypes) {
   class Questions extends Model {
     /**
      * Helper method for defining associations.
@@ -14,15 +11,96 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Questions.init({
-    question: DataTypes.STRING,
-    termId: DataTypes.INTEGER,
-    correct: DataTypes.ENUM('wrong','correct'), // Make sure you add the values or an error will happen
-    testId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER,
-    termId: DataTypes.INTEGER
+    id: {
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true
+    },
+    question: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    termId: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    correct: {
+      type: DataTypes.ENUM('wrong','correct'),
+      allowNull: true
+    },
+    testId: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    quizId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'quizzes',
+        key: 'id'
+      }
+    },
+    entryId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'entries',
+        key: 'id'
+      }
+    },
+    topicId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'topics',
+        key: 'id'
+      }
+    },
+    answer: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    }
   }, {
     sequelize,
-    modelName: 'Questions',
+    tableName: 'questions',
+    timestamps: true,
+    indexes: [
+      {
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "quizId",
+        using: "BTREE",
+        fields: [
+          { name: "quizId" },
+        ]
+      },
+      {
+        name: "entryId",
+        using: "BTREE",
+        fields: [
+          { name: "entryId" },
+        ]
+      },
+      {
+        name: "topicId",
+        using: "BTREE",
+        fields: [
+          { name: "topicId" },
+        ]
+      },
+    ]
   });
+
   return Questions;
 };

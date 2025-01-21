@@ -3,6 +3,7 @@ const { param, body } = require('express-validator');
 const router = express.Router();
 const userCtr = require("../controllers/userController");
 const loginCtr = require("../controllers/loginController");
+const topicCtr = require("../controllers/topicController");
 const multer = require('multer');
 const path = require('path')
 const storage = multer.diskStorage({
@@ -38,4 +39,9 @@ router.post("/login",
       loginCtr.login);
 
 router.post("/upload/profile",upload.single('file'), userCtr.profImage);
+
+router.post('topic/create', topicCtr.create);
+router.get('topics', topicCtr.index);
+
 module.exports = router;
+

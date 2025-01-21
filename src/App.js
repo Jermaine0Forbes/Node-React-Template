@@ -46,7 +46,6 @@ export default function App()
                   <Route path="register" element={<Register />} />
                   <Route path="list" element={<List />} />
                   <Route path="/user/:id" element={<Profile/>} />
-
                   <Route path="topic/create" element={                 
                     <ProtectedRoute level={1}>
                         <Topic/>

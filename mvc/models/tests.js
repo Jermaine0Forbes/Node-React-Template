@@ -1,8 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
+const {Model} = require('sequelize');
+module.exports = function(sequelize, DataTypes) {
   class Tests extends Model {
     /**
      * Helper method for defining associations.
@@ -13,14 +10,55 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
+
   Tests.init({
-    number: DataTypes.INTEGER,
-    correct: DataTypes.INTEGER,
-    wrong: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER
+    id: {
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true
+    },
+    number: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    correct: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    wrong: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'users',
+        key: 'id'
+      }
+    }
   }, {
     sequelize,
-    modelName: 'Tests',
+    tableName: 'tests',
+    timestamps: true,
+    indexes: [
+      {
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "fk_tests_users",
+        using: "BTREE",
+        fields: [
+          { name: "userId" },
+        ]
+      },
+    ]
   });
   return Tests;
 };

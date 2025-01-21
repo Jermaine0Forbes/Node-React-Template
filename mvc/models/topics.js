@@ -1,6 +1,7 @@
 const {Model} = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  class Sets extends Model {
+
+  class Topics extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,20 +12,24 @@ module.exports = function(sequelize, DataTypes) {
     }
   }
 
-  Sets.init({
+  Topics.init({
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    name: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    parentInt: {
+    subtopic: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    parentTopicId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'topics',
+        key: 'id'
+      }
     },
     userId: {
       type: DataTypes.INTEGER,
@@ -33,10 +38,14 @@ module.exports = function(sequelize, DataTypes) {
         model: 'users',
         key: 'id'
       }
+    },
+    title: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'sets',
+    tableName: 'topics',
     timestamps: true,
     indexes: [
       {
@@ -48,7 +57,14 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "fk_sets_users",
+        name: "parentTopicId",
+        using: "BTREE",
+        fields: [
+          { name: "parentTopicId" },
+        ]
+      },
+      {
+        name: "userId",
         using: "BTREE",
         fields: [
           { name: "userId" },
@@ -56,6 +72,6 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
-
-  return Sets;
+  
+  return Topics;
 };

@@ -18,7 +18,9 @@ Express & React template
 - redirect user to login if they try to access topics page
 - create topics page that will list out all topics created by user
 - Create form in topic page and make sure it saves when signed in
+- add a tag id column to the entry table
 - Create an entry form and make sure it saves
+- add a status column to the quiz table (incomplete/completed)
 
 [go back home](home)
 
@@ -49,6 +51,21 @@ Express & React template
 [go back home](home)
 
 ## Sequelize Commands
+
+### To auto-generate models
+
+1. install sequelize-auto
+
+`npm install sequelize-auto -g`
+
+2. install the database library globally
+
+`npm install mysql2 -g`
+
+3. Run the command to specify where to put the files, the name of the database, 
+and other attributes. For more info, [click here](https://github.com/sequelize/sequelize-auto)
+
+`sequelize-auto -o "./mvc/models" -d quiz -h localhost -u root -p 3306`
 
 ### To check which files have been migrated
 

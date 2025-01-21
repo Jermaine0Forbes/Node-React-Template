@@ -1,6 +1,6 @@
 const {Model} = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  class Sets extends Model {
+  class Quizzes extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,20 +11,13 @@ module.exports = function(sequelize, DataTypes) {
     }
   }
 
-  Sets.init({
+
+  Quizzes.init({
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
-    },
-    name: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    parentInt: {
-      type: DataTypes.INTEGER,
-      allowNull: true
     },
     userId: {
       type: DataTypes.INTEGER,
@@ -32,11 +25,16 @@ module.exports = function(sequelize, DataTypes) {
       references: {
         model: 'users',
         key: 'id'
-      }
+      },
+      unique: "quizzes_ibfk_1"
+    },
+    result: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'sets',
+    tableName: 'quizzes',
     timestamps: true,
     indexes: [
       {
@@ -48,7 +46,8 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "fk_sets_users",
+        name: "userId",
+        unique: true,
         using: "BTREE",
         fields: [
           { name: "userId" },
@@ -57,5 +56,5 @@ module.exports = function(sequelize, DataTypes) {
     ]
   });
 
-  return Sets;
+  return Quizzes;
 };
