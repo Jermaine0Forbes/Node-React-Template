@@ -40,8 +40,9 @@ router.post("/login",
 
 router.post("/upload/profile",upload.single('file'), userCtr.profImage);
 
-router.post('topic/create', topicCtr.create);
-router.get('topics', topicCtr.index);
+router.post('/topic/create', topicCtr.create);
+router.get('/topics/:id', topicCtr.index);
+router.get('/topic/:id', topicCtr.view);
 
 module.exports = router;
 

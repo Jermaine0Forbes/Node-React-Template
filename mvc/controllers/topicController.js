@@ -13,16 +13,42 @@ dotenv.config();
 
 module.exports.create = async (req,res) => {
     logging('api', req.originalUrl)
-    const { title }  = req.body;
+    const data = await Topics.create( req.body,
+    { 
+        logging: (sql) => {
+            logging('sql', sql);
+          }
+    });
+
+    res.json({topic: data})
+
+}
+
+module.exports.view = async (req,res) => {
+    logging('api', req.originalUrl)
+    const { id }  = req.params;
+    const data = await Topics.findOne(
+    { 
+        where: { id },
+        logging: (sql) => {
+            logging('sql', sql);
+          }
+    });
+
+    res.json({topic: data})
 
 }
 
 
-module.exports.index = async (req,res) => {
+
+module.exports.index =  (req,res) => {
     logging('api', req.originalUrl)
 
-    const data = await Topics.findAll({ 
-        attributes : ['id','username', 'adminLevel'],
+    const { id } = req.params;
+
+    const data =  Topics.findAll({
+        where: { userId: id}, 
+        attributes : ['id','title'],
         logging: (sql) => {
           logging('sql', sql);
         }
