@@ -28,7 +28,7 @@ export default function TopicCreate()
                 if(data.status === 200){
                     const topic = await data.json();
                     console.log(topic)
-                    redirect('/topic/topic?.id');
+                    redirect('/topic/'+topic?.id);
                 } 
             },
             onError: async (err) => {

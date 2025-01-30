@@ -21,16 +21,21 @@ export default function TopicList()
     const user = getUser(token);
     const color = useColor(user?.adminLevel);
     const {isLoading,  data} = useQuery('topics', () => fetchTopics(user?.id));
+
     return (
         <Container>
                 <Box component={'div'} onSubmit={(e) =>console.log(e)} >
                 <main>
                     <Typography variant="h3">Topics</Typography>
-                    <WhileLoading loading={isLoading}>
+                    <WhileLoading isLoading={isLoading}>
                         {
                              data && data.length ? (
                                 data.map((e, i) => {
-                                    <div key={id}>{e?.title}</div>
+                                   return <Typography variant="h4" key={i}>
+                                    <Link href={'/topic/'+e?.id}  style={{color}} >
+                                        {e?.title}
+                                    </Link>
+                                    </Typography>;
 
                                 })
                             ) :

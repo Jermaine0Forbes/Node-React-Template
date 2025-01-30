@@ -12,22 +12,24 @@ export const createTopic = async (data) => {
 export const fetchTopic = async (id) => {
     return await fetch(process.env.URL+'/api/topic/'+id, { 
         method:'GET', 
-        headers:{
-            'Content-Type': "application/json"
-        },
+        // headers:{
+        //     'Content-Type': "application/json"
+        // },
         // body: JSON.stringify({id: data}),
     })
+    .then(resp => resp.json())
     .catch(err => console.error(err));
 }
 
 
-export const fetchTopics =  (id) => {
-    return  fetch(process.env.URL+'/api/topics/'+id, { 
+export const fetchTopics = async (id) => {
+    return await fetch(process.env.URL+'/api/topics/'+id, { 
         method:'GET', 
         headers:{
             'Content-Type': "application/json"
         },
         // body: JSON.stringify({id: data}),
     })
+    .then(resp => resp.json())
     .catch(err => console.error(err));
 }

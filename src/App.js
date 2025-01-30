@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import TopicCreate from "./pages/Topic/Create";
 import TopicList from "./pages/Topic/List";
+import TopicEdit from "./pages/Topic/Edit";
 import Forbidden from "./pages/Forbidden";
 import AuthProvider from "./providers/AuthProvider";
 import ProtectedRoute from "./pages/ProtectedRoute";
@@ -53,6 +54,10 @@ export default function App()
                   <Route path="topic/list" element={                 
                     <ProtectedRoute level={1}>
                         <TopicList/>
+                      </ProtectedRoute>} />
+                  <Route path="topic/:id" element={                 
+                    <ProtectedRoute level={1}>
+                        <TopicEdit/>
                       </ProtectedRoute>} />
                   <Route path="/forbidden" element={<Forbidden />} />
                   <Route path="*" element={<NotFound />} />

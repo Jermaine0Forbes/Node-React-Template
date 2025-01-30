@@ -35,25 +35,26 @@ module.exports.view = async (req,res) => {
           }
     });
 
-    res.json({topic: data})
+    res.json({ topic:data})
 
 }
 
 
 
-module.exports.index =  (req,res) => {
+module.exports.index = async (req,res) => {
     logging('api', req.originalUrl)
 
     const { id } = req.params;
 
-    const data =  Topics.findAll({
+    const data = await  Topics.findAll({
         where: { userId: id}, 
         attributes : ['id','title'],
         logging: (sql) => {
           logging('sql', sql);
         }
     });
+    // console.log(data)
 
-    res.json({topics: data})
+    res.json(data)
 
 }

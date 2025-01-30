@@ -16,8 +16,8 @@ Express & React template
 
 - ~~Create Quiz, Topic, and Entry pages~~
 - ~~redirect user to login if they try to access topics page~~
-- create topics page that will list out all topics created by user
-- Create form in topic page and make sure it saves when signed in
+- ~~create topics page that will list out all topics created by user~~
+- ~~Create form in topic page and make sure it saves when signed in~~
 - add a tag id column to the entry table
 - Create an entry form and make sure it saves
 - add a status column to the quiz table (incomplete/completed)
