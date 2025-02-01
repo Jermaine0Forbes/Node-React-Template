@@ -97,3 +97,5 @@ find all the different data types [here](https://sequelize.org/docs/v6/moved/dat
 `npx sequelize-cli db:seed:all`
 
 [go back home](home)
+
+`npx sequelize-cli model:generate --name TagsToEntries --attributes userId:integer,tagId:integer,entryId:integer`

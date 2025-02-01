@@ -2,6 +2,8 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
+import Badge from '@material-ui/core/Badge';
+import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
@@ -64,6 +66,9 @@ const useStyles = makeStyles(() => ({
         borderRadius: "0 0 10px 10px", 
         backgroundColor: 'rgba(0, 0, 0, 0.3)',
         marginBottom: "1em"
+    },
+    entryOrder: {
+        backgroundColor: 'white',
     }
 }));
 
@@ -76,7 +81,13 @@ export default function Entry({num = 0})
     return (
         <Box component={'section'} className={classes.entrySection}>
             <Grid className={classes.entryHead}>
-                #{num}
+            <Chip
+                label={num}
+                component="div"
+                href="#basic-chip"
+                variant="outlined"
+                className={classes.entryOrder}
+            />
             </Grid>
             <Grid className={classes.entryBody}>
                 <Grid className={classes.entryBlock}>
@@ -96,7 +107,7 @@ export default function Entry({num = 0})
                         multiline
                         variant='filled'
                         className={classes.entry}
-                        rows={3}
+                        minRows={3}
                     >
                     </TextField>
                 </Grid>
@@ -107,7 +118,7 @@ export default function Entry({num = 0})
                         multiline
                         variant='filled'
                         className={classes.entry}
-                        rows={1}
+                        minRows={1}
                     >
                     </TextField>
                 </Grid>
