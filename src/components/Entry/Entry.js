@@ -98,6 +98,7 @@ export default function Entry({num = 0})
                     size="small"
                     margin="normal"
                     className={classes.title}
+                    name={"title-"+num}
                     ></TextField>
                 </Grid>
                 <Grid className={classes.entryBlock}>
@@ -108,6 +109,7 @@ export default function Entry({num = 0})
                         variant='filled'
                         className={classes.entry}
                         minRows={3}
+                        name={"entry-"+num}
                     >
                     </TextField>
                 </Grid>
@@ -119,6 +121,7 @@ export default function Entry({num = 0})
                         variant='filled'
                         className={classes.entry}
                         minRows={1}
+                        name={"tags-"+num}
                     >
                     </TextField>
                 </Grid>

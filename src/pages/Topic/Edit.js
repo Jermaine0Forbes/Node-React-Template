@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useState, useEffect, useRef} from 'react';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import FormGroup from '@material-ui/core/FormGroup';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { useColor } from '../../hooks/users';
@@ -25,6 +26,7 @@ export default function TopicEdit()
         const [form, setForm] = useState({})
         const [title, setTitle] = useState('');
         const {id} = useParams()
+        const entryRef = useRef();
         const redirect = useNavigate();
          const {isLoading,  data} = useQuery('topics', () => fetchTopic(id));
         // const {isLoading : loadingRight, mutate} = useMutation({
@@ -64,6 +66,19 @@ export default function TopicEdit()
             // console.log(data)
             mutate(data)
         }
+
+        const addEntry = (e) => {
+            e.preventDefault();
+
+            console.log(entryRef.current)
+            // const data = {};
+            // const form = new FormData(entryRef.current);
+            // for (const [key, value] of form.entries()){
+            //     data[key] = value;
+            // };
+
+            // console.log(data)
+        }
     
     return (
         <Container>
@@ -79,11 +94,30 @@ export default function TopicEdit()
                             >
                         </TextField>
                     </Grid>
-                    <Grid>
+                    <Grid ref={entryRef} className={"entry-container"}>
                         <Entry />
                     </Grid>    
                     <Grid >
-                        <Button   type='submit' variant='contained' style={{ backgroundColor:color, color:"white"}}>Submit</Button>
+                        <ButtonGroup
+                            variant="contained"
+                        >
+                            <Button
+                                variant='contained'
+                                onClick={addEntry} 
+                                style={{ backgroundColor:color, color:"white"}}
+                            
+                            >
+                                Add entry
+                            </Button>
+                            <Button   
+                                type='submit' 
+                                variant='contained' 
+                                style={{ backgroundColor:color, color:"white"}}
+                            >
+                                Save changes
+                            </Button>
+                        </ButtonGroup>
+
                     </Grid>
                 </Box>
         </Container>
