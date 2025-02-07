@@ -48,7 +48,7 @@ export const postUser = (formData) =>{
         },
         body: JSON.stringify(formData),
     })
-    .catch(err => console.error(err));
+    .catch(err => err);
 };
 
 export const postProfImage = async (data) => {

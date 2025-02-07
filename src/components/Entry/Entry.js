@@ -73,7 +73,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-export default function Entry({num = 0})
+export default function Entry({num = 0, data = {}})
 {
 
     const classes = useStyles();
@@ -99,7 +99,7 @@ export default function Entry({num = 0})
                     margin="normal"
                     className={classes.title}
                     name={"title-"+num}
-                    ></TextField>
+                    >{data?.title}</TextField>
                 </Grid>
                 <Grid className={classes.entryBlock}>
                     <Typography>Entry:</Typography>
@@ -111,6 +111,7 @@ export default function Entry({num = 0})
                         minRows={3}
                         name={"entry-"+num}
                     >
+                        {data?.entry}
                     </TextField>
                 </Grid>
                 <Grid className={classes.entryBlock}>
@@ -123,6 +124,7 @@ export default function Entry({num = 0})
                         minRows={1}
                         name={"tags-"+num}
                     >
+                        {data?.tags}
                     </TextField>
                 </Grid>
             </Grid>

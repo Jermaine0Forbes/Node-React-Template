@@ -17,6 +17,14 @@ import { createTopic } from '../../services/topic';
 import { useQuery } from 'react-query';
 import { fetchTopic } from '../../services/topic';
 import Entry from '../../components/Entry/Entry';
+import { makeStyles } from '@material-ui/core';
+
+const useStyles = makeStyles(() => ({
+    topicTitle: {
+        marginLeft: "1em",
+
+    },
+}));
 
 export default function TopicEdit()
 {
@@ -25,9 +33,12 @@ export default function TopicEdit()
         const color = useColor(user?.adminLevel);
         const [form, setForm] = useState({})
         const [title, setTitle] = useState('');
+        const [entries, setEntries] = useState([{}]);
         const {id} = useParams()
         const entryRef = useRef();
+        const titleRef = useRef();
         const redirect = useNavigate();
+        const classes = useStyles();
          const {isLoading,  data} = useQuery('topics', () => fetchTopic(id));
         // const {isLoading : loadingRight, mutate} = useMutation({
         //     mutationFn: (data) => createTopic(data),
@@ -52,74 +63,85 @@ export default function TopicEdit()
             }
         },[data]);
 
-        const handleForm = (e) => {
-            const field = e.target;
-            let value = field.name === "subtopic" ? field.checked :field.value;
-            const formData = {...form, [field.name] : value  }
-            // console.log(formData)
-            setForm(formData)
-         };
 
         const handleSubmit = (e) => {
             e.preventDefault();
-            const data = {...form, userId: user?.id};
-            // console.log(data)
-            mutate(data)
+            const data = {title, entries};
+            console.log(data)
+            // mutate(data)
         }
 
         const addEntry = (e) => {
             e.preventDefault();
 
             console.log(entryRef.current)
-            // const data = {};
-            // const form = new FormData(entryRef.current);
-            // for (const [key, value] of form.entries()){
-            //     data[key] = value;
-            // };
+            let data = {};
+            const list = [];
+            const form = new FormData(entryRef.current);
+            for (const [key, value] of form.entries()){
+                data[key] = value;
 
-            // console.log(data)
+                if(key.includes('tags')){
+                    list.push(data)
+                    data = {};
+                }
+            };
+            list.push({})
+            setEntries(list)
+            console.log(list)
         }
     
     return (
-        <Container>
-                <Box component={'form'} onSubmit={(e) => handleSubmit(e)} >
-                    <Typography variant="h3">Topic</Typography>
-                    <Grid>
-                        <TextField 
+            <Box>
+                <Grid component="section">
+                    <Typography variant="h3">Topic: 
+                    <TextField 
                             name="title" type='text' 
                             value={title}
+                            onChange={e => setTitle(e.target.value)}
                             variant="standard"
                             size="small"
                             margin="normal"
+                            ref={titleRef}
+                            className={classes.topicTitle}
                             >
-                        </TextField>
-                    </Grid>
-                    <Grid ref={entryRef} className={"entry-container"}>
-                        <Entry />
-                    </Grid>    
-                    <Grid >
-                        <ButtonGroup
-                            variant="contained"
+                    </TextField>
+                    </Typography>
+                </Grid>
+                <Grid 
+                    ref={entryRef} 
+                    className={"entry-container"}
+                    component={'form'}
+                >
+                    {
+                        entries.map((e, i) => {
+                            return <Entry key={i} num={i+1} data={e}/>
+                        })
+                    }
+                </Grid>    
+                <Grid component="section" >
+                    <ButtonGroup
+                        variant="contained"
+                    >
+                        <Button
+                            variant='contained'
+                            onClick={addEntry} 
+                            style={{ backgroundColor:color, color:"white"}}
+                        
                         >
-                            <Button
-                                variant='contained'
-                                onClick={addEntry} 
-                                style={{ backgroundColor:color, color:"white"}}
-                            
-                            >
-                                Add entry
-                            </Button>
-                            <Button   
-                                type='submit' 
-                                variant='contained' 
-                                style={{ backgroundColor:color, color:"white"}}
-                            >
-                                Save changes
-                            </Button>
-                        </ButtonGroup>
+                            Add entry
+                        </Button>
+                        <Button   
+                            type='submit' 
+                            variant='contained' 
+                            style={{ backgroundColor:color, color:"white"}}
+                            onClick={handleSubmit}
+                        >
+                            Save changes
+                        </Button>
+                    </ButtonGroup>
 
-                    </Grid>
-                </Box>
-        </Container>
+                </Grid>
+            </Box>
     );
 }

@@ -76,13 +76,21 @@ function invalidRegister(email, user, pass){
 
  function logging (fileName, content) {
   const date = new Date();
+  // Get month name (long format)
+  const month = date.toLocaleString('default', { month: 'long' });
+  // Get year
+  const year = date.getFullYear();
   const dateStr = date.toDateString().split(' ').join('_');
-  const logFilePath = path.resolve(__dirname+'/../logs/',`${fileName}_${dateStr}.log`);
+  const logFilePath = path.resolve(__dirname+'/../logs/',`${fileName}_${month}_${year}.log`);
   const logEntry = `${date.toISOString()}: ${content}\n`
 
   fs.appendFile(logFilePath, logEntry, (err) => {
     if (err) {
-      console.error('Error writing to the log file:', err);
+      // console.error('Error writing to the log file:', err);
+      fs.writeFile(logFilePath, logEntry, (err) => {
+        if (err) throw err;
+        console.log('File created and data appended.');
+      });
     } else {
       console.log('Log entry added to', logFilePath);
     }

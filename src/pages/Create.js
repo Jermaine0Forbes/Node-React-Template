@@ -22,11 +22,19 @@ export default function Create()
     const [firstName, setFirstName] = useState(faker.person.firstName());
     const [lastName, setLastName] = useState(faker.person.lastName());
     const [showPass, setShowPass ] = useState(false);
+    const [noErrors, setNoErrors] = useState(true);
 
     const togglePass = () => { setShowPass(!showPass)};
 
-    const {isLoading, isSuccess, mutate} = useMutation({
+    const {isLoading, isSuccess, isError, mutate} = useMutation({
         mutationFn: (data) => postUser(data),
+        onSuccess: (data) => {
+            // console.log(data)
+            if(data?.status !== 200){
+
+                setNoErrors(false);
+            }
+        }
     });
 
     useEffect(() => isSuccess && setOpen(!open) , [isSuccess]);
@@ -39,6 +47,8 @@ export default function Create()
         for (const [key, value] of form.entries()){
             data[key] = value;
         };
+
+        // console.log(data)
         mutate(data)
     }
 
@@ -62,7 +72,7 @@ export default function Create()
                                 />
                             </Grid >
                             <Grid >
-                                <PasswordField readOnly value="123" showPassword={showPass} handleShowPassword={togglePass}/>
+                                <PasswordField  value="password" showPassword={showPass} handleShowPassword={togglePass}/>
                             </Grid>
                             <Grid>
                                 <Button type='submit' variant='contained' color="secondary">Submit</Button>
@@ -72,8 +82,11 @@ export default function Create()
                 </WhileLoading>
 
             {
+
                 isSuccess && (
-                    <UserAlert
+
+                    noErrors ? 
+                                        <UserAlert
                         isOpen={open} 
                         duration={10000} 
                         onClose={handleClose}
@@ -81,7 +94,19 @@ export default function Create()
                     >
                         User <strong>{firstName}</strong> has been created!
                     </UserAlert>
+
+                    :
+                    <UserAlert
+                        isOpen={open} 
+                        duration={10000} 
+                        onClose={handleClose}
+                        status="error"
+                    >
+                        User <strong>{firstName}</strong> could not be created
+                    </UserAlert>
+
                 )
+
             }
         </Container>
     );

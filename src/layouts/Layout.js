@@ -73,7 +73,7 @@ export default function Layout()
     })
 
     return (
-        <Container>
+        <Container component="main">
             <AppBar position="static"  style={{backgroundColor: userColor}}>
                 <Toolbar disableGutters >
                     <MenuList className={classes.toolbar}>

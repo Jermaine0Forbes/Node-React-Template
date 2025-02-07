@@ -19,7 +19,7 @@ Express & React template
 - ~~create topics page that will list out all topics created by user~~
 - ~~Create form in topic page and make sure it saves when signed in~~
 - ~~add a tag id column to the entry table~~
-- Create a button in the topic edit page that will generate a new entry
+- ~~Create a button in the topic edit page that will generate a new entry~~
 - Create an entry form and make sure it saves
 - add api that will fetch the entries that belong to a topic
 - update topic form that can create a subtopic and it shows up in the topic edit page

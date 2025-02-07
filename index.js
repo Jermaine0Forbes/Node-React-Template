@@ -10,6 +10,7 @@ var ip =  process.env.IP || 'localhost'; // change the IP address to get your
 var cors = require("cors");
 var port = process.env.PORT || 3001;
 const routes = require('./mvc/routes/router');
+// const {hashPassword} = require(__dirname+"/utils/index");
 
 
 var whitelist = ['http://localhost:3200', 'http://localhost:4000']
@@ -61,8 +62,11 @@ app.use(function(err,req,res,next){
      }
 })
 
-app.listen(port, ip, function(){
+app.listen(port, ip, async  function(){
     const env = process.env.APP_ENV;
+    // const pass = process.env.PASS;
+    // const token = await hashPassword(pass);
+    // console.log(token)
     console.log("node connected to "+port);
     console.log("node environment is in "+env)
 })
