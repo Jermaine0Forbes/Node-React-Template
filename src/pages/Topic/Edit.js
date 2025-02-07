@@ -7,15 +7,12 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import FormGroup from '@material-ui/core/FormGroup';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import { useColor } from '../../hooks/users';
 import {AuthContext} from '../../providers/AuthProvider';
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation } from 'react-query';
-import { createTopic } from '../../services/topic';
 import { useQuery } from 'react-query';
-import { fetchTopic } from '../../services/topic';
+import { fetchTopic, updateTopic } from '../../services/topic';
 import Entry from '../../components/Entry/Entry';
 import { makeStyles } from '@material-ui/core';
 

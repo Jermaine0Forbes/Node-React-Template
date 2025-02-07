@@ -1,13 +1,8 @@
 const  { Topics } = require("../models/index");
-const { 
-logging, invalidEmail, generateAccessToken,
-invalidRegister, invalidPassword, noUser,
-hashPassword, getValidationErrors, 
-} = require('../../utils/index');
+const { logging } = require('../../utils/index');
 const { validationResult } = require('express-validator');
 const bcrypt = require("bcrypt");
 const dotenv = require('dotenv');
-const jwt = require('jsonwebtoken');
 
 dotenv.config();
 
@@ -36,6 +31,13 @@ module.exports.view = async (req,res) => {
     });
 
     res.json({ topic:data})
+
+}
+
+module.exports.put = async (req, res) => {
+    logging('api', req.originalUrl);
+
+    console.log(req.body)
 
 }
 

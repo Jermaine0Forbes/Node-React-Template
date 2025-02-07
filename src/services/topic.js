@@ -6,7 +6,18 @@ export const createTopic = async (data) => {
         },
         body: JSON.stringify(data),
     })
-    .catch(err => console.error(err));
+    .catch(err => err);
+}
+
+export const updateTopic = async (data) => {
+    return await fetch(process.env.URL+'/api/topic/update', { 
+        method:'PUT', 
+        headers:{
+            'Content-Type': "application/json"
+        },
+        body: JSON.stringify(data),
+    })
+    .catch(err => err);
 }
 
 export const fetchTopic = async (id) => {

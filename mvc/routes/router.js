@@ -4,6 +4,7 @@ const router = express.Router();
 const userCtr = require("../controllers/userController");
 const loginCtr = require("../controllers/loginController");
 const topicCtr = require("../controllers/topicController");
+const entryCtr = require("../controllers/entryController");
 const multer = require('multer');
 const path = require('path')
 const storage = multer.diskStorage({
@@ -42,7 +43,11 @@ router.post("/upload/profile",upload.single('file'), userCtr.profImage);
 
 router.post('/topic/create', topicCtr.create);
 router.get('/topics/:id', topicCtr.index);
-router.get('/topic/:id', topicCtr.view);
+router.route('/topic/:id')
+      .get(param('id').isNumeric().trim(), topicCtr.view)
+      .put(param('id').isNumeric().trim(), topicCtr.put)
+
+router.post('/entry/create', entryCtr.create);
 
 module.exports = router;
 
