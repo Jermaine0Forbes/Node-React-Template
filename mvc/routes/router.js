@@ -48,6 +48,7 @@ router.route('/topic/:id')
       .put(param('id').isNumeric().trim(), topicCtr.put)
 
 router.post('/entry/create', entryCtr.create);
+router.get('/entries/:id',param('id').isNumeric().trim(), entryCtr.index);
 
 module.exports = router;
 

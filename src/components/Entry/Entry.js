@@ -69,6 +69,10 @@ const useStyles = makeStyles(() => ({
     },
     entryOrder: {
         backgroundColor: 'white',
+    },
+
+    hidden: {
+        display: "none"
     }
 }));
 
@@ -92,15 +96,33 @@ export default function Entry({num = 0, data = {}, handleChange})
             <Grid className={classes.entryBody}>
                 <Grid className={classes.entryBlock}>
                     <Typography>Title:</Typography>
+
+                    {
+                        data?.id && (
+
+                            <TextField
+                            name={"id"}
+                            type="hidden"
+                            className={classes.hidden}
+                            hidden
+                            value={data?.id}
+                            >
+                            </TextField>
+
+                        ) 
+                    }
                     
                     <TextField
                     variant="filled"
                     size="small"
                     margin="normal"
                     className={classes.title}
-                    name={"title-"+num}
+                    name={"title"}
+                    // name={"title-"+num}
                     onChange={() => handleChange()}
-                    >{data?.title}</TextField>
+                    value={data?.title ?? ''}
+                    >
+                    </TextField>
                 </Grid>
                 <Grid className={classes.entryBlock}>
                     <Typography>Entry:</Typography>
@@ -110,10 +132,11 @@ export default function Entry({num = 0, data = {}, handleChange})
                         variant='filled'
                         className={classes.entry}
                         minRows={3}
-                        name={"entry-"+num}
+                        name={"entry"}
+                        // name={"entry-"+num}
                         onChange={() => handleChange()}
+                        value={data?.entry ?? ''}
                     >
-                        {data?.entry}
                     </TextField>
                 </Grid>
                 <Grid className={classes.entryBlock}>
@@ -124,9 +147,11 @@ export default function Entry({num = 0, data = {}, handleChange})
                         variant='filled'
                         className={classes.entry}
                         minRows={1}
-                        name={"tags-"+num}
+                        name={"tags"}
+                        // name={"tags-"+num}
+                        onChange={() => handleChange()}
+                        value={data?.tags ?? ''}
                     >
-                        {data?.tags}
                     </TextField>
                 </Grid>
             </Grid>

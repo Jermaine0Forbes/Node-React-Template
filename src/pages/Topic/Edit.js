@@ -4,8 +4,6 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import FormGroup from '@material-ui/core/FormGroup';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { useColor } from '../../hooks/users';
 import {AuthContext} from '../../providers/AuthProvider';
@@ -13,7 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useMutation } from 'react-query';
 import { useQuery } from 'react-query';
 import { fetchTopic, updateTopic } from '../../services/topic';
-import { createEntry } from '../../services/entry';
+import { createEntry, fetchEntries } from '../../services/entry';
 import Entry from '../../components/Entry/Entry';
 import { makeStyles } from '@material-ui/core';
 
@@ -37,7 +35,8 @@ export default function TopicEdit()
         const titleRef = useRef();
         const redirect = useNavigate();
         const classes = useStyles();
-         const {isLoading,  data} = useQuery('topics', () => fetchTopic(id));
+        const {isLoading,  data: topicData} = useQuery('topics', () => fetchTopic(id));
+        const {isLoading: entryDataLoading,  data:entriesData} = useQuery('get-entries', () => fetchEntries(id));
         const { mutate: mutateTopic } = useMutation({
             mutationFn: (data) => updateTopic(data),
             onSuccess: async (data) => {
@@ -66,12 +65,19 @@ export default function TopicEdit()
             }
         });
         useEffect(() => {
-            if(data){
-                const {topic} = data;
+            let data; 
+            if(topicData){
+                const {topic} = topicData;
 
                 setTitle(topic?.title);
             }
-        },[data]);
+            if(entriesData) {
+               data = Array.isArray(entriesData) && entriesData?.length === 0 
+               ? [{}] :entriesData;
+               console.log(data)
+               setEntries(data)
+            }
+        },[topicData, entriesData]);
 
 
 
@@ -153,6 +159,8 @@ export default function TopicEdit()
                 >
                     {
                         entries.map((e, i) => {
+                            // console.log("e")
+                            // console.log(e)
                             return <Entry key={i} num={i+1} data={e} handleChange={handleEntry}/>
                         })
                     }
