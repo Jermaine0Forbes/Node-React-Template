@@ -13,6 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useMutation } from 'react-query';
 import { useQuery } from 'react-query';
 import { fetchTopic, updateTopic } from '../../services/topic';
+import { createEntry } from '../../services/entry';
 import Entry from '../../components/Entry/Entry';
 import { makeStyles } from '@material-ui/core';
 
@@ -37,21 +38,33 @@ export default function TopicEdit()
         const redirect = useNavigate();
         const classes = useStyles();
          const {isLoading,  data} = useQuery('topics', () => fetchTopic(id));
-        // const {isLoading : loadingRight, mutate} = useMutation({
-        //     mutationFn: (data) => createTopic(data),
-        //     onSuccess: async (data) => {
+        const { mutate: mutateTopic } = useMutation({
+            mutationFn: (data) => updateTopic(data),
+            onSuccess: async (data) => {
+                const topic = await data.json();
+                if(data !== 200){
+                    console.log("success")
+                    console.log(topic)
+                }else{
+                    console.log("errors")
+                }
+            }
+        });
+        const { mutate: mutateEntry} = useMutation({
+            mutationFn: (data) => createEntry(data),
+            onSuccess: async (data) => {
 
-        //         console.log(data)
-        //         // if(data.status === 200){
-        //         //    const topic =  await data.json();
-        //         //     console.log(topic)
-        //         //     // redirect('/');
-        //         // } 
-        //     },
-        //     onError: async (err) => {
-        //         console.log(err)
-        //     }
-        // });
+                console.log(data)
+                // if(data.status === 200){
+                //    const topic =  await data.json();
+                //     console.log(topic)
+                //     // redirect('/');
+                // } 
+            },
+            onError: async (err) => {
+                console.log(err)
+            }
+        });
         useEffect(() => {
             if(data){
                 const {topic} = data;
@@ -61,17 +74,10 @@ export default function TopicEdit()
         },[data]);
 
 
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            const data = {title, entries};
-            console.log(data)
-            // mutate(data)
-        }
 
-        const addEntry = (e) => {
-            e.preventDefault();
 
-            console.log(entryRef.current)
+        const handleEntry = (adding = false) => {
+
             let data = {};
             const list = [];
             const form = new FormData(entryRef.current);
@@ -79,13 +85,48 @@ export default function TopicEdit()
                 data[key] = value;
 
                 if(key.includes('tags')){
+                    data.topicId = id;
                     list.push(data)
                     data = {};
                 }
             };
-            list.push({})
+            if(adding) {
+                list.push({})
+            }
             setEntries(list)
-            console.log(list)
+            // console.log(list)
+        }
+
+        const addEntry = (e) => {
+            e.preventDefault();
+            handleEntry(true);
+        }
+
+        const handleSubmit = (e) => {
+            e.preventDefault();
+            mutateTopic({title, userId: user?.id, id });
+            // handleEntry();
+            console.log('handle submit entries')
+            console.log(entries)
+            const data = entries.map((e,i) => {
+                let include = false;
+                for (const [key, value] of Object.entries(e)){
+                    let requiredField = key.includes('title') || key.includes('entry');
+                    if(requiredField && value.trim()){
+                        include = true;
+                    }
+                };
+                if(include) {
+                    return e;
+                }
+
+            })
+            mutateEntry(data);
+            // const data = {title, entries};
+
+
+            console.log(data)
+            // mutate(data)
         }
     
     return (
@@ -112,7 +153,7 @@ export default function TopicEdit()
                 >
                     {
                         entries.map((e, i) => {
-                            return <Entry key={i} num={i+1} data={e}/>
+                            return <Entry key={i} num={i+1} data={e} handleChange={handleEntry}/>
                         })
                     }
                 </Grid>    

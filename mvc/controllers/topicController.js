@@ -38,6 +38,19 @@ module.exports.put = async (req, res) => {
     logging('api', req.originalUrl);
 
     console.log(req.body)
+    const {title,  userId, id} = req.body;
+    const data = await Topics.update(
+        {title, userId},
+        { 
+            where: { id },
+            logging: (sql) => {
+                logging('sql', sql);
+              }
+        });
+
+    console.log('data')
+    console.log(data)
+    res.json(data)
 
 }
 
