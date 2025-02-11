@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import BottomNavigation from '@material-ui/core/BottomNavigation';
 import { useColor } from '../../hooks/users';
 import {AuthContext} from '../../providers/AuthProvider';
 import { useNavigate, useParams } from "react-router-dom";
@@ -20,6 +21,21 @@ const useStyles = makeStyles(() => ({
         marginLeft: "1em",
 
     },
+    bottomNavSection: {
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 3,
+        marginTop:"1em"
+    },
+    bottomNav: {
+        padding: '1em 0'
+    },
+    entryContainer: {
+        paddingBottom: '5em'
+    }
+
 }));
 
 export default function TopicEdit()
@@ -27,7 +43,7 @@ export default function TopicEdit()
         const {getUser, token} = useContext(AuthContext);
         const user = getUser(token);
         const color = useColor(user?.adminLevel);
-        const [form, setForm] = useState({})
+        const [posY, setPosY] = useState(0)
         const [title, setTitle] = useState('');
         const [entries, setEntries] = useState([{}]);
         const {id} = useParams()
@@ -154,7 +170,7 @@ export default function TopicEdit()
                 </Grid>
                 <Grid 
                     ref={entryRef} 
-                    className={"entry-container"}
+                    className={classes.entryContainer}
                     component={'form'}
                 >
                     {
@@ -165,28 +181,39 @@ export default function TopicEdit()
                         })
                     }
                 </Grid>    
-                <Grid component="section" >
-                    <ButtonGroup
-                        variant="contained"
+                <Grid 
+                    component="section"    
+                    elevation={3}
+                    className={classes.bottomNavSection}
+                >
+                    <BottomNavigation
+                        className={classes.bottomNav}
+                        value={posY}
+                        onChange={(event, newValue) => {
+                        setPosY(newValue);
+                        }}
                     >
-                        <Button
-                            variant='contained'
-                            onClick={addEntry} 
-                            style={{ backgroundColor:color, color:"white"}}
-                        
+                        <ButtonGroup
+                            variant="contained"
                         >
-                            Add entry
-                        </Button>
-                        <Button   
-                            type='submit' 
-                            variant='contained' 
-                            style={{ backgroundColor:color, color:"white"}}
-                            onClick={handleSubmit}
-                        >
-                            Save changes
-                        </Button>
-                    </ButtonGroup>
-
+                            <Button
+                                variant='contained'
+                                onClick={addEntry} 
+                                style={{ backgroundColor:color, color:"white"}}
+                            
+                            >
+                                Add entry
+                            </Button>
+                            <Button   
+                                type='submit' 
+                                variant='contained' 
+                                style={{ backgroundColor:color, color:"white"}}
+                                onClick={handleSubmit}
+                            >
+                                Save changes
+                            </Button>
+                        </ButtonGroup>
+                    </BottomNavigation>
                 </Grid>
             </Box>
     );

@@ -2,13 +2,10 @@ import React, {useContext} from 'react';
 import { useQuery } from 'react-query';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import Link from '@material-ui/core/Link';
 import { useColor } from '../../hooks/users';
 import {AuthContext} from '../../providers/AuthProvider';
@@ -45,6 +42,16 @@ export default function TopicList()
                    
                 </main>
                 </Box>
+
+                <Link href='/topic/create'>
+                    <SpeedDial
+                        ariaLabel="SpeedDial basic example"
+                        sx={{ position: 'absolute', bottom: 16, right: 16,  color}}
+                        icon={<SpeedDialIcon />}
+                    >
+                    </SpeedDial>
+                </Link>
         </Container>
+        
     );
 }
