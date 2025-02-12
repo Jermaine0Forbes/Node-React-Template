@@ -42,9 +42,11 @@ export default function TopicCreate()
         });
 
         useEffect( () => {
-            if(topicsData) {
-                 const t = topicsData.map((e) =>( {label: e.topic, id: e.id}))
-                setTopics(t);
+            let td = JSON.stringify(topicsData);
+            let t = JSON.stringify(topics);
+            if(td && td !== t) {
+                 td = topicsData.map((e) =>( {label: e.title, id: e.id}))
+                setTopics(td);
             }
 
         }, [topicsData]);
@@ -64,6 +66,7 @@ export default function TopicCreate()
             // console.log(data)
             mutate(data)
         }
+
     
     return (
         <Container>
@@ -82,8 +85,14 @@ export default function TopicCreate()
                                     disablePortal
                                     id="combo-box-demo"
                                     options={topics}
+                                    getOptionKey = {(o) => o.id}
                                     sx={{ width: 300 }}
-                                    renderInput={(params) => <TextField {...params} key={5*params?.id} label="Topics" />}
+                                    onChange={(e) => console.log(e.target.key)}
+                            renderInput={(params) =>{ 
+                            return <TextField 
+                                {...params} 
+                                label="Topics" />;
+                            }}
                                 />
                             </Collapse>
                         </FormGroup>
