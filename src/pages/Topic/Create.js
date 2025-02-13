@@ -22,8 +22,10 @@ export default function TopicCreate()
         const user = getUser(token);
         const color = useColor(user?.adminLevel);
         const [topics, setTopics] = useState([]);
+        const [disableSwitch, setDisableSwitch] = useState(true);
         const [subTop, setSubTop] = useState(false);
-        const [form, setForm] = useState({})
+        const [parentId, setParentId] = useState(null);
+        const [form, setForm] = useState({});
         const redirect = useNavigate();
         const {data: topicsData} = useQuery(['fetch-topics', subTop], () => fetchTopics(user?.id));
         const {isLoading, mutate} = useMutation({
@@ -46,6 +48,7 @@ export default function TopicCreate()
             let t = JSON.stringify(topics);
             if(td && td !== t) {
                  td = topicsData.map((e) =>( {label: e.title, id: e.id}))
+                setDisableSwitch(false);
                 setTopics(td);
             }
 
@@ -53,10 +56,16 @@ export default function TopicCreate()
 
         const handleForm = (e) => {
             const field = e.target;
+            // console.log('field')
+            // console.log(field.id)
             let value = field.name === "subtopic" ? field.checked :field.value;
-            setSubTop(!subTop);
-            const formData = {...form, [field.name] : value  }
-            // console.log(formData)
+            let name = field?.id.includes('combo') ? 'parentTopicId' : field.name;
+            if(field.name === "subtopic"){
+                setSubTop(value);
+            }
+
+            const formData = {...form, [name] : value  }
+            console.log(formData)
             setForm(formData)
          };
 
@@ -79,20 +88,24 @@ export default function TopicCreate()
                     </Grid>    
                     <Grid>
                         <FormGroup>
-                            <FormControlLabel control={<Switch  inputProps={{name:"subtopic"}} onChange={handleForm}/>} label="is it a subtopic" />
+                            <FormControlLabel 
+                                control={<Switch disabled={disableSwitch}  inputProps={{name:"subtopic"}} onChange={handleForm}/>} 
+                                label="is it a subtopic" 
+                            />
                             <Collapse in={subTop}>
                                 <Autocomplete
                                     disablePortal
                                     id="combo-box-demo"
                                     options={topics}
-                                    getOptionKey = {(o) => o.id}
                                     sx={{ width: 300 }}
-                                    onChange={(e) => console.log(e.target.key)}
-                            renderInput={(params) =>{ 
-                            return <TextField 
-                                {...params} 
-                                label="Topics" />;
-                            }}
+                                    onChange={handleForm}
+                                    renderInput={(params) => <TextField {...params} label="Topics" />}
+                                    renderOption={(props,option) =>( 
+                                    <li 
+                                    {...props} 
+                                    key={option.id}
+                                    value={option.id}
+                                    >{option.label}</li>)}
                                 />
                             </Collapse>
                         </FormGroup>
