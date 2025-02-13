@@ -6,6 +6,12 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import ImageIcon from '@mui/icons-material/Image';
 import { useColor } from '../../hooks/users';
 import {AuthContext} from '../../providers/AuthProvider';
 import { useNavigate, useParams } from "react-router-dom";
@@ -43,6 +49,7 @@ export default function TopicEdit()
         const {getUser, token} = useContext(AuthContext);
         const user = getUser(token);
         const color = useColor(user?.adminLevel);
+        const [subtopics, setSubtopics] = useState([]);
         const [posY, setPosY] = useState(0)
         const [title, setTitle] = useState('');
         const [entries, setEntries] = useState([{}]);
@@ -83,9 +90,10 @@ export default function TopicEdit()
         useEffect(() => {
             let data; 
             if(topicData){
-                const {topic} = topicData;
+                const {topic, subtopics: st} = topicData;
 
                 setTitle(topic?.title);
+                setSubtopics(st)
             }
             if(entriesData) {
                data = Array.isArray(entriesData) && entriesData?.length === 0 
@@ -168,13 +176,33 @@ export default function TopicEdit()
                     </TextField>
                     </Typography>
                 </Grid>
+                <Grid component="section">
+                    {
+                        (subtopics?.length > 0) && (
+                            <List >
+                                {
+                                    subtopics.map((e,i) => {
+                                        return (<ListItem key={i}>
+                                        <ListItemAvatar>
+                                            <Avatar>
+                                                <ImageIcon />
+                                            </Avatar>
+                                        </ListItemAvatar>
+                                        <ListItemText primary={e?.title} />
+                                    </ListItem>);
+                                    })
+                                }
+                            </List>
+                        )
+                    }
+                </Grid>
                 <Grid 
                     ref={entryRef} 
                     className={classes.entryContainer}
                     component={'form'}
                 >
                     {
-                        entries.map((e, i) => {
+                       entries?.length && entries.map((e, i) => {
                             // console.log("e")
                             // console.log(e)
                             return <Entry key={i} num={i+1} data={e} handleChange={handleEntry}/>

@@ -30,7 +30,16 @@ module.exports.view = async (req,res) => {
           }
     });
 
-    res.json({ topic:data})
+    const subtopics = await Topics.findAll(
+        {
+             where: {parentTopicId: id},
+             logging: (sql) => {
+                logging('sql', sql);
+             }
+        }
+    );
+
+    res.json({ topic:data, subtopics})
 
 }
 
