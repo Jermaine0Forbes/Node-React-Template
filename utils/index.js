@@ -114,7 +114,7 @@ function invalidRegister(email, user, pass){
 
 
 exports.generateAccessToken =  function (user) {
-  return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: '3h' });
+  return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: '24h' });
 }
 
 exports.hashPassword = async function (password, saltRounds = 10)

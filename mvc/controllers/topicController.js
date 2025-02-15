@@ -32,7 +32,7 @@ module.exports.view = async (req,res) => {
 
     const subtopics = await Topics.findAll(
         {
-             where: {parentTopicId: id},
+             where: {parentTopicId: id, subtopic: 1},
              logging: (sql) => {
                 logging('sql', sql);
              }

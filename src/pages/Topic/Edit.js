@@ -6,12 +6,16 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
+import { Link} from "react-router-dom";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
 import ImageIcon from '@mui/icons-material/Image';
+import LinkIcon from '@mui/icons-material/Link';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useColor } from '../../hooks/users';
 import {AuthContext} from '../../providers/AuthProvider';
 import { useNavigate, useParams } from "react-router-dom";
@@ -40,6 +44,9 @@ const useStyles = makeStyles(() => ({
     },
     entryContainer: {
         paddingBottom: '5em'
+    },
+    subtopicItem: {
+        color:"white"
     }
 
 }));
@@ -182,7 +189,22 @@ export default function TopicEdit()
                             <List >
                                 {
                                     subtopics.map((e,i) => {
-                                        return (<ListItem key={i}>
+                                        return (
+                                        <ListItem 
+                                            key={i} 
+                                            className={classes.subtopicItem} 
+                                            style={{backgroundColor:color}}
+                                            secondaryAction={
+                                                <>
+                                                <IconButton component={Link} to={"/topic/"+e?.id} edge="end" aria-label="link">
+                                                    <LinkIcon />
+                                                </IconButton>
+                                                <IconButton edge="end" aria-label="show more">
+                                                    <KeyboardArrowDownIcon />
+                                                </IconButton>
+                                                </>
+                                            }
+                                        >
                                         <ListItemAvatar>
                                             <Avatar>
                                                 <ImageIcon />
