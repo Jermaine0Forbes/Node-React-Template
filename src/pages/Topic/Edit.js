@@ -6,7 +6,6 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
-import { Link} from "react-router-dom";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -18,7 +17,7 @@ import LinkIcon from '@mui/icons-material/Link';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useColor } from '../../hooks/users';
 import {AuthContext} from '../../providers/AuthProvider';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
 import { useMutation } from 'react-query';
 import { useQuery } from 'react-query';
 import { fetchTopic, updateTopic } from '../../services/topic';
@@ -60,6 +59,7 @@ export default function TopicEdit()
         const [posY, setPosY] = useState(0)
         const [title, setTitle] = useState('');
         const [entries, setEntries] = useState([{}]);
+        const [goto, setGoto] = useState(false);
         const {id} = useParams()
         const entryRef = useRef();
         const titleRef = useRef();
@@ -108,7 +108,11 @@ export default function TopicEdit()
                console.log(data)
                setEntries(data)
             }
-        },[topicData, entriesData]);
+            if(goto){
+                redirect(goto, {replace: true});
+                redirect(0);
+            }
+        },[topicData, entriesData, goto]);
 
 
 
@@ -196,7 +200,13 @@ export default function TopicEdit()
                                             style={{backgroundColor:color}}
                                             secondaryAction={
                                                 <>
-                                                <IconButton component={Link} to={"/topic/"+e?.id} edge="end" aria-label="link">
+                                                <IconButton 
+                                                    // component={Link} 
+                                                    // to={"/topic/"+e?.id}
+                                                    onClick={() => setGoto("/topic/"+e?.id)} 
+                                                    edge="end" 
+                                                    aria-label="link"
+                                                >
                                                     <LinkIcon />
                                                 </IconButton>
                                                 <IconButton edge="end" aria-label="show more">

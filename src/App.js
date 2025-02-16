@@ -55,7 +55,7 @@ export default function App()
                     <ProtectedRoute level={1}>
                         <TopicList/>
                       </ProtectedRoute>} />
-                  <Route path="topic/:id" element={                 
+                  <Route exact path="/topic/:id" element={
                     <ProtectedRoute level={1}>
                         <TopicEdit/>
                       </ProtectedRoute>} />
