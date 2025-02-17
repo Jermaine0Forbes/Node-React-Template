@@ -2,10 +2,10 @@ import React, {useContext, useState, useEffect, useRef} from 'react';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import BottomNavigation from '@mui/material/BottomNavigation';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -15,6 +15,7 @@ import IconButton from '@mui/material/IconButton';
 import ImageIcon from '@mui/icons-material/Image';
 import LinkIcon from '@mui/icons-material/Link';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useColor } from '../../hooks/users';
 import {AuthContext} from '../../providers/AuthProvider';
 import { useNavigate, useParams} from "react-router-dom";
@@ -24,6 +25,8 @@ import { fetchTopic, updateTopic } from '../../services/topic';
 import { createEntry, fetchEntries } from '../../services/entry';
 import Entry from '../../components/Entry/Entry';
 import { makeStyles } from '@material-ui/core';
+import WhileLoading from '../../components/Loading/WhileLoading';
+import Collapse from '@mui/material/Collapse';
 
 const useStyles = makeStyles(() => ({
     topicTitle: {
@@ -55,9 +58,12 @@ export default function TopicEdit()
         const {getUser, token} = useContext(AuthContext);
         const user = getUser(token);
         const color = useColor(user?.adminLevel);
-        const [subtopics, setSubtopics] = useState([]);
+        const [subtopicList, setSubtopicList] = useState([]);
+        const [subEntries, setSubEntries] = useState([]);
         const [posY, setPosY] = useState(0)
         const [title, setTitle] = useState('');
+        const [openSubList, setOpenSubList] = useState(false);
+        const [subId, setSubId] = useState(null);
         const [entries, setEntries] = useState([{}]);
         const [goto, setGoto] = useState(false);
         const {id} = useParams()
@@ -67,6 +73,7 @@ export default function TopicEdit()
         const classes = useStyles();
         const {isLoading,  data: topicData} = useQuery('topics', () => fetchTopic(id));
         const {isLoading: entryDataLoading,  data:entriesData} = useQuery('get-entries', () => fetchEntries(id));
+        const {isLoading: subEntriesLoading,  data:subEntriesData} = useQuery('get-sub-entries', () => fetchEntries(subId),{ enabled: !!subId});
         const { mutate: mutateTopic } = useMutation({
             mutationFn: (data) => updateTopic(data),
             onSuccess: async (data) => {
@@ -100,7 +107,7 @@ export default function TopicEdit()
                 const {topic, subtopics: st} = topicData;
 
                 setTitle(topic?.title);
-                setSubtopics(st)
+                setSubtopicList(st)
             }
             if(entriesData) {
                data = Array.isArray(entriesData) && entriesData?.length === 0 
@@ -112,7 +119,10 @@ export default function TopicEdit()
                 redirect(goto, {replace: true});
                 redirect(0);
             }
-        },[topicData, entriesData, goto]);
+            if(subEntriesData){
+                setSubEntries(subEntriesData);
+            }
+        },[topicData, entriesData, goto, subEntriesData]);
 
 
 
@@ -169,6 +179,33 @@ export default function TopicEdit()
             console.log(data)
             // mutate(data)
         }
+
+        const handleSubtopic =  (evt) => {
+            const id = evt.target.dataset.subtopicId ??  null;
+            console.log(evt.target)
+            console.log(evt.target.dataset)
+            console.log(id)
+            setSubId(id);
+            setOpenSubList(!openSubList);
+
+
+            // const val = {...subtopic, [name]: value};
+            // console.log(val)
+            // setSubtopic(val)
+
+            // if(subtopic?.open === false){
+            //     setSubtopic({...subtopic, list: []});
+            // }
+            // switch (name) {
+                
+            //     case 'id': 
+            //     case 'open': 
+            //     setSubtopic({...subtopic, [name]: value})
+            //    break;
+            // }
+    
+        }
+        // console.log(subtopic)
     
     return (
             <Box>
@@ -189,10 +226,10 @@ export default function TopicEdit()
                 </Grid>
                 <Grid component="section">
                     {
-                        (subtopics?.length > 0) && (
+                        (subtopicList?.length > 0) && (
                             <List >
                                 {
-                                    subtopics.map((e,i) => {
+                                    subtopicList.map((e,i) => {
                                         return (
                                         <ListItem 
                                             key={i} 
@@ -201,16 +238,25 @@ export default function TopicEdit()
                                             secondaryAction={
                                                 <>
                                                 <IconButton 
-                                                    // component={Link} 
-                                                    // to={"/topic/"+e?.id}
                                                     onClick={() => setGoto("/topic/"+e?.id)} 
                                                     edge="end" 
                                                     aria-label="link"
                                                 >
                                                     <LinkIcon />
                                                 </IconButton>
-                                                <IconButton edge="end" aria-label="show more">
-                                                    <KeyboardArrowDownIcon />
+                                                <IconButton 
+                                                    edge="end" 
+                                                    aria-label="show more"
+                                                    onClick={handleSubtopic}
+                                                >
+                                                    {
+                                                        openSubList ? (
+                                                            <KeyboardArrowUpIcon  />
+                                                        ) : (
+                                                            <KeyboardArrowDownIcon data-subtopic-id={e?.id} />
+                                                        )
+                                                    }
+                                                    
                                                 </IconButton>
                                                 </>
                                             }
@@ -221,9 +267,35 @@ export default function TopicEdit()
                                             </Avatar>
                                         </ListItemAvatar>
                                         <ListItemText primary={e?.title} />
-                                    </ListItem>);
+                                    </ListItem>
+                                        );
                                     })
                                 }
+                                <Collapse in={openSubList}>
+                                    <WhileLoading isLoading={subEntriesLoading}>
+                                         {
+                                            ( subEntries?.length > 0) && (
+                                                <List >
+                                                    {
+                                                        subEntries?.map((e,i) => {
+
+                                                            return (
+                                                                <ListItem 
+                                                                key={i} 
+                                                                >
+
+                                                            <ListItemText secondary={e?.title} />
+                                                        </ListItem>
+                                                            )
+                                                        })
+                                                    }
+
+
+                                                </List>
+                                            )
+                                         }
+                                    </WhileLoading>
+                                </Collapse>
                             </List>
                         )
                     }
@@ -255,6 +327,7 @@ export default function TopicEdit()
                     >
                         <ButtonGroup
                             variant="contained"
+                            aria-label="button-group"
                         >
                             <Button
                                 variant='contained'
