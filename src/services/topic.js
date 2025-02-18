@@ -44,3 +44,14 @@ export const fetchTopics = async (id) => {
     .then(resp => resp.json())
     .catch(err => console.error(err));
 }
+
+export const fetchSubtopics = async (id) => {
+    return await fetch(process.env.URL+'/api/subtopics/'+id, { 
+        method:'GET', 
+        headers:{
+            'Content-Type': "application/json"
+        },
+        body: JSON.stringify(data),
+    })
+    .catch(err => err);
+}

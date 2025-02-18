@@ -46,6 +46,7 @@ router.get('/topics/:id', topicCtr.index);
 router.route('/topic/:id')
       .get(param('id').isNumeric().trim(), topicCtr.view)
       .put(param('id').isNumeric().trim(), topicCtr.put)
+router.get('/subtopics/:id',[param('id').isNumeric().trim()], topicCtr.getSubs);
 
 router.post('/entry/create', entryCtr.create);
 router.get('/entries/:id',param('id').isNumeric().trim(), entryCtr.index);

@@ -1,4 +1,4 @@
-const  { Topics } = require("../models/index");
+const  { Topics, Entries } = require("../models/index");
 const { logging } = require('../../utils/index');
 const { validationResult } = require('express-validator');
 const bcrypt = require("bcrypt");
@@ -41,6 +41,29 @@ module.exports.view = async (req,res) => {
 
     res.json({ topic:data, subtopics})
 
+}
+
+module.exports.getSubs = async (req,res) => {
+    logging('api', req.originalUrl)
+    const { id }  = req.params;
+
+    const entries = await Entries.findAll({
+        where: {topicId: id},
+        logging: (sql) => {
+            logging('sql', sql);
+          }
+    })
+
+    const subtopics = await Topics.findAll(
+        {
+             where: {parentTopicId: id, subtopic: 1},
+             logging: (sql) => {
+                logging('sql', sql);
+             }
+        }
+    );
+
+    res.json({ entries, subtopics});
 }
 
 module.exports.put = async (req, res) => {
