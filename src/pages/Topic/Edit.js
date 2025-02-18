@@ -27,6 +27,7 @@ import Entry from '../../components/Entry/Entry';
 import { makeStyles } from '@material-ui/core';
 import WhileLoading from '../../components/Loading/WhileLoading';
 import Collapse from '@mui/material/Collapse';
+import SubtopicList from "../../components/List/SubtopicList";
 
 const useStyles = makeStyles(() => ({
     topicTitle: {
@@ -62,10 +63,10 @@ export default function TopicEdit()
         const [subEntries, setSubEntries] = useState([]);
         const [posY, setPosY] = useState(0)
         const [title, setTitle] = useState('');
-        const [openSubList, setOpenSubList] = useState(false);
-        const [subId, setSubId] = useState(null);
+        // const [openSubList, setOpenSubList] = useState(false);
+        // const [subId, setSubId] = useState(null);
         const [entries, setEntries] = useState([{}]);
-        const [goto, setGoto] = useState(false);
+        // const [goto, setGoto] = useState(false);
         const {id} = useParams()
         const entryRef = useRef();
         const titleRef = useRef();
@@ -73,7 +74,7 @@ export default function TopicEdit()
         const classes = useStyles();
         const {isLoading,  data: topicData} = useQuery('topics', () => fetchTopic(id));
         const {isLoading: entryDataLoading,  data:entriesData} = useQuery('get-entries', () => fetchEntries(id));
-        const {isLoading: subEntriesLoading,  data:subEntriesData} = useQuery('get-sub-entries', () => fetchEntries(subId),{ enabled: !!subId});
+        // const {isLoading: subEntriesLoading,  data:subEntriesData} = useQuery('get-sub-entries', () => fetchEntries(subId),{ enabled: !!subId});
         const { mutate: mutateTopic } = useMutation({
             mutationFn: (data) => updateTopic(data),
             onSuccess: async (data) => {
@@ -115,14 +116,14 @@ export default function TopicEdit()
                console.log(data)
                setEntries(data)
             }
-            if(goto){
-                redirect(goto, {replace: true});
-                redirect(0);
-            }
-            if(subEntriesData){
-                setSubEntries(subEntriesData);
-            }
-        },[topicData, entriesData, goto, subEntriesData]);
+            // if(goto){
+            //     redirect(goto, {replace: true});
+            //     redirect(0);
+            // }
+            // if(subEntriesData){
+            //     setSubEntries(subEntriesData);
+            // }
+        },[topicData, entriesData]);
 
 
 
@@ -225,80 +226,7 @@ export default function TopicEdit()
                     </Typography>
                 </Grid>
                 <Grid component="section">
-                    {
-                        (subtopicList?.length > 0) && (
-                            <List >
-                                {
-                                    subtopicList.map((e,i) => {
-                                        return (
-                                        <ListItem 
-                                            key={i} 
-                                            className={classes.subtopicItem} 
-                                            style={{backgroundColor:color}}
-                                            secondaryAction={
-                                                <>
-                                                <IconButton 
-                                                    onClick={() => setGoto("/topic/"+e?.id)} 
-                                                    edge="end" 
-                                                    aria-label="link"
-                                                >
-                                                    <LinkIcon />
-                                                </IconButton>
-                                                <IconButton 
-                                                    edge="end" 
-                                                    aria-label="show more"
-                                                    onClick={handleSubtopic}
-                                                >
-                                                    {
-                                                        openSubList ? (
-                                                            <KeyboardArrowUpIcon  />
-                                                        ) : (
-                                                            <KeyboardArrowDownIcon data-subtopic-id={e?.id} />
-                                                        )
-                                                    }
-                                                    
-                                                </IconButton>
-                                                </>
-                                            }
-                                        >
-                                        <ListItemAvatar>
-                                            <Avatar>
-                                                <ImageIcon />
-                                            </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText primary={e?.title} />
-                                    </ListItem>
-                                        );
-                                    })
-                                }
-                                <Collapse in={openSubList}>
-                                    <WhileLoading isLoading={subEntriesLoading}>
-                                         {
-                                            ( subEntries?.length > 0) && (
-                                                <List >
-                                                    {
-                                                        subEntries?.map((e,i) => {
-
-                                                            return (
-                                                                <ListItem 
-                                                                key={i} 
-                                                                >
-
-                                                            <ListItemText secondary={e?.title} />
-                                                        </ListItem>
-                                                            )
-                                                        })
-                                                    }
-
-
-                                                </List>
-                                            )
-                                         }
-                                    </WhileLoading>
-                                </Collapse>
-                            </List>
-                        )
-                    }
+                     <SubtopicList subtopicList={subtopicList}/>
                 </Grid>
                 <Grid 
                     ref={entryRef} 

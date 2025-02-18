@@ -51,7 +51,7 @@ export const fetchSubtopics = async (id) => {
         headers:{
             'Content-Type': "application/json"
         },
-        body: JSON.stringify(data),
     })
+    .then(resp => resp.json())
     .catch(err => err);
 }

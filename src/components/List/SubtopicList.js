@@ -22,8 +22,6 @@ import { useNavigate, useParams} from "react-router-dom";
 import { useMutation } from 'react-query';
 import { useQuery } from 'react-query';
 import { fetchSubtopics } from '../../services/topic';
-import { createEntry, fetchEntries } from '../../services/entry';
-import Entry from '../../components/Entry/Entry';
 import { makeStyles } from '@material-ui/core';
 import WhileLoading from '../../components/Loading/WhileLoading';
 import Collapse from '@mui/material/Collapse';
@@ -64,13 +62,13 @@ export default function SubtopicList({subtopicList})
         const [openSubList, setOpenSubList] = useState(false);
         const [subId, setSubId] = useState(null);
         const [goto, setGoto] = useState(false);
-        const {id} = useParams()
+        // const {id} = useParams()
         const redirect = useNavigate();
         const classes = useStyles();
         const {isLoading: subEntriesLoading,  data:subData} = useQuery('get-subtopics-entries', () => fetchSubtopics(subId),{ enabled: !!subId});
 
         useEffect(() => {
-            let data; 
+            // let data; 
 
             if(goto){
                 redirect(goto, {replace: true});
@@ -78,6 +76,8 @@ export default function SubtopicList({subtopicList})
             }
             if(subData){
                  const {subtopics, entries} = subData;
+                 console.log('subData')
+                 console.log(subData)
                 setSubEntries(entries);
                 setSubTopics(subtopics);
             }
@@ -92,6 +92,13 @@ export default function SubtopicList({subtopicList})
             setSubId(id);
             setOpenSubList(!openSubList);
         }
+
+        console.log('openSubList')
+        console.log(openSubList)
+        // console.log('subTopics')
+        // console.log(subTopics)
+        // console.log('subEntries')
+        // console.log(subEntries)
     
     return (
             
@@ -145,6 +152,39 @@ export default function SubtopicList({subtopicList})
                         <Collapse in={openSubList}>
                             <WhileLoading isLoading={subEntriesLoading}>
                                     {
+                                        ( subTopics?.length > 0) && (
+                                            <List >
+                                                {
+                                                    subTopics?.map((e,i) => {
+    
+                                                        return (
+                                                            <ListItem 
+                                                                key={i} 
+                                                                className={classes.subtopicItem} 
+                                                                style={{backgroundColor:color}}
+                                                                secondaryAction={
+                                                                    <IconButton 
+                                                                        onClick={() => setGoto("/topic/"+e?.id)} 
+                                                                        edge="end" 
+                                                                        aria-label="link"
+                                                                    >
+                                                                        <LinkIcon />
+                                                                    </IconButton>
+                                                                }
+                                                            >
+    
+                                                        <ListItemText primary={e?.title} />
+                                                    </ListItem>
+                                                        )
+                                                    })
+                                                }
+    
+    
+                                            </List>
+                                        )
+                                    }
+                                    {
+                                        
                                     ( subEntries?.length > 0) && (
                                         <List >
                                             {
