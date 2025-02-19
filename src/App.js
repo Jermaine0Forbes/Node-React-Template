@@ -14,6 +14,8 @@ import NotFound from "./pages/NotFound";
 import TopicCreate from "./pages/Topic/Create";
 import TopicList from "./pages/Topic/List";
 import TopicEdit from "./pages/Topic/Edit";
+import TagList from "./pages/Tags/List";
+import TagEdit from "./pages/Tags/Edit";
 import Forbidden from "./pages/Forbidden";
 import AuthProvider from "./providers/AuthProvider";
 import ProtectedRoute from "./pages/ProtectedRoute";
@@ -58,6 +60,14 @@ export default function App()
                   <Route exact path="/topic/:id" element={
                     <ProtectedRoute level={1}>
                         <TopicEdit/>
+                      </ProtectedRoute>} />
+                  <Route exact path="/tag/list" element={
+                    <ProtectedRoute level={1}>
+                        <TagList/>
+                      </ProtectedRoute>} />
+                  <Route exact path="/tag/:id" element={
+                    <ProtectedRoute level={1}>
+                        <TagEdit/>
                       </ProtectedRoute>} />
                   <Route path="/forbidden" element={<Forbidden />} />
                   <Route path="*" element={<NotFound />} />

@@ -1,11 +1,11 @@
 import React, {useContext, useState, useEffect, useRef} from 'react';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import BottomNavigation from '@mui/material/BottomNavigation';
+// import TextField from '@material-ui/core/TextField';
+// import Button from '@mui/material/Button';
+// import Typography from '@mui/material/Typography';
+// import ButtonGroup from '@mui/material/ButtonGroup';
+// import BottomNavigation from '@mui/material/BottomNavigation';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -23,8 +23,8 @@ import { useMutation } from 'react-query';
 import { useQuery } from 'react-query';
 import { fetchSubtopics } from '../../services/topic';
 import { makeStyles } from '@material-ui/core';
-import WhileLoading from '../../components/Loading/WhileLoading';
 import Collapse from '@mui/material/Collapse';
+import ChildSubtopicList from './ChildSubtopicList';
 
 const useStyles = makeStyles(() => ({
     topicTitle: {
@@ -76,8 +76,8 @@ export default function SubtopicList({subtopicList})
             }
             if(subData){
                  const {subtopics, entries} = subData;
-                 console.log('subData')
-                 console.log(subData)
+                //  console.log('subData')
+                //  console.log(subData)
                 setSubEntries(entries);
                 setSubTopics(subtopics);
             }
@@ -86,15 +86,15 @@ export default function SubtopicList({subtopicList})
 
         const handleSubtopic =  (evt) => {
             const id = evt.target.dataset.subtopicId ??  null;
-            console.log(evt.target)
-            console.log(evt.target.dataset)
-            console.log(id)
+            // console.log(evt.target)
+            // console.log(evt.target.dataset)
+            // console.log(id)
             setSubId(id);
             setOpenSubList(!openSubList);
         }
 
-        console.log('openSubList')
-        console.log(openSubList)
+        // console.log('openSubList')
+        // console.log(openSubList)
         // console.log('subTopics')
         // console.log(subTopics)
         // console.log('subEntries')
@@ -102,7 +102,7 @@ export default function SubtopicList({subtopicList})
     
     return (
             
-        <Grid component="section">
+        <>
             {
                 (subtopicList?.length > 0) && (
                     <List >
@@ -150,67 +150,17 @@ export default function SubtopicList({subtopicList})
                             })
                         }
                         <Collapse in={openSubList}>
-                            <WhileLoading isLoading={subEntriesLoading}>
-                                    {
-                                        ( subTopics?.length > 0) && (
-                                            <List >
-                                                {
-                                                    subTopics?.map((e,i) => {
-    
-                                                        return (
-                                                            <ListItem 
-                                                                key={i} 
-                                                                className={classes.subtopicItem} 
-                                                                style={{backgroundColor:color}}
-                                                                secondaryAction={
-                                                                    <IconButton 
-                                                                        onClick={() => setGoto("/topic/"+e?.id)} 
-                                                                        edge="end" 
-                                                                        aria-label="link"
-                                                                    >
-                                                                        <LinkIcon />
-                                                                    </IconButton>
-                                                                }
-                                                            >
-    
-                                                        <ListItemText primary={e?.title} />
-                                                    </ListItem>
-                                                        )
-                                                    })
-                                                }
-    
-    
-                                            </List>
-                                        )
-                                    }
-                                    {
-                                        
-                                    ( subEntries?.length > 0) && (
-                                        <List >
-                                            {
-                                                subEntries?.map((e,i) => {
-
-                                                    return (
-                                                        <ListItem 
-                                                        key={i} 
-                                                        >
-
-                                                    <ListItemText secondary={e?.title} />
-                                                </ListItem>
-                                                    )
-                                                })
-                                            }
-
-
-                                        </List>
-                                    )
-                                    }
-                            </WhileLoading>
+                            <ChildSubtopicList
+                              isLoading={subEntriesLoading}
+                              childTopics={subTopics}
+                              childEntries={subEntries}
+                              setGoto={setGoto}
+                            />
                         </Collapse>
                     </List>
                 )
             }
-        </Grid>
+        </>
              
     );
 }

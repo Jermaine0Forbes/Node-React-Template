@@ -22,7 +22,14 @@ Express & React template
 - ~~Create a button in the topic edit page that will generate a new entry~~
 - ~~Create an entry form and make sure it saves~~
 - ~~add api that will fetch the entries that belong to a topic~~
-- update topic form that can create a subtopic and it shows up in the topic edit page
+- ~~update topic form that can create a subtopic and it shows up in the topic edit page~~
+- create tag listing and edit page
+- create tag functional system
+-  add logic to tag listing page
+-  add logic to tag edit page
+-  add wysiwyg editor to entry field
+-  create quiz-sessions table
+-  possibly create answers table
 - add a status column to the quiz table (incomplete/completed)
 
 [go back home](home)
