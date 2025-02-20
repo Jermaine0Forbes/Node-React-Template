@@ -133,19 +133,22 @@ export default function TopicEdit()
             let data = {};
             const list = [];
             const form = new FormData(entryRef.current);
+            console.log(form.entries())
             for (const [key, value] of form.entries()){
                 data[key] = value;
-
-                if(key.includes('tags')){
-                    data.topicId = id;
-                    list.push(data)
-                    data = {};
-                }
-            };
-            if(adding) {
-                list.push({})
+                console.log(data)
             }
-            setEntries(list)
+
+            //     if(key.includes('tags')){
+            //         data.topicId = id;
+            //         list.push(data)
+            //         data = {};
+            //     }
+            // };
+            // if(adding) {
+            //     list.push({})
+            // }
+            // setEntries(list)
             // console.log(list)
         }
 
@@ -181,31 +184,31 @@ export default function TopicEdit()
             // mutate(data)
         }
 
-        const handleSubtopic =  (evt) => {
-            const id = evt.target.dataset.subtopicId ??  null;
-            console.log(evt.target)
-            console.log(evt.target.dataset)
-            console.log(id)
-            setSubId(id);
-            setOpenSubList(!openSubList);
+        // const handleSubtopic =  (evt) => {
+        //     const id = evt.target.dataset.subtopicId ??  null;
+        //     console.log(evt.target)
+        //     console.log(evt.target.dataset)
+        //     console.log(id)
+        //     setSubId(id);
+        //     setOpenSubList(!openSubList);
 
 
-            // const val = {...subtopic, [name]: value};
-            // console.log(val)
-            // setSubtopic(val)
+        //     // const val = {...subtopic, [name]: value};
+        //     // console.log(val)
+        //     // setSubtopic(val)
 
-            // if(subtopic?.open === false){
-            //     setSubtopic({...subtopic, list: []});
-            // }
-            // switch (name) {
+        //     // if(subtopic?.open === false){
+        //     //     setSubtopic({...subtopic, list: []});
+        //     // }
+        //     // switch (name) {
                 
-            //     case 'id': 
-            //     case 'open': 
-            //     setSubtopic({...subtopic, [name]: value})
-            //    break;
-            // }
+        //     //     case 'id': 
+        //     //     case 'open': 
+        //     //     setSubtopic({...subtopic, [name]: value})
+        //     //    break;
+        //     // }
     
-        }
+        // }
         // console.log(subtopic)
     
     return (

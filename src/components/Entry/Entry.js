@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import Badge from '@material-ui/core/Badge';
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
@@ -76,11 +77,29 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
+const top100Films = [
+    { title: 'The Shawshank Redemption', year: 1994 },
+    { title: 'The Godfather', year: 1972 },
+    { title: 'The Godfather: Part II', year: 1974 },
+    { title: 'The Dark Knight', year: 2008 },
+    { title: '12 Angry Men', year: 1957 },
+    { title: "Schindler's List", year: 1993 },
+    { title: 'Pulp Fiction', year: 1994 },
+];
+
 
 export default function Entry({num = 0, data = {}, handleChange})
 {
 
+    const [tags, setTags] = useState([]);
     const classes = useStyles();
+    const handleTags = (evt, value) => {
+        
+        setTags([value,...tags]);
+        if(tags.length > 0) {
+            handleChange();
+        }
+    }
     
     return (
         <Box component={'section'} className={classes.entrySection}>
@@ -141,7 +160,30 @@ export default function Entry({num = 0, data = {}, handleChange})
                 </Grid>
                 <Grid className={classes.entryBlock}>
                     <Typography>Tags:</Typography>
-                    <TextField
+                    <Autocomplete
+                        multiple
+                        id="tags-standard"
+                        options={top100Films}
+                        getOptionLabel={(option) => option.title}
+                        defaultValue={[top100Films[1]]}
+                        
+                        onChange={handleTags}
+                        renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            variant="filled"
+                            label="Multiple values"
+                            placeholder="Tags"
+                        />
+                        )}
+                    />
+                    {
+                        (tags.length > 0) && (
+
+                            tags.map((e,i) => <TextField type="hidden" className={classes.hidden} value={e} key={i} name="tags[]"/>)
+                        )
+                    }
+                    {/* <TextField
                         label="Enter any tags"
                         multiline
                         variant='filled'
@@ -152,7 +194,7 @@ export default function Entry({num = 0, data = {}, handleChange})
                         onChange={() => handleChange()}
                         value={data?.tags ?? ''}
                     >
-                    </TextField>
+                    </TextField> */}
                 </Grid>
             </Grid>
 
