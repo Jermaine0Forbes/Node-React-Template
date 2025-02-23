@@ -8,6 +8,7 @@ import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
+import {json} from "../../utils/index";
 
 const useStyles = makeStyles(() => ({
     title: {
@@ -88,14 +89,14 @@ const top100Films = [
 ];
 
 
-export default function Entry({num = 0, data = {}, handleChange})
+export default function Entry({num = 0, data = {}, handleChange, id = null})
 {
 
     const [tags, setTags] = useState([]);
     const classes = useStyles();
     const handleTags = (evt, value) => {
-        
-        setTags([value,...tags]);
+        // console.log(value)
+        setTags([json(value),...tags]);
         if(tags.length > 0) {
             handleChange();
         }
@@ -178,10 +179,12 @@ export default function Entry({num = 0, data = {}, handleChange})
                         )}
                     />
                     {
-                        (tags.length > 0) && (
+                        (tags.length > 0) ? (
 
-                            tags.map((e,i) => <TextField type="hidden" className={classes.hidden} value={e} key={i} name="tags[]"/>)
-                        )
+                            tags.map((e,i) => <TextField type="hidden" className={classes.hidden} value={e} key={i} name={`tags[]`} />)
+                        ):
+                        ( <TextField type="hidden" className={classes.hidden} name={`tags[]`}/>)
+
                     }
                     {/* <TextField
                         label="Enter any tags"
@@ -196,6 +199,18 @@ export default function Entry({num = 0, data = {}, handleChange})
                     >
                     </TextField> */}
                 </Grid>
+                <TextField
+                        type="hidden" 
+                        className={classes.hidden} 
+                        name={"order"}
+                        value={num}
+                    />
+                <TextField
+                        type="hidden" 
+                        className={classes.hidden} 
+                        name={"topicId"}
+                        value={id}
+                    />
             </Grid>
 
         </Box>

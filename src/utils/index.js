@@ -1,0 +1,1 @@
+export const json = (value) =>  typeof value === "object" ? JSON.stringify(value) : JSON.parse(value);
