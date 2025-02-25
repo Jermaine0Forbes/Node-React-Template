@@ -1,4 +1,4 @@
-const  { Entries } = require("../models/index");
+const  { Entries, Tags } = require("../models/index");
 const { logging } = require('../../utils/index');
 const { validationResult } = require('express-validator');
 const bcrypt = require("bcrypt");
@@ -6,6 +6,27 @@ const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 
 dotenv.config();
+
+const prepareTags = (tag) => {
+   if (typeof tag === "string") return { name: tag}; 
+
+} 
+
+const prepareEntries = (data) => {
+   return data.map((obj) => {
+      
+      const { title, entry, 'tags[]': tags, topicId } = obj;
+      const preppedTags = tags.map(prepareTags);
+      return {
+        title,
+        entry,
+        tags: preppedTags,
+        topicId,
+      }
+   })
+
+}
+
 
 module.exports.create = async (req,res) => {
     logging('api', req.originalUrl)
@@ -24,26 +45,65 @@ module.exports.create = async (req,res) => {
     console.log('updating')
     console.log(bulkUpdate)
 
-    const data = await Entries.bulkCreate(bulkCreate,{
-        logging: (sql) => {
-            logging('sql', sql);
-          }
-     })
+    const normalized = prepareEntries(bulkCreate);
 
-    const updateList = [];
-    for(let i = 0; i < bulkUpdate.length;  i++)
+    console.log('normalized')
+    console.log(normalized)
+     let data;
+     let entry;
+     let tag, x;
 
-      updateList[i] = await Entries.update({
-        title: bulkUpdate[i]?.title,
-        entry: bulkUpdate[i]?.entry
-      }, {
-            where:{id: bulkUpdate[i]?.id},
-            logging: (sql) => {
-                logging('sql', sql);
-              }
-        })
+     entry = await Entries.bulkCreate(normalized, {
+          include: [
+            {
+              model:Tags,
+              as: 'tags',
+              attributes: ['name']
+            },
+          ],
+          logging: (sql) => {
+              logging('sql', sql);
+            }
+
+     });
+
+     console.log(entry);
+
+
+    // for(let i = 0; i < normalized.length;  i++) {
+    //     data = normalized[i];
+    //    entry = await Entries.create(data,{
+    //       include: Tags,
+    //       logging: (sql) => {
+    //           logging('sql', sql);
+    //         }
+    //    });
+    //    tag = await Tags.create(data.tags[0], {
+    //     logging: (sql) => {
+    //       logging('sql', sql);
+    //     }
+    //    });
+
+    //    x = await entry.addTags(tag, {through: {userId: 1 }});
+    //    console.log(x)
+    // };
+
+
+
+    // const updateList = [];
+    // for(let i = 0; i < bulkUpdate.length;  i++)
+
+    //   updateList[i] = await Entries.update({
+    //     title: bulkUpdate[i]?.title,
+    //     entry: bulkUpdate[i]?.entry
+    //   }, {
+    //         where:{id: bulkUpdate[i]?.id},
+    //         logging: (sql) => {
+    //             logging('sql', sql);
+    //           }
+    //     })
  
-    res.json({ create: data, update: updateList});
+    // res.json({ create: data, update: updateList});
 
 }
 

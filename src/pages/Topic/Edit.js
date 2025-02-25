@@ -28,7 +28,7 @@ import { makeStyles } from '@material-ui/core';
 import WhileLoading from '../../components/Loading/WhileLoading';
 import Collapse from '@mui/material/Collapse';
 import SubtopicList from "../../components/List/SubtopicList";
-import { json } from '../../utils';
+import { json, getKey } from '../../utils';
 
 const useStyles = makeStyles(() => ({
     topicTitle: {
@@ -135,13 +135,13 @@ export default function TopicEdit()
         const handleEntry = (adding = false) => {
             let data = {};
             const isEntryEmpty = !!(entries.length <= 1 && entries[0]?.order === undefined);
-            const list = isEntryEmpty ? [] : [...entries];
-            const list2 = [];
+            const oldEntries = isEntryEmpty ? [] : [...entries];
+            const newEntries = [];
 
             if(adding) {
-                const newOrder = String(entries.length+1);
-                list.push({order: newOrder });
-                setEntries(list);
+                const newOrder = String(getKey(entries.length+1));
+                oldEntries.push({order: newOrder });
+                setEntries(oldEntries);
                 return true;
             }
 
@@ -151,14 +151,13 @@ export default function TopicEdit()
                 // console.log(key)
                 if(!key.includes('tags')){
                     data[key] = value;
-                    continue;
-                }
+                } else {
+
                     data[key] = value ? json(value) : [];
+                }
                
-            
-                //need to move up
                 if(key.includes('topicId')){
-                    list2.push(data);
+                    newEntries.push(data);
                     data = {};
                 }
             }
@@ -166,34 +165,29 @@ export default function TopicEdit()
             console.log('data')
             console.log(data)
 
-           const orders = list.length > 0 ? getOrders(list) : [];
+           const orders = oldEntries.length > 0 ? getOrders(oldEntries) : [];
         //    const newOrders = data.length > 0 ? data.map(e => e?.order ) : [];
            console.log('orders')
            console.log(orders)
            // Need to map data orders and compare if the size of orders or data orders are different
            // if so then push, if not then update
-            const shouldUpdate =  orders.length > 0  ?  list2.every((obj) => orders.includes(obj?.order))  : false;
+            const shouldUpdate =  orders.length > 0  ?  newEntries.every((obj) => orders.includes(obj?.order))  : false;
             // const shouldUpdate = data.some(e => orders.includes(e.order));
 
             console.log('shouldUpdate')
             console.log(shouldUpdate)
 
             if (shouldUpdate) {
-
                 // list.push(data)
-                const x = list2;
+                const x = newEntries;
                 // const x = list.map((obj) => ((obj.hasOwnProperty('order') && obj.order  === data?.order) ? data:obj ));
                 console.log('x')
                 console.log(x)
                 setEntries(x)
 
             }else{
-                list.push(data)
-                setEntries(list)
+                setEntries(newEntries)
             }
-
-           
-            
             // console.log(list)
         }
 
@@ -285,7 +279,7 @@ export default function TopicEdit()
                        entries?.length && entries.map((e, i) => {
                             // console.log("e")
                             // console.log(e)
-                            return <Entry key={i} num={i+1} data={e} id={id} handleChange={handleEntry}/>
+                            return <Entry key={i} num={getKey(i+1)} data={e} id={id} handleChange={handleEntry}/>
                         })
                     }
                 </Grid>    

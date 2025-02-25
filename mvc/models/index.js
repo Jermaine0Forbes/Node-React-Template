@@ -16,6 +16,12 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
+const getModel = (model) => {
+  const x = db[model];
+  console.log(x)
+  return x;
+}
+
 fs
   .readdirSync(__dirname)
   .filter(file => {
@@ -32,9 +38,35 @@ fs
   });
 
 Object.keys(db).forEach(modelName => {
+  //  console.log(db[modelName])
+
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
+
+  switch(modelName) {
+    case 'Entries':
+      db[modelName].belongsTo(getModel('Topics'));
+      // db[modelName].belongsToMany(getModel('Tags'), { through: getModel('TagsToEntries')});
+      db[modelName].belongsToMany(getModel('Tags'), { 
+        through: 'tags-to-entries',
+        as: 'tags',
+        foreignKey: 'entryId'
+
+      });
+    break;
+    case 'Tags':
+      // db[modelName].belongsToMany(getModel('Entries'), { through: getModel('TagsToEntries')});
+      db[modelName].belongsToMany(getModel('Entries'), { 
+        through: 'tags-to-entries',
+        as: 'entries',
+        foreignKey: 'tagId'
+      });
+    break;
+    // case 'TagsToEntries':
+    //   db[modelName].belongsToMany(getModel('Tags'), { through: getModel('TagsToEntries')});
+    // break;
+   }
 });
 
 db.sequelize = sequelize;

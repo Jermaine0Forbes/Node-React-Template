@@ -24,6 +24,7 @@ Express & React template
 - ~~add api that will fetch the entries that belong to a topic~~
 - ~~update topic form that can create a subtopic and it shows up in the topic edit page~~
 - ~~create tag listing and edit page~~
+- get user backend function
 - create tag functional system
 -  add logic to tag listing page
 -  add logic to tag edit page

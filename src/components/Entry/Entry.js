@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
@@ -73,8 +73,15 @@ const useStyles = makeStyles(() => ({
         backgroundColor: 'white',
     },
 
+    entryTag: {
+        position:'relative'
+    },
+
     hidden: {
         display: "none"
+    },
+    tagField: {
+        width:'100%'
     }
 }));
 
@@ -95,12 +102,15 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
     const [tags, setTags] = useState([]);
     const classes = useStyles();
     const handleTags = (evt, value) => {
-        // console.log(value)
-        setTags([json(value),...tags]);
-        if(tags.length > 0) {
-            handleChange();
-        }
+        // console.log(evt)
+        console.log(value)
+        setTags([json(value)]);
+       
     }
+
+    useEffect( () => {
+        handleChange();
+    }, [tags])
     
     return (
         <Box component={'section'} className={classes.entrySection}>
@@ -159,14 +169,31 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                     >
                     </TextField>
                 </Grid>
-                <Grid className={classes.entryBlock}>
+                <Grid className={[classes.entryBlock,classes.entryTag]}>
                     <Typography>Tags:</Typography>
                     <Autocomplete
                         multiple
                         id="tags-standard"
+                        freeSolo
+                        disablePortal={true}
                         options={top100Films}
-                        getOptionLabel={(option) => option.title}
-                        defaultValue={[top100Films[1]]}
+                        className={classes.tagField}
+                        getOptionLabel={(option) => {
+
+                            console.log('option')
+                            console.log(option)
+                            // Value selected with enter, right from the input
+                            if (typeof option === 'string') {
+                                return  option;
+                            }
+                            // Add "xxx" option created dynamically
+                            if (option.inputValue) {
+                                return { name: option.inputValue, id: null};
+                            }
+                            // Regular option
+                            return option.title;
+                        }}
+                        // defaultValue={[top100Films[1]]}
                         
                         onChange={handleTags}
                         renderInput={(params) => (
@@ -178,32 +205,14 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                         />
                         )}
                     />
-                    {
-                        (tags.length > 0) ? (
 
-                            tags.map((e,i) => <TextField type="hidden" className={classes.hidden} value={e} key={i} name={`tags[]`} />)
-                        ):
-                        ( <TextField type="hidden" className={classes.hidden} name={`tags[]`}/>)
-
-                    }
-                    {/* <TextField
-                        label="Enter any tags"
-                        multiline
-                        variant='filled'
-                        className={classes.entry}
-                        minRows={1}
-                        name={"tags"}
-                        // name={"tags-"+num}
-                        onChange={() => handleChange()}
-                        value={data?.tags ?? ''}
-                    >
-                    </TextField> */}
+                    <TextField type="hidden" className={classes.hidden} value={tags} name={`tags[]`} />
                 </Grid>
                 <TextField
                         type="hidden" 
                         className={classes.hidden} 
                         name={"order"}
-                        value={num}
+                        value={data?.id ?? num}
                     />
                 <TextField
                         type="hidden" 
