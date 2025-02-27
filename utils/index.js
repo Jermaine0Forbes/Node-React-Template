@@ -112,6 +112,12 @@ function invalidRegister(email, user, pass){
   await new Promise(resolve => setTimeout(resolve, seconds*1000));
 }
 
+function writeJson (data, name) {
+  const json = typeof data === "object" ? JSON.stringify(data) : data;
+  fs.writeFileSync(`${name}.json`, data);
+
+}
+
 
 exports.generateAccessToken =  function (user) {
   return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: '24h' });

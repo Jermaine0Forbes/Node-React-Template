@@ -8,6 +8,8 @@ const { validationResult } = require('express-validator');
 const bcrypt = require("bcrypt");
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+
 
 dotenv.config();
 
@@ -100,5 +102,9 @@ module.exports.login = async (req, res) => {
      return res.status(400).send(msg);
     }
 
-   return res.send(generateAccessToken(user.dataValues));
+    const token = generateAccessToken(user.dataValues);
+    const userJson = JSON.stringify({ token });
+   
+
+   return res.send(token);
 }
