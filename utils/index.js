@@ -80,7 +80,7 @@ function invalidRegister(email, user, pass){
   const month = date.toLocaleString('default', { month: 'long' });
   // Get year
   const year = date.getFullYear();
-  const dateStr = date.toDateString().split(' ').join('_');
+  // const dateStr = date.toDateString().split(' ').join('_');
   const logFilePath = path.resolve(__dirname+'/../logs/',`${fileName}_${month}_${year}.log`);
   const logEntry = `${date.toISOString()}: ${content}\n`
 
@@ -114,7 +114,53 @@ function invalidRegister(email, user, pass){
 
 function writeJson (data, name) {
   const json = typeof data === "object" ? JSON.stringify(data) : data;
-  fs.writeFileSync(`${name}.json`, data);
+  const directoryPath = __dirname+'/../json/';
+  let msg;
+  if(!fs.existsSync(directoryPath)){
+     msg = directoryPath+": doesn't exist";
+    logging('error', msg);
+    fs.mkdirSync(directoryPath);
+  }
+  const fileName = `${name}.json`;
+  const filePath = path.resolve(directoryPath,fileName);
+
+  try{
+    fs.writeFileSync(filePath, json);
+  }catch(err){
+    logging('error', err);
+  }
+
+}
+
+function readJson(name) {
+  const directoryPath = __dirname+'/../json/';
+  if(!fs.existsSync(directoryPath)){
+    fs.mkdirSync(directoryPath);
+  }
+  const fileName = `${name}.json`;
+  const filePath = path.resolve(directoryPath,fileName);
+  try {
+   const  data = fs.readSync(filePath, 'utf8');
+   return data;
+  } catch(err) {
+    logging('error', err);
+  }
+}
+
+
+function getUser() {
+  //  const  token  = readJson('user');
+   const { token } = JSON.parse(readJson('user'));
+   console.log(token)
+   try{
+    const user = jwt.verify(token, process.env.TOKEN_SECRET);
+    console.log('verified token')
+    console.log(user);
+    return user;
+   } catch(err) {
+    logging('error', err);
+   }
+
 
 }
 
@@ -133,6 +179,12 @@ exports.hashPassword = async function (password, saltRounds = 10)
               .catch( err => console.error(err));
 
 }
+
+exports.getUser = getUser;
+
+exports.readJson = readJson;
+
+exports.writeJson = writeJson;
 
 exports.logging = logging;
   

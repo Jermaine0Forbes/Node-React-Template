@@ -2,7 +2,7 @@ const  { Users } = require("../models/index");
 const { 
 logging, invalidEmail, generateAccessToken,
 invalidRegister, invalidPassword, noUser,
-hashPassword, getValidationErrors, 
+hashPassword, getValidationErrors, writeJson, 
 } = require('../../utils/index');
 const { validationResult } = require('express-validator');
 const bcrypt = require("bcrypt");
@@ -104,7 +104,7 @@ module.exports.login = async (req, res) => {
 
     const token = generateAccessToken(user.dataValues);
     const userJson = JSON.stringify({ token });
-   
+    writeJson(userJson, 'user');
 
    return res.send(token);
 }

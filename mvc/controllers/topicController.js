@@ -1,5 +1,5 @@
 const  { Topics, Entries } = require("../models/index");
-const { logging } = require('../../utils/index');
+const { logging, getUser } = require('../../utils/index');
 const { validationResult } = require('express-validator');
 const bcrypt = require("bcrypt");
 const dotenv = require('dotenv');
@@ -100,7 +100,9 @@ module.exports.index = async (req,res) => {
           logging('sql', sql);
         }
     });
-    // console.log(data)
+    console.log("getting user json")
+    const user = getUser();
+    console.log(user)
 
     res.json(data)
 
