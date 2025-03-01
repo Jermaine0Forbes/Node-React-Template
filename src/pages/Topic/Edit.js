@@ -6,16 +6,6 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import BottomNavigation from '@mui/material/BottomNavigation';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import ImageIcon from '@mui/icons-material/Image';
-import LinkIcon from '@mui/icons-material/Link';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useColor } from '../../hooks/users';
 import {AuthContext} from '../../providers/AuthProvider';
 import { useNavigate, useParams} from "react-router-dom";
@@ -25,8 +15,6 @@ import { fetchTopic, updateTopic } from '../../services/topic';
 import { createEntry, fetchEntries } from '../../services/entry';
 import Entry from '../../components/Entry/Entry';
 import { makeStyles } from '@material-ui/core';
-import WhileLoading from '../../components/Loading/WhileLoading';
-import Collapse from '@mui/material/Collapse';
 import SubtopicList from "../../components/List/SubtopicList";
 import { json, getKey } from '../../utils';
 
@@ -61,11 +49,8 @@ export default function TopicEdit()
         const user = getUser(token);
         const color = useColor(user?.adminLevel);
         const [subtopicList, setSubtopicList] = useState([]);
-        // const [subEntries, setSubEntries] = useState([]);
         const [posY, setPosY] = useState(0)
         const [title, setTitle] = useState('');
-        // const [openSubList, setOpenSubList] = useState(false);
-        // const [subId, setSubId] = useState(null);
         const [entries, setEntries] = useState([]);
         // const [goto, setGoto] = useState(false);
         const {id} = useParams()
@@ -113,7 +98,7 @@ export default function TopicEdit()
             }
             if(entriesData) {
                data = Array.isArray(entriesData) && entriesData?.length === 0 
-               ? [{}] :entriesData;
+               ? [{}] : entriesData;
                console.log(data)
                setEntries(data)
             }
@@ -146,7 +131,6 @@ export default function TopicEdit()
             }
 
             const form = new FormData(entryRef.current);
-            // console.log(form.entries())
             for (const [key, value] of form.entries()){
                 // console.log(key)
                 if(!key.includes('tags')){
@@ -180,7 +164,6 @@ export default function TopicEdit()
             if (shouldUpdate) {
                 // list.push(data)
                 const x = newEntries;
-                // const x = list.map((obj) => ((obj.hasOwnProperty('order') && obj.order  === data?.order) ? data:obj ));
                 console.log('x')
                 console.log(x)
                 setEntries(x)
@@ -223,32 +206,6 @@ export default function TopicEdit()
             // mutate(data)
         }
 
-        // const handleSubtopic =  (evt) => {
-        //     const id = evt.target.dataset.subtopicId ??  null;
-        //     console.log(evt.target)
-        //     console.log(evt.target.dataset)
-        //     console.log(id)
-        //     setSubId(id);
-        //     setOpenSubList(!openSubList);
-
-
-        //     // const val = {...subtopic, [name]: value};
-        //     // console.log(val)
-        //     // setSubtopic(val)
-
-        //     // if(subtopic?.open === false){
-        //     //     setSubtopic({...subtopic, list: []});
-        //     // }
-        //     // switch (name) {
-                
-        //     //     case 'id': 
-        //     //     case 'open': 
-        //     //     setSubtopic({...subtopic, [name]: value})
-        //     //    break;
-        //     // }
-    
-        // }
-        // console.log(subtopic)
     
     return (
             <Box>

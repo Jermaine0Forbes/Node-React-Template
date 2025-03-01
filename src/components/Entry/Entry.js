@@ -100,6 +100,7 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
 {
 
     const [tags, setTags] = useState([]);
+    const [savedTags, setSavedTags] = useState([]);
     const classes = useStyles();
     const handleTags = (evt, value) => {
         // console.log(evt)
@@ -110,6 +111,13 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
 
     useEffect( () => {
         handleChange();
+        if(data?.tags && data?.tags.length > 0){
+            const tagsSaved = [];
+            for(let i = 0 ; i < data.tags.length; i++){
+                tagsSaved.push(data.tags[i])
+            }
+            setSavedTags(tagsSaved);
+        }
     }, [tags])
     
     return (
@@ -176,7 +184,8 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                         id="tags-standard"
                         freeSolo
                         disablePortal={true}
-                        options={top100Films}
+                        options={data?.tagList ?? []}
+                        // options={data?.tagList ?? []}
                         className={classes.tagField}
                         getOptionLabel={(option) => {
 
@@ -194,6 +203,7 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                             return option.title;
                         }}
                         // defaultValue={[top100Films[1]]}
+                        defaultValue={savedTags}
                         
                         onChange={handleTags}
                         renderInput={(params) => (

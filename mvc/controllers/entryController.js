@@ -1,4 +1,4 @@
-const  { Entries, Tags } = require("../models/index");
+const  { Entries, Tags, TagsToEntries } = require("../models/index");
 const { logging, getUser } = require('../../utils/index');
 const { validationResult } = require('express-validator');
 const bcrypt = require("bcrypt");
@@ -26,6 +26,13 @@ const prepareEntries = async (data) => {
         topicId,
       }
    })
+}
+
+const includeTagList = (entries, tags = []) => {
+ return entries.map( (entry) => {
+    entry.dataValues['tagList'] = tags;
+    return entry;
+  });
 
 }
 
@@ -117,13 +124,36 @@ module.exports.index = async (req, res) => {
 
     console.log(req.params)
     const {id} = req.params;
-    const data = await Entries.findAll({
+    let entries;
+    entries = await Entries.findAll({
+        attributes: ['id', 'title', 'entry', 'topicId'],
         where: {topicId: id},
+        include: [
+          {
+            model:Tags,
+            as: 'tags',
+            attributes: ['name', 'id']
+          },
+        ],
+        exclude:[
+         { model: 'tags-to-entries',}
+        ],
         logging: (sql) => {
             logging('sql', sql);
           }
-    })
-    console.log(data)
-    res.json(data);
+    });
+
+    const tags = await Tags.findAll({
+      attributes: ['name', 'id'] ,
+      logging: (sql) => {
+        logging('sql', sql);
+      },
+    });
+    
+    if(Array.isArray(entries) && entries.length > 0 ) {
+      entries = includeTagList(entries, tags)
+    }
+    // console.log(entries)
+    res.json(entries);
 } 
 
