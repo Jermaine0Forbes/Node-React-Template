@@ -18,7 +18,7 @@ if (config.use_env_variable) {
 
 const getModel = (model) => {
   const x = db[model];
-  console.log(x)
+  // console.log(x)
   return x;
 }
 

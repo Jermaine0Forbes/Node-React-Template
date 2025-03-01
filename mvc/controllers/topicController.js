@@ -100,9 +100,6 @@ module.exports.index = async (req,res) => {
           logging('sql', sql);
         }
     });
-    console.log("getting user json")
-    const user = getUser();
-    console.log(user)
 
     res.json(data)
 

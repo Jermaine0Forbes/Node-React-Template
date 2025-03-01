@@ -18,3 +18,9 @@ export const registerUser =  (formData) =>{
     })
     .catch(err => console.error(err));
 }
+
+
+export const logoutUser = async () => {
+    return await fetch(process.env.URL+'/api/logout')
+    .catch(err => console.log(err));
+}

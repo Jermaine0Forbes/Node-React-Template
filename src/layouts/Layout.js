@@ -1,5 +1,6 @@
 import React, {useContext, useState, useEffect, useCallback} from 'react';
 import { Outlet, Link, useNavigate} from "react-router-dom";
+import { useQuery } from 'react-query';
 import Container from '@material-ui/core/Container';
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
@@ -12,6 +13,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {AuthContext} from '../providers/AuthProvider';
 import { useColor } from '../hooks/users';
 import { makeStyles } from '@material-ui/core';
+import {logoutUser} from "../services/login";
 
 const useStyles = makeStyles(() => ({
     toolbar: {
@@ -44,12 +46,22 @@ const useStyles = makeStyles(() => ({
 export default function Layout()
 {
     const classes = useStyles();
-    const { currentUser, logout} = useContext(AuthContext);
+    const { currentUser, logout, loggedOut} = useContext(AuthContext);
     const [name, setName] = useState(null);
     const [userColor, setUserColor] = useState(useColor());
     const [open, setOpen] = useState(false);
     const [anchor, setAnchor] = useState(null);
     const redirect = useNavigate();
+    useQuery({
+        queryKey:'topics', 
+        queryFn: async () => {
+           const resp  = await logoutUser();
+           if(resp.ok){
+            redirect('/');
+           }
+        },
+        enabled:loggedOut
+    });
 
     useEffect(() => {
         if(currentUser){
@@ -69,7 +81,7 @@ export default function Layout()
         setAnchor(null)
         setOpen(false)
         setUserColor('secondary')
-        redirect('/');
+        
     })
 
     return (

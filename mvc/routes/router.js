@@ -39,6 +39,8 @@ router.post("/login",
       ],
       loginCtr.login);
 
+router.get("/logout", loginCtr.logout);
+
 router.post("/upload/profile",upload.single('file'), userCtr.profImage);
 
 router.post('/topic/create', topicCtr.create);

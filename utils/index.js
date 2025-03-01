@@ -7,6 +7,8 @@ const jwt = require('jsonwebtoken');
 
 dotenv.config();
 
+const JSON_PATH =  __dirname+'/../json/';
+
 function getValidationErrors (validErrs) 
 {
   errMsgs = {}
@@ -112,55 +114,90 @@ function invalidRegister(email, user, pass){
   await new Promise(resolve => setTimeout(resolve, seconds*1000));
 }
 
+function checkJsonDir() {
+  let msg;
+  if(!fs.existsSync(JSON_PATH)){
+    msg = JSON_PATH+": doesn't exist";
+   logging('error', msg);
+   fs.mkdirSync(JSON_PATH);
+ }
+}
+
+
+function getJsonPath(name) {
+  const fileName = `${name}.json`;
+  return path.resolve(JSON_PATH,fileName)
+}
+
 function writeJson (data, name) {
   const json = typeof data === "object" ? JSON.stringify(data) : data;
-  const directoryPath = __dirname+'/../json/';
-  let msg;
-  if(!fs.existsSync(directoryPath)){
-     msg = directoryPath+": doesn't exist";
-    logging('error', msg);
-    fs.mkdirSync(directoryPath);
-  }
-  const fileName = `${name}.json`;
-  const filePath = path.resolve(directoryPath,fileName);
-
+    checkJsonDir();
+  const filePath = getJsonPath(name);
   try{
     fs.writeFileSync(filePath, json);
   }catch(err){
     logging('error', err);
   }
+  if(fs.existsSync(filePath)){
+    logging('debug', filePath+" was successfully created")
 
+  }
 }
 
-function readJson(name) {
-  const directoryPath = __dirname+'/../json/';
-  if(!fs.existsSync(directoryPath)){
-    fs.mkdirSync(directoryPath);
-  }
-  const fileName = `${name}.json`;
-  const filePath = path.resolve(directoryPath,fileName);
+async function readJson(name) {
+  let data;
+  checkJsonDir();
+  // logging('debug', "2: inside readJson getting json path");
+  const filePath = getJsonPath(name);
   try {
-   const  data = fs.readSync(filePath, 'utf8');
-   return data;
+    // logging('debug', "3: trying read json file");
+   data = fs.readFileSync(filePath);
+
   } catch(err) {
     logging('error', err);
   }
+
+  return data;
+}
+
+function removeJson (name) {
+  checkJsonDir();
+  const filePath = getJsonPath(name);
+
+  if(fs.existsSync(filePath)){
+
+    fs.unlink(filePath, (err) => {
+      if(err) {
+        logging('error',err);
+      }
+      logging('debug', filePath+" destroyed")
+    });
+
+  }
+
 }
 
 
-function getUser() {
-  //  const  token  = readJson('user');
-   const { token } = JSON.parse(readJson('user'));
-   console.log(token)
+async function getUser() {
+    // logging('debug', "1: inside get user");
+   const user = await readJson('user');
+  //  logging('debug', "4: readJson user - "+user);
+
+   if(!user){
+    //  logging('error', 'json data cannot be found');
+     return false;
+   }
+   const { token } = JSON.parse(user);
+  //  console.log(token)
    try{
-    const user = jwt.verify(token, process.env.TOKEN_SECRET);
-    console.log('verified token')
-    console.log(user);
+    // logging('debug', "5: attempting to verify token");
+    const user =  jwt.verify(token, process.env.TOKEN_SECRET);
+    // console.log('verified token')
+    // console.log(user);
     return user;
    } catch(err) {
     logging('error', err);
    }
-
 
 }
 
@@ -179,6 +216,8 @@ exports.hashPassword = async function (password, saltRounds = 10)
               .catch( err => console.error(err));
 
 }
+
+exports.removeJson = removeJson;
 
 exports.getUser = getUser;
 

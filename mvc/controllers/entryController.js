@@ -1,5 +1,5 @@
 const  { Entries, Tags } = require("../models/index");
-const { logging } = require('../../utils/index');
+const { logging, getUser } = require('../../utils/index');
 const { validationResult } = require('express-validator');
 const bcrypt = require("bcrypt");
 const dotenv = require('dotenv');
@@ -7,12 +7,14 @@ const jwt = require('jsonwebtoken');
 
 dotenv.config();
 
-const prepareTags = (tag) => {
-   if (typeof tag === "string") return { name: tag}; 
+const prepareTags = async (tag) => {
+  console.log("getting user json")
+  const {id} = await getUser();
+   if (typeof tag === "string") return { name: tag, userId:id}; 
 
 } 
 
-const prepareEntries = (data) => {
+const prepareEntries = async (data) => {
    return data.map((obj) => {
       
       const { title, entry, 'tags[]': tags, topicId } = obj;
@@ -32,6 +34,8 @@ module.exports.create = async (req,res) => {
     logging('api', req.originalUrl)
      console.log(req.body)
 
+  
+
      if(!Array.isArray(req.body)) {
         const msg = 'request body is not an array';
         logging('error', msg);
@@ -45,7 +49,7 @@ module.exports.create = async (req,res) => {
     console.log('updating')
     console.log(bulkUpdate)
 
-    const normalized = prepareEntries(bulkCreate);
+    const normalized = await prepareEntries(bulkCreate);
 
     console.log('normalized')
     console.log(normalized)
@@ -58,7 +62,7 @@ module.exports.create = async (req,res) => {
             {
               model:Tags,
               as: 'tags',
-              attributes: ['name']
+              attributes: ['name', 'userId']
             },
           ],
           logging: (sql) => {

@@ -2,7 +2,8 @@ const  { Users } = require("../models/index");
 const { 
 logging, invalidEmail, generateAccessToken,
 invalidRegister, invalidPassword, noUser,
-hashPassword, getValidationErrors, writeJson, 
+hashPassword, getValidationErrors, writeJson,
+removeJson, 
 } = require('../../utils/index');
 const { validationResult } = require('express-validator');
 const bcrypt = require("bcrypt");
@@ -73,7 +74,7 @@ module.exports.login = async (req, res) => {
    const pass = await Users.findOne({
     where: {email}, 
     attributes: ['password'],
-    logging: (sql, queryObject) => {
+    logging: (sql) => {
         logging('sql', sql);
     }
     });
@@ -107,4 +108,11 @@ module.exports.login = async (req, res) => {
     writeJson(userJson, 'user');
 
    return res.send(token);
+}
+
+module.exports.logout = async (req, res) => { 
+ logging('api', req.originalUrl)   
+   removeJson('user');
+  return res.sendStatus(200);
+
 }

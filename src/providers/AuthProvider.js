@@ -1,6 +1,6 @@
 import React, {useEffect, useState, createContext} from 'react';
 import { isExpired, decodeToken } from "react-jwt";
-
+import {logoutUser} from "../services/login";
 
 export const AuthContext = createContext(null);
 
@@ -10,40 +10,49 @@ export default function AuthProvider ({children}) {
     const [token, setToken] = useState(usr);
     const [oldToken, setOldToken] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
+    const [loggedOut, setLoggedOut] = useState(false);
 
     const logout = () => {
+        setOldToken(token);
         setToken('');
         localStorage.removeItem('usr')
         setCurrentUser(null);
-        setOldToken(null);
+        setLoggedOut(true);
+        console.log('logging out?')
     }
 
     const getUser =  (token)  => token && !isExpired(token) ? decodeToken(token): false ;
 
-    useEffect(() =>{
-        const tokenExpired = isExpired(token);
-        
-        if( (token && !tokenExpired) || token != oldToken){
-             console.log("token:")
-             console.log(token)
-             console.log("old token:")
-             console.log(oldToken)
+    useEffect(() => {
+        let tokenExpired
+        if(token)  {
+            tokenExpired = isExpired(token);
             
-            try {
-            const myDecodedToken = decodeToken(token);
-             setCurrentUser(myDecodedToken);
-             setOldToken(token);
-            } catch(err) {
-                console.log("jwt error")
-                console.log(err)
+            if( (token && !tokenExpired) || token != oldToken){
+                 console.log("token:")
+                 console.log(token)
+                 console.log("old token:")
+                 console.log(oldToken)
+                try {
+                const myDecodedToken = decodeToken(token);
+                setLoggedOut(false);
+                 setCurrentUser(myDecodedToken);
+                 setOldToken(token);
+                } catch(err) {
+                    console.log("jwt error")
+                    console.log(err)
+                }
             }
+
+            if(tokenExpired){
+                logout();
+            }
+
         }
 
-        if(tokenExpired){
-            logout();
-        }
 
-    }, [token])
+
+    }, [token, loggedOut])
 
     const value = {
         token,
@@ -51,6 +60,7 @@ export default function AuthProvider ({children}) {
         currentUser,
         logout,
         getUser,
+        loggedOut,
     };
 
     return (
