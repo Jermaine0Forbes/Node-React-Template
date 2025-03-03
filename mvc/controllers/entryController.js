@@ -29,8 +29,15 @@ const prepareEntries = async (data) => {
 }
 
 const includeTagList = (entries, tags = []) => {
+  const _tags = tags.map(tag => {
+    console.log(tag)
+    const {name} = tag.dataValues;
+    delete tag.dataValues['tags-to-entries'];
+    return tag;
+  })
  return entries.map( (entry) => {
-    entry.dataValues['tagList'] = tags;
+   
+    entry.dataValues['tagList'] = _tags;
     return entry;
   });
 
@@ -144,7 +151,15 @@ module.exports.index = async (req, res) => {
     });
 
     const tags = await Tags.findAll({
-      attributes: ['name', 'id'] ,
+      // attributes: ['name', 'id'] ,
+      attributes: { exclude:['termId', 'createdAt', 'updatedAt', 'tags-to-entries']} ,
+      // include: [
+      //   {
+      //     model: 'tags-to-entries',
+      //     through: { attributes: []}
+      //   }
+
+      // ],
       logging: (sql) => {
         logging('sql', sql);
       },

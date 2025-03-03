@@ -111,14 +111,21 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
 
     useEffect( () => {
         handleChange();
+
+    }, [tags]);
+
+    useEffect(() => {
+        console.log('1')
         if(data?.tags && data?.tags.length > 0){
             const tagsSaved = [];
+            console.log('2')
             for(let i = 0 ; i < data.tags.length; i++){
                 tagsSaved.push(data.tags[i])
             }
+            console.log(tagsSaved)
             setSavedTags(tagsSaved);
         }
-    }, [tags])
+    },[data?.tags])
     
     return (
         <Box component={'section'} className={classes.entrySection}>
@@ -200,10 +207,10 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                                 return { name: option.inputValue, id: null};
                             }
                             // Regular option
-                            return option.title;
+                            return option.name;
                         }}
                         // defaultValue={[top100Films[1]]}
-                        defaultValue={savedTags}
+                        value={savedTags}
                         
                         onChange={handleTags}
                         renderInput={(params) => (
