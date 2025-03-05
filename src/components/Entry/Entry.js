@@ -8,7 +8,7 @@ import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import {json, toJson} from "../../utils/index";
+import {json, toJson, getKey} from "../../utils/index";
 
 const useStyles = makeStyles(() => ({
     title: {
@@ -104,15 +104,18 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
     const classes = useStyles();
     const handleTags = (evt, value) => {
         // console.log(evt)
-        // console.log('value')
-        // console.log(value)
+        console.log('value')
+        console.log(value)
         setSavedTags(value)
-        setTags([toJson(value)]);
+        const stringified = value.map( option => typeof option === "object" ? json(option): option);
+        setTags(stringified);
        
     }
 
-    useEffect( () => {
+    useEffect(() => {
         handleChange();
+        console.log('tags')
+        console.log(tags)
 
     }, [tags]);
 
@@ -235,8 +238,22 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                         />
                         )}
                     />
+                    {
+                        tags ? 
+                        (
+                            tags.map( (tag, i) =>  {
 
-                    <TextField type="hidden" className={classes.hidden} value={tags} name={`tags[]`} />
+                            <TextField type="hidden" key={getKey(i)} className={classes.hidden} value={tag} name={`tags[]`} />
+
+                            })
+                        )
+                        : 
+                        (
+                            <TextField type="hidden" className={classes.hidden} value={tags} name={`tags[]`} />
+
+                        )
+                    }
+                    
                 </Grid>
                 <TextField
                         type="hidden" 

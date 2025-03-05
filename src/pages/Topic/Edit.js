@@ -136,8 +136,25 @@ export default function TopicEdit()
                 if(!key.includes('tags')){
                     data[key] = value;
                 } else {
+                    console.log('data key')
+                    console.log(typeof value)
+                    console.log(value)
+                    switch(typeof value) {
+                        case "string":
+                            data[key] = typeof parse(value) === "object"? parse(value) : value ;
+                        break;
 
-                    data[key] = typeof value === "string" ? parse(value) : [];
+                        case "object":
+                            data[key] = value;
+                        break;
+                        default:
+                            data[key] = [];
+
+                    }
+                   
+                    
+
+                    // data[key] = typeof value === "string" ? parse(value) : [];
                 }
                
                 if(key.includes('topicId')){
