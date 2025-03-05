@@ -16,7 +16,7 @@ import { createEntry, fetchEntries } from '../../services/entry';
 import Entry from '../../components/Entry/Entry';
 import { makeStyles } from '@material-ui/core';
 import SubtopicList from "../../components/List/SubtopicList";
-import { json, getKey } from '../../utils';
+import { json, getKey, toJson, parse } from '../../utils';
 
 const useStyles = makeStyles(() => ({
     topicTitle: {
@@ -124,7 +124,7 @@ export default function TopicEdit()
             const newEntries = [];
 
             if(adding) {
-                const newOrder = String(getKey(entries.length+1));
+                const newOrder = String(entries.length+1000);
                 oldEntries.push({order: newOrder });
                 setEntries(oldEntries);
                 return true;
@@ -137,7 +137,7 @@ export default function TopicEdit()
                     data[key] = value;
                 } else {
 
-                    data[key] = value ? json(value) : [];
+                    data[key] = typeof value === "string" ? parse(value) : [];
                 }
                
                 if(key.includes('topicId')){
@@ -236,7 +236,7 @@ export default function TopicEdit()
                        entries?.length && entries.map((e, i) => {
                             // console.log("e")
                             // console.log(e)
-                            return <Entry key={i} num={getKey(i+1)} data={e} id={id} handleChange={handleEntry}/>
+                            return <Entry key={getKey(i)} num={i+1} data={e} id={id} handleChange={handleEntry}/>
                         })
                     }
                 </Grid>    

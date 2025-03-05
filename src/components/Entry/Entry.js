@@ -8,7 +8,7 @@ import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import {json} from "../../utils/index";
+import {json, toJson} from "../../utils/index";
 
 const useStyles = makeStyles(() => ({
     title: {
@@ -104,8 +104,10 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
     const classes = useStyles();
     const handleTags = (evt, value) => {
         // console.log(evt)
-        console.log(value)
-        setTags([json(value)]);
+        // console.log('value')
+        // console.log(value)
+        setSavedTags(value)
+        setTags([toJson(value)]);
        
     }
 
@@ -115,15 +117,26 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
     }, [tags]);
 
     useEffect(() => {
-        console.log('1')
+        // console.log('1')
         if(data?.tags && data?.tags.length > 0){
             const tagsSaved = [];
-            console.log('2')
-            for(let i = 0 ; i < data.tags.length; i++){
-                tagsSaved.push(data.tags[i])
+            const tagsField = [];
+            let jsonTag;
+            let tag;
+            // console.log('2')
+            for(let i =  data.tags.length -1 ; i >= 0; i--){
+                tag = data.tags[i];
+                // console.log(tag)
+                jsonTag = toJson(tag);
+                tagsSaved.push(tag);
+                tagsField.push(jsonTag);
             }
-            console.log(tagsSaved)
+            // console.log(tagsSaved)
             setSavedTags(tagsSaved);
+            // console.log('tagsField')
+            // console.log(tagsField)
+            setTags(tagsField);
+
         }
     },[data?.tags])
     
@@ -184,7 +197,7 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                     >
                     </TextField>
                 </Grid>
-                <Grid className={[classes.entryBlock,classes.entryTag]}>
+                <Grid className={classes.entryBlock+" "+classes.entryTag}>
                     <Typography>Tags:</Typography>
                     <Autocomplete
                         multiple
@@ -196,8 +209,8 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                         className={classes.tagField}
                         getOptionLabel={(option) => {
 
-                            console.log('option')
-                            console.log(option)
+                            // console.log('option')
+                            // console.log(option)
                             // Value selected with enter, right from the input
                             if (typeof option === 'string') {
                                 return  option;
@@ -229,7 +242,7 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                         type="hidden" 
                         className={classes.hidden} 
                         name={"order"}
-                        value={data?.id ?? num}
+                        value={(data?.id ?? num)*1000}
                     />
                 <TextField
                         type="hidden" 
