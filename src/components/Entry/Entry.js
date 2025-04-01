@@ -114,8 +114,8 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
 
     useEffect(() => {
         handleChange();
-        console.log('tags')
-        console.log(tags)
+        // console.log('tags')
+        // console.log(tags)
 
     }, [tags]);
 

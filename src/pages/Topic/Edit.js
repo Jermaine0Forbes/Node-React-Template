@@ -181,7 +181,7 @@ export default function TopicEdit()
             if (shouldUpdate) {
                 // list.push(data)
                 const x = newEntries;
-                console.log('x')
+                console.log('should update new entries data')
                 console.log(x)
                 setEntries(x)
 

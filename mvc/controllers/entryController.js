@@ -71,21 +71,21 @@ module.exports.create = async (req,res) => {
      let entry;
      let tag, x;
 
-     entry = await Entries.bulkCreate(normalized, {
-          include: [
-            {
-              model:Tags,
-              as: 'tags',
-              attributes: ['name', 'userId']
-            },
-          ],
-          logging: (sql) => {
-              logging('sql', sql);
-            }
+    //  entry = await Entries.bulkCreate(normalized, {
+    //       include: [
+    //         {
+    //           model:Tags,
+    //           as: 'tags',
+    //           attributes: ['name', 'userId']
+    //         },
+    //       ],
+    //       logging: (sql) => {
+    //           logging('sql', sql);
+    //         }
 
-     });
+    //  });
 
-     console.log(entry);
+    //  console.log(entry);
 
 
     // for(let i = 0; i < normalized.length;  i++) {
