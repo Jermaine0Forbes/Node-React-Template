@@ -123,12 +123,12 @@ export default function TopicEdit()
             const oldEntries = isEntryEmpty ? [] : [...entries];
             const newEntries = [];
 
-            if(adding) {
-                const newOrder = String(entries.length+1000);
-                oldEntries.push({order: newOrder });
-                setEntries(oldEntries);
-                return true;
-            }
+            // if(adding) {
+            //     const newOrder = String(entries.length+1000);
+            //     oldEntries.push({order: newOrder });
+            //     setEntries(oldEntries);
+            //     return true;
+            // }
 
             const form = new FormData(entryRef.current);
             for (const [key, value] of form.entries()){
@@ -193,10 +193,17 @@ export default function TopicEdit()
 
         const addEntry = (e) => {
             e.preventDefault();
-            handleEntry(true);
+            // handleEntry(true);
+            const isEntryEmpty = !!(entries.length <= 1 && entries[0]?.order === undefined);
+            const oldEntries = isEntryEmpty ? [] : [...entries];
+            const newOrder = String(entries.length+1000);
+            oldEntries.push({order: newOrder });
+            setEntries(oldEntries);
+
         }
 
         const handleSubmit = (e) => {
+            
             e.preventDefault();
             mutateTopic({title, userId: user?.id, id });
             // handleEntry();

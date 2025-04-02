@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import {json, toJson, getKey} from "../../utils/index";
+import { Task } from '@mui/icons-material';
 
 const useStyles = makeStyles(() => ({
     title: {
@@ -103,9 +104,10 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
     const [savedTags, setSavedTags] = useState([]);
     const classes = useStyles();
     const handleTags = (evt, value) => {
-        // console.log(evt)
-        console.log('value')
-        console.log(value)
+        console.log('tags')
+        console.log(tags)
+        // console.log('value')
+        // console.log(value)
         setSavedTags(value)
         const stringified = value.map( option => typeof option === "object" ? json(option): option);
         setTags(stringified);
@@ -113,6 +115,8 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
     }
 
     useEffect(() => {
+        // this is probably the issue for infinite updates
+        if(tags.length > 0)
         handleChange();
         // console.log('tags')
         // console.log(tags)
@@ -180,7 +184,7 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                     className={classes.title}
                     name={"title"}
                     // name={"title-"+num}
-                    onChange={() => handleChange()}
+                    onChange={handleChange}
                     value={data?.title ?? ''}
                     >
                     </TextField>
