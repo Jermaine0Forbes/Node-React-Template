@@ -100,12 +100,14 @@ const top100Films = [
 export default function Entry({num = 0, data = {}, handleChange, id = null})
 {
 
+    const [title, setTitle] = useState(data?.title ?? '');
+    const [entry, setEntry] = useState(data?.title ?? '');
     const [tags, setTags] = useState([]);
     const [savedTags, setSavedTags] = useState([]);
     const classes = useStyles();
     const handleTags = (evt, value) => {
-        console.log('tags')
-        console.log(tags)
+        console.log('saved tags')
+        console.log(savedTags)
         // console.log('value')
         // console.log(value)
         setSavedTags(value)
@@ -122,6 +124,21 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
         // console.log(tags)
 
     }, [tags]);
+
+    const handleField = (e) => {
+        const {value, name} = e.target;
+        switch(name) {
+
+            case 'title':
+            setTitle(value)
+            break;
+
+            case 'entry':
+             setEntry(value)
+
+        }
+
+    }
 
     useEffect(() => {
         // console.log('1')
@@ -184,8 +201,8 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                     className={classes.title}
                     name={"title"}
                     // name={"title-"+num}
-                    onChange={handleChange}
-                    value={data?.title ?? ''}
+                    onChange={handleField}
+                    value={title}
                     >
                     </TextField>
                 </Grid>
@@ -199,8 +216,8 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                         minRows={3}
                         name={"entry"}
                         // name={"entry-"+num}
-                        onChange={() => handleChange()}
-                        value={data?.entry ?? ''}
+                        onChange={handleField}
+                        value={entry}
                     >
                     </TextField>
                 </Grid>
