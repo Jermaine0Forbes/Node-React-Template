@@ -8,8 +8,8 @@ import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import {json, toJson, getKey} from "../../utils/index";
-import { Task } from '@mui/icons-material';
+import {json, toJson, getKey, parse, empty} from "../../utils/index";
+import { v4 as uuidv4 } from 'uuid';
 
 const useStyles = makeStyles(() => ({
     title: {
@@ -97,33 +97,60 @@ const top100Films = [
 ];
 
 
-export default function Entry({num = 0, data = {}, handleChange, id = null})
+export default function Entry({num = 0, data = {}, handleChange, id = null, options = []})
 {
 
     const [title, setTitle] = useState(data?.title ?? '');
     const [entry, setEntry] = useState(data?.title ?? '');
     const [tags, setTags] = useState([]);
+    const orderId = data?.order ?? uuidv4();
+    const defaultInfo = {
+        id: data?.id ?? null,
+        title: title,
+        entry: entry,
+        tags: tags,
+        order: orderId,
+        topicId: id,
+    };
+
+    const [info, setInfo] = useState(json(defaultInfo));
     const [savedTags, setSavedTags] = useState([]);
     const classes = useStyles();
     const handleTags = (evt, value) => {
         console.log('saved tags')
         console.log(savedTags)
-        // console.log('value')
-        // console.log(value)
+        console.log('value')
+        console.log(value)
         setSavedTags(value)
-        const stringified = value.map( option => typeof option === "object" ? json(option): option);
-        setTags(stringified);
+        // const stringified = value.map( option => typeof option === "object" ? json(option): option);
+        // setTags(stringified);
+        setTags(value);
        
     }
 
     useEffect(() => {
         // this is probably the issue for infinite updates
-        if(tags.length > 0)
-        handleChange();
+        // if(tags.length > 0)
+        // handleChange();
         // console.log('tags')
         // console.log(tags)
 
-    }, [tags]);
+        const newInfo = {
+            id: data?.id ?? null,
+            title: title,
+            entry: entry,
+            tags: [...savedTags].reverse(),
+            // tags: empty(tags) ? tags: parse(tags).reverse(),
+            order: orderId,
+            topicId: id,
+        };
+
+        console.log('newInfo')
+        console.log(newInfo)
+
+        setInfo(json(newInfo));
+
+    }, [tags,title, entry]);
 
     const handleField = (e) => {
         const {value, name} = e.target;
@@ -153,8 +180,17 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                 // console.log(tag)
                 jsonTag = toJson(tag);
                 tagsSaved.push(tag);
-                tagsField.push(jsonTag);
+                // tagsField.push(jsonTag);
+                tagsField.push(tag);
             }
+
+            // for(let i = 0; i < data.tags.length; i++){
+            //     tag = data.tags[i];
+            //     // console.log(tag)
+            //     jsonTag = toJson(tag);
+            //     tagsSaved.push(tag);
+            //     tagsField.push(tag);
+            // }
             // console.log(tagsSaved)
             setSavedTags(tagsSaved);
             // console.log('tagsField')
@@ -165,7 +201,7 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
     },[data?.tags])
     
     return (
-        <Box component={'section'} className={classes.entrySection}>
+        <Box component={'section'} className={classes.entrySection+" entry-section"}>
             <Grid className={classes.entryHead}>
             <Chip
                 label={num}
@@ -228,7 +264,7 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                         id="tags-standard"
                         freeSolo
                         disablePortal={true}
-                        options={data?.tagList ?? []}
+                        options={ options}
                         // options={data?.tagList ?? []}
                         className={classes.tagField}
                         getOptionLabel={(option) => {
@@ -259,7 +295,7 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
                         />
                         )}
                     />
-                    {
+                    {/* {
                         tags ? 
                         (
                             tags.map( (tag, i) =>  {
@@ -274,19 +310,25 @@ export default function Entry({num = 0, data = {}, handleChange, id = null})
 
                         )
                     }
-                    
+                     */}
                 </Grid>
-                <TextField
+                {/* <TextField
                         type="hidden" 
                         className={classes.hidden} 
                         name={"order"}
-                        value={(data?.id ?? num)*1000}
+                        value={orderId}
                     />
                 <TextField
                         type="hidden" 
                         className={classes.hidden} 
                         name={"topicId"}
                         value={id}
+                    /> */}
+                    <TextField
+                        type="hidden" 
+                        className={classes.hidden} 
+                        name={"info"}
+                        value={info}
                     />
             </Grid>
 

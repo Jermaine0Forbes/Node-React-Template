@@ -44,6 +44,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'TagsToEntries',
+    tableName: 'tags-to-entries',
     timestamps: true,
     indexes: [
       {

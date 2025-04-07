@@ -29,6 +29,7 @@ Express & React template
 -  add logic to tag listing page
 -  add logic to tag edit page
 -  add wysiwyg editor to entry field
+- lazy load the topic list, topic, and tag list page
 -  create quiz-sessions table
 -  possibly create answers table
 - add a status column to the quiz table (incomplete/completed)

@@ -17,6 +17,7 @@ import Entry from '../../components/Entry/Entry';
 import { makeStyles } from '@material-ui/core';
 import SubtopicList from "../../components/List/SubtopicList";
 import { json, getKey, toJson, parse } from '../../utils';
+import { v4 as uuidv4 } from 'uuid';
 
 const useStyles = makeStyles(() => ({
     topicTitle: {
@@ -52,6 +53,7 @@ export default function TopicEdit()
         const [posY, setPosY] = useState(0)
         const [title, setTitle] = useState('');
         const [entries, setEntries] = useState([]);
+        const [tagValues, setTagValues] = useState([]);
         // const [goto, setGoto] = useState(false);
         const {id} = useParams()
         const entryRef = useRef();
@@ -88,28 +90,10 @@ export default function TopicEdit()
                 console.log(err)
             }
         });
-        useEffect(() => {
-            let data; 
-            if(topicData){
-                const {topic, subtopics: st} = topicData;
+       
+        const isEntryEmpty =  (entries) => !!(entries.length <= 1 && entries[0]?.order === undefined);
+       
 
-                setTitle(topic?.title);
-                setSubtopicList(st)
-            }
-            if(entriesData) {
-               data = Array.isArray(entriesData) && entriesData?.length === 0 
-               ? [{}] : entriesData;
-               console.log(data)
-               setEntries(data)
-            }
-            // if(goto){
-            //     redirect(goto, {replace: true});
-            //     redirect(0);
-            // }
-            // if(subEntriesData){
-            //     setSubEntries(subEntriesData);
-            // }
-        },[topicData, entriesData]);
 
 
         const getOrders = (list = []) => {
@@ -119,8 +103,8 @@ export default function TopicEdit()
 
         const handleEntry = (adding = false) => {
             let data = {};
-            const isEntryEmpty = !!(entries.length <= 1 && entries[0]?.order === undefined);
-            const oldEntries = isEntryEmpty ? [] : [...entries];
+            
+            const oldEntries = isEntryEmpty(entries) ? [] : [...entries];
             const newEntries = [];
 
             // if(adding) {
@@ -194,34 +178,84 @@ export default function TopicEdit()
         const addEntry = (e) => {
             e.preventDefault();
             // handleEntry(true);
-            const isEntryEmpty = !!(entries.length <= 1 && entries[0]?.order === undefined);
-            const oldEntries = isEntryEmpty ? [] : [...entries];
-            const newOrder = String(entries.length+1000);
-            oldEntries.push({order: newOrder });
-            setEntries(oldEntries);
+            // const oldEntries = isEntryEmpty(entries) ? [] : [...entries];
+            // const newOrder = String(entries.length+1000);
+            // oldEntries.push({order: newOrder });
+            // setEntries(oldEntries);
+            // const size = entries.length;
+            const orderId =  uuidv4();
+            const newEntry = {order: orderId };
+            const infos = entryRef.current.querySelectorAll('.entry-section input[name="info"]');
+            console.log('infos')
+            console.log(infos)
+            const oldEntries = Array.from(infos).map((e) => json(e.value));
+            setEntries([...oldEntries, newEntry]);
+            // const newEntry = <Entry key={getKey(size)} num={size+1} data={data} id={id} handleChange={handleEntry}/>;
+            // setEntries([...entries, newEntry]);
 
         }
+
+        useEffect(() => {
+            let data; 
+            if(topicData){
+                const {topic, subtopics: st} = topicData;
+
+                setTitle(topic?.title);
+                setSubtopicList(st)
+            }
+            if(entriesData) {
+                const {entries : entryList, tags} = entriesData; 
+               data = Array.isArray(entryList) && entryList?.length === 0 
+               ? [{}] : entryList;
+            //    const entryArr = [];
+            console.log('data')
+            console.log(data)
+               const entryOrder = data.map((e, i) => {
+                   e.order = uuidv4();
+                   return e;
+                })
+            //    console.log(data)
+
+
+            //    setEntries(entryArr)
+               setEntries(entryOrder)
+               setTagValues(tags);
+            //    setEntries(data)
+            }
+            // if(goto){
+            //     redirect(goto, {replace: true});
+            //     redirect(0);
+            // }
+            // if(subEntriesData){
+            //     setSubEntries(subEntriesData);
+            // }
+        },[topicData, entriesData]);
 
         const handleSubmit = (e) => {
             
             e.preventDefault();
-            mutateTopic({title, userId: user?.id, id });
+            const infos = entryRef.current.querySelectorAll('.entry-section input[name="info"]');
+            const data = Array.from(infos).map((e) => json(e.value));
+   
             // handleEntry();
             console.log('handle submit entries')
-            console.log(entries)
-            const data = entries.map((e,i) => {
-                let include = false;
-                for (const [key, value] of Object.entries(e)){
-                    let requiredField = key.includes('title') || key.includes('entry');
-                    if(requiredField && value.trim()){
-                        include = true;
-                    }
-                };
-                if(include) {
-                    return e;
-                }
+            console.log(data)
+            // Need to create input requirement handling in the future
 
-            })
+            // const data = entries.map((e,i) => {
+            //     let include = false;
+            //     for (const [key, value] of Object.entries(e)){
+            //         let requiredField = key.includes('title') || key.includes('entry');
+            //         if(requiredField && value.trim()){
+            //             include = true;
+            //         }
+            //     };
+            //     if(include) {
+            //         return e;
+            //     }
+
+            // })
+            mutateTopic({title, userId: user?.id, id });
             mutateEntry(data);
             // const data = {title, entries};
 
@@ -256,11 +290,12 @@ export default function TopicEdit()
                     className={classes.entryContainer}
                     component={'form'}
                 >
+
                     {
                        entries?.length && entries.map((e, i) => {
                             // console.log("e")
                             // console.log(e)
-                            return <Entry key={getKey(i)} num={i+1} data={e} id={id} handleChange={handleEntry}/>
+                            return <Entry key={getKey(i)} num={i+1} data={e} id={id} options={tagValues} handleChange={handleEntry}/>
                         })
                     }
                 </Grid>    

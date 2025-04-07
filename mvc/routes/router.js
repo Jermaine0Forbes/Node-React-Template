@@ -51,6 +51,7 @@ router.route('/topic/:id')
 router.get('/subtopics/:id',[param('id').isNumeric().trim()], topicCtr.getSubs);
 
 router.post('/entry/create', entryCtr.create);
+router.post('/entry/test', entryCtr.test);
 router.get('/entries/:id',param('id').isNumeric().trim(), entryCtr.index);
 
 module.exports = router;

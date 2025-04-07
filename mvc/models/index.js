@@ -51,21 +51,31 @@ Object.keys(db).forEach(modelName => {
       db[modelName].belongsToMany(getModel('Tags'), { 
         through: 'tags-to-entries',
         as: 'tags',
-        foreignKey: 'entryId'
-
+        foreignKey: 'entryId',
+        exclude: [
+          'createdAt',
+          'updatedAt',
+        ]
       });
     break;
     case 'Tags':
-      // db[modelName].belongsToMany(getModel('Entries'), { through: getModel('TagsToEntries')});
       db[modelName].belongsToMany(getModel('Entries'), { 
         through: 'tags-to-entries',
         as: 'entries',
         foreignKey: 'tagId'
       });
+      db[modelName].hasMany(getModel('TagsToEntries'), {
+      as: 'tet',
+      foreignKey: 'tagId'
+      });
     break;
-    // case 'TagsToEntries':
-    //   db[modelName].belongsToMany(getModel('Tags'), { through: getModel('TagsToEntries')});
-    // break;
+    case 'TagsToEntries':
+      db[modelName].belongsTo(getModel('Tags'), { 
+        through: getModel('TagsToEntries'),
+        as: 'tag',
+        foreignKey: 'tagId'
+      });
+    break;
    }
 });
 

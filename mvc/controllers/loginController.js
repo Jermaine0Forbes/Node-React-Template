@@ -93,6 +93,7 @@ module.exports.login = async (req, res) => {
     attributes: ['adminLevel','email', 'id', 'username'],
     logging: (sql, queryObject) => {
         logging('sql', sql);
+        // logging('debug', JSON.stringify(queryObject))
      }
     });
 
