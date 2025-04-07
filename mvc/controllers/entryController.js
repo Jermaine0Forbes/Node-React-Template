@@ -17,45 +17,26 @@ async function getEntries (id) {
           model:Tags,
           as: 'tags',
           attributes: ['name', 'id'], 
-          exclude:[
-            'tags-to-entries',
-            // {
-            //   tableName: 'tags-to-entries',
-            //   model: TagsToEntries,
-
-            // }
-          ]
+          through:{
+            attributes: [],
+          },
         },
       ],
-      exclude:[
-      //  { model: 'tags-to-entries',}
-       'tags-to-entries',
-      ],
-      logging: (sql,queryObject) => {
+      logging: (sql) => {
           logging('sql', sql);
          
         }
   });
 
   const tags = await Tags.findAll({
-    // attributes: ['name', 'id'] ,
     attributes: { exclude:['termId', 'createdAt', 'updatedAt', 'tags-to-entries']} ,
-    // include: [
-    //   {
-    //     model: 'tags-to-entries',
-    //     through: { attributes: []}
-    //   }
-
-    // ],
     logging: (sql,queryObject) => {
       logging('sql', sql);
      
     },
   });
   
-  // if(Array.isArray(entries) && entries.length > 0 ) {
-  //   entries = includeTagList(entries, tags)
-  // }
+
   console.log(tags)
   return {entries,tags}; 
 
@@ -86,356 +67,412 @@ const prepareEntries = async (data) => {
    })
 }
 
-// const includeTagList = (entries, tags = []) => {
-//   const _tags = tags.map(tag => {
-//     // console.log(tag)
-//     const {name} = tag.dataValues;
-//     delete tag.dataValues['tags-to-entries'];
-//     return tag;
-//   })
-//  return entries.map( (entry) => {
-   
-//     entry.dataValues['tagList'] = _tags;
-//     return entry;
-//   });
-
-// }
 
 module.exports.test = async (req,res) => {
 
 
+  // const data =[
+  //   {
+  //     "title":"t1",
+  //     "entry":"t1",
+  //     "tags":[
+  //         {
+  //           name: 't1',
+  //           userId: 3,
+  //           id: 3,
+  //         },
+  //         {
+  //           name: 't2',
+  //           userId: 3,
+  //           id: 4,
+  //         },
+  //         // {
+  //         //   name: 't5',
+  //         //   userId: 3,
+  //         // },
+  //         // {
+  //         //   name: 't6',
+  //         //   userId: 3,
+  //         // },
+  //         // {
+  //         //   name: 't4',
+  //         //   userId: 3,
+  //         // },
+  //       ],
+  //     "topicId":"3",
+  //     "id":25
+  //   },
+  //   {
+  //     "title":"t2",
+  //     "entry":"t2",
+  //     "tags":[
+  //         // {
+  //         // name: 't3',
+  //         // userId: 3,
+  //         // id: 5,
+  //         // },
+  //         // {
+  //         //   name: 't4',
+  //         //   userId: 3,
+  //         //   id: 6,
+  //         // },
+  //         {
+  //           name: 't2',
+  //           userId: 3,
+  //           id: 4,
+  //         },
+  //         {
+  //           name: 't1',
+  //           userId: 3,
+  //           id: 3,
+  //         },
+  //         // {
+  //         //   name: 't5',
+  //         //   userId: 3,
+  //         // },
+  //         // {
+  //         //   name: 't6',
+  //         //   userId: 3,
+  //         // },
+  //         {
+  //           name: 'w7',
+  //           userId: 3,
+  //         },
+  //         {
+  //           name: 'q6',
+  //           userId: 3, 
+  //         },
+
+
+  //     ],
+  //     "topicId":"3",
+  //     "id":26
+  //   }
+  // ];
+
   const data =[
     {
-      "title":"t1",
-      "entry":"t1",
+      "title":"t3",
+      "entry":"t3",
       "tags":[
           {
             name: 't1',
             userId: 3,
             id: 3,
+            tte : {
+              userId: 3,
+              tagId:3,
+            },
           },
           {
             name: 't2',
             userId: 3,
             id: 4,
+            tte : {
+              userId: 3,
+              tagId:3,
+            },
           },
-          // {
-          //   name: 't5',
-          //   userId: 3,
-          // },
-          // {
-          //   name: 't6',
-          //   userId: 3,
-          // },
-          // {
-          //   name: 't4',
-          //   userId: 3,
-          // },
         ],
       "topicId":"3",
-      "id":25
     },
-    {
-      "title":"t2",
-      "entry":"t2",
-      "tags":[
-          // {
-          // name: 't3',
-          // userId: 3,
-          // id: 5,
-          // },
-          // {
-          //   name: 't4',
-          //   userId: 3,
-          //   id: 6,
-          // },
-          {
-            name: 't2',
-            userId: 3,
-            id: 4,
-          },
-          {
-            name: 't1',
-            userId: 3,
-            id: 3,
-          },
-          // {
-          //   name: 't5',
-          //   userId: 3,
-          // },
-          // {
-          //   name: 't6',
-          //   userId: 3,
-          // },
-          {
-            name: 'w7',
-            userId: 3,
-          },
-          {
-            name: 'q6',
-            userId: 3, 
-          },
-
-
-      ],
-      "topicId":"3",
-      "id":26
-    }
   ];
 
-  let entry;
-  let entryId;
-  let topicId = 3;
-  let userId = 3;
-  let entryTags;
-  let updateList = [];
 
-  Entries.hasMany(TagsToEntries, {
-    foreignKey: 'entryId',
-    attributes: [ 'userId', 'entryId', 'tagId']
-  });
-  TagsToEntries.belongsTo(Entries);
-  Tags.hasMany(TagsToEntries);
-  TagsToEntries.belongsTo(Tags);
+  entry = await Entries.bulkCreate(data, {
+    include: [
+      {
+        model:Tags,
+        as: 'tags',
+        attributes: ['name'],
+        include: [
+          {
+            model: TagsToEntries,
+            as: 'tte',
+          }
+        ]
+      },
+    ],
+    logging: (sql, queryObject) => {
+        logging('sql', sql);
+       
+      }
 
-  for(let i = 0; i < data.length;  i++) {
-    entry = data[i]; 
-    entryId = entry.id;
+});
+
+    let entry;
+    let entryId;
+    let topicId = 3;
+    let userId = 3;
+    let entryTags;
+    let updateList = [];
+    let status = 'update';
     let entryCurrent;
 
-    updateList[i] = await Entries.update({
-      title: entry.title,
-      entry: entry.entry
-    }, {
-          where:{id: entryId},
+    Entries.hasMany(TagsToEntries, {
+      foreignKey: 'entryId',
+      attributes: [ 'userId', 'entryId', 'tagId']
+    });
+    TagsToEntries.belongsTo(Entries);
+    Tags.hasMany(TagsToEntries);
+    TagsToEntries.belongsTo(Tags);
+
+  for(let i = 0; i > data.length;  i++) {
+    entry = data[i]; 
+
+    if (status === "update") {
+       
+        entryId = entry.id;
+    
+        updateList[i] = await Entries.update({
+          title: entry.title,
+          entry: entry.entry
+        }, {
+              where:{id: entryId},
+              include: [
+                {
+                  model:Tags,
+                  as: 'tags',
+                  attributes: ['name', 'userId']
+                },
+              ],
+              logging: (sql, queryObject) => {
+                  logging('sql', sql);
+                
+                }
+          })
+    
+        /*
+          Get the current entry
+        */
+        entryCurrent = await Entries.findByPk(entryId);
+        let ec = entryCurrent;
+        console.log('the current entry is')
+        console.log(ec)
+    
+        console.log('updateList')
+        console.log(updateList)
+
+    } else if ( status === "create") {
+
+       entryCurrent = await Entries.create(entry,{
+          logging: (sql) => {
+            logging('sql', sql);
+          
+          }
+       });
+
+       let ec = entryCurrent;
+       console.log('the current entry is')
+       console.log(ec)
+       entryId = ec.id;
+    }
+
+
+    entryTags = entry?.tags;
+
+    if(entryTags) {
+      console.log('entryTags, count:'+ entryTags.length)
+
+      for(let i = 0; i < entryTags.length;  i++) {
+         let tag = entryTags[i];
+         let ft;
+         let existingTags;
+         let et;
+         let count;
+  
+  
+         console.log('entryId')
+         console.log(entryId)
+  
+  
+        let existingTagsFromEntries = await TagsToEntries.findAll({
+          where:{
+            entryId: entryId
+          },
           include: [
             {
               model:Tags,
-              as: 'tags',
-              attributes: ['name', 'userId']
+              as: 'tag',
+              attributes: ['name', 'id']
             },
           ],
-          logging: (sql, queryObject) => {
-              logging('sql', sql);
-             
-            }
-      })
-
-
-    /*
-      Get the current entry
-    */
-    entryCurrent = await Entries.findByPk(entryId);
-    let ec = entryCurrent;
-    console.log('the current entry is')
-    console.log(ec)
-
-
-    console.log('updateList')
-    console.log(updateList)
-
-
-    entryTags = entry.tags;
-    console.log('entryTags, count:'+ entryTags.length)
-    // console.log(entryTags)
-
-    for(let i = 0; i < entryTags.length;  i++) {
-       let tag = entryTags[i];
-       let ft;
-       let existingTags;
-       let et;
-       let count;
-
-
-       console.log('entryId')
-       console.log(entryId)
-
-
-      let existingTagsFromEntries = await TagsToEntries.findAll({
-        where:{
-          entryId: entryId
-        },
-        include: [
-          {
-            model:Tags,
-            as: 'tag',
-            attributes: ['name', 'id']
-          },
-        ],
-        logging: (sql) => {
-          logging('sql', sql);
-         
-        }
-       });
-
-       let etfe = existingTagsFromEntries;
-       existingTags = etfe.map( ent => ent.tag);
-       et = existingTags;
-
-      /*
-         The tags that are associated with the entry
-       */
-       console.log('existingTags count:'+ et.length)
-       console.log(existingTags)
-
-       /*
-         The tag names that are associated with the entry
-       */
-       exNames = et.map(e =>  e.name);
-       console.log('existing names count:'+ exNames.length);
-       console.log(exNames);
-
-
-       /*
-        The tags that currently are not associated with the entry
-        in the database
-       */
-       let diffTags = entryTags.filter( ent => !exNames.includes(ent.name));
-       let dt = diffTags;
-
- 
-       console.log('different tags')
-       console.log(dt)
-
-
-      /*
-       The tags that already exist, but need to be added to the entry
-      */
-
-       let addedTags = dt.filter(ent => ent.hasOwnProperty('id'));
-       let at = addedTags;
-
-       console.log('added tags, count:'+ at.length);
-       console.log(at);
-
-
-       /*  
-        The tags that have not been created yet
-       */
-       let allTags = await Tags.findAll({ attributes:['name']});
-       let allTagNames = allTags.map(tag => tag.name);
-       let atn = allTagNames;
-       console.log('all of the tag names')
-       console.log(atn)
-       let newTags = dt.filter(ent => !ent.hasOwnProperty('id') && !atn.includes(ent.name));
-       let nt = newTags;
-
-       console.log('new tags, count:'+nt.length);
-       console.log(nt);
-
-       /*
-          The tag names that are associated with the entry
-          from the post request
-       */
-       let newNames = entryTags.map(e => e.name);
-       let nn = newNames;
-       
-       console.log('list of names of the new tags');
-       console.log(nn)
-
-
-
-       /*
-        The tags that need to be removed from the entry
-       */
-
-       let removedTags = et.filter( ent => !nn.includes(ent.name));
-       let rt = removedTags;
-
-       console.log('removed tags count:'+ rt.length)
-       console.log(rt)
-
-
-      if(addedTags.length > 0 ){
-
-        count = await ec.countTagsToEntries();
-        console.log('total of tags to entries')
-        console.log(count)
-
-        let tranformAddedTags = at.map( tag => ( { userId: tag.userId, entryId, tagId: tag.id }));
-        let tat = tranformAddedTags;
-        console.log('added tags that have been transformed');
-        console.log(tat)
-
-        console.log('attempting to add tags to entries')
-        let tte = await TagsToEntries.bulkCreate(tat,{
           logging: (sql) => {
             logging('sql', sql);
            
           }
-        });
-
-        count = await ec.countTagsToEntries();
-        console.log('number of tags to entries left')
-        console.log(count)
-
-      }
-
-
-      if(newTags.length > 0) {
-        count = await ec.countTagsToEntries();
-        console.log('total of tags to entries')
-        console.log(count)
-
-          for(tag of newTags) {
-
-          let  ct = await Tags.create({name: tag.name}, {
-              logging: (sql) => {
-                logging('sql', sql);
-               
-              }
-             });
-
-             let transfromNewTag = { userId: tag.userId, entryId, tagId: ct.id};
-             let tnt = transfromNewTag;
-
-             console.log('new tag that have been transformed');
-             console.log(tnt)
-
-             console.log('attempting to create a tags to entries row')
-             await ec.createTagsToEntry(tnt)
-          }
-
+         });
+  
+         let etfe = existingTagsFromEntries;
+         existingTags = etfe.map( ent => ent.tag);
+         et = existingTags;
+  
+        /*
+           The tags that are associated with the entry
+         */
+         console.log('existingTags count:'+ et.length)
+         console.log(existingTags)
+  
+         /*
+           The tag names that are associated with the entry
+         */
+         exNames = et.map(e =>  e.name);
+         console.log('existing names count:'+ exNames.length);
+         console.log(exNames);
+  
+  
+         /*
+          The tags that currently are not associated with the entry
+          in the database
+         */
+         let diffTags = entryTags.filter( ent => !exNames.includes(ent.name));
+         let dt = diffTags;
+  
+   
+         console.log('different tags')
+         console.log(dt)
+  
+  
+        /*
+         The tags that already exist, but need to be added to the entry
+        */
+  
+         let addedTags = dt.filter(ent => ent.hasOwnProperty('id'));
+         let at = addedTags;
+  
+         console.log('added tags, count:'+ at.length);
+         console.log(at);
+  
+  
+         /*  
+          The tags that have not been created yet
+         */
+         let allTags = await Tags.findAll({ attributes:['name']});
+         let allTagNames = allTags.map(tag => tag.name);
+         let atn = allTagNames;
+         console.log('all of the tag names')
+         console.log(atn)
+         let newTags = dt.filter(ent => !ent.hasOwnProperty('id') && !atn.includes(ent.name));
+         let nt = newTags;
+  
+         console.log('new tags, count:'+nt.length);
+         console.log(nt);
+  
+         /*
+            The tag names that are associated with the entry
+            from the post request
+         */
+         let newNames = entryTags.map(e => e.name);
+         let nn = newNames;
+         
+         console.log('list of names of the new tags');
+         console.log(nn)
+  
+  
+  
+         /*
+          The tags that need to be removed from the entry
+         */
+  
+         let removedTags = et.filter( ent => !nn.includes(ent.name));
+         let rt = removedTags;
+  
+         console.log('removed tags count:'+ rt.length)
+         console.log(rt)
+  
+  
+        if(addedTags.length > 0 ){
+  
           count = await ec.countTagsToEntries();
-          console.log('number of tags to entries left')
+          console.log('total of tags to entries')
           console.log(count)
   
-
-      
-      }
-
-
-      if(removedTags.length > 0 ) {
-
-        count = await ec.countTagsToEntries();
-        console.log('total of tags to entries')
-        console.log(count)
-
-         let transformRemovedTags = rt.map( tag => ( { entryId, tagId: tag.id }));
-         let trt = transformRemovedTags;
-         console.log('removed tags that have been transformed')
-         console.log(trt);
-
-        for(tag of trt) {
-
-          console.log('attempting to remove tags to entries')
-          let tte = await TagsToEntries.destroy({
-            where: tag,
+          let tranformAddedTags = at.map( tag => ( { userId: tag.userId, entryId, tagId: tag.id }));
+          let tat = tranformAddedTags;
+          console.log('added tags that have been transformed');
+          console.log(tat)
+  
+          console.log('attempting to add tags to entries')
+          let tte = await TagsToEntries.bulkCreate(tat,{
             logging: (sql) => {
               logging('sql', sql);
              
             }
           });
-
+  
+          count = await ec.countTagsToEntries();
+          console.log('number of tags to entries left')
+          console.log(count)
+  
         }
+  
+  
+        if(newTags.length > 0) {
+          count = await ec.countTagsToEntries();
+          console.log('total of tags to entries')
+          console.log(count)
+  
+            for(tag of newTags) {
+  
+            let  ct = await Tags.create({name: tag.name}, {
+                logging: (sql) => {
+                  logging('sql', sql);
+                 
+                }
+               });
+  
+               let transfromNewTag = { userId: tag.userId, entryId, tagId: ct.id};
+               let tnt = transfromNewTag;
+  
+               console.log('new tag that have been transformed');
+               console.log(tnt)
+  
+               console.log('attempting to create a tags to entries row')
+               await ec.createTagsToEntry(tnt)
+            }
+  
+            count = await ec.countTagsToEntries();
+            console.log('number of tags to entries left')
+            console.log(count)
+    
+  
         
-        count = await ec.countTagsToEntries();
-        console.log('number of tags to entries left')
-        console.log(count)
-
+        }
+  
+  
+        if(removedTags.length > 0 ) {
+  
+          count = await ec.countTagsToEntries();
+          console.log('total of tags to entries')
+          console.log(count)
+  
+           let transformRemovedTags = rt.map( tag => ( { entryId, tagId: tag.id }));
+           let trt = transformRemovedTags;
+           console.log('removed tags that have been transformed')
+           console.log(trt);
+  
+          for(tag of trt) {
+  
+            console.log('attempting to remove tags to entries')
+            let tte = await TagsToEntries.destroy({
+              where: tag,
+              logging: (sql) => {
+                logging('sql', sql);
+               
+              }
+            });
+  
+          }
+          
+          count = await ec.countTagsToEntries();
+          console.log('number of tags to entries left')
+          console.log(count)
+  
+        }
+  
       }
-
     }
+
   }
 
   const response = await getEntries(topicId);

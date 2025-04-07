@@ -65,7 +65,7 @@ Object.keys(db).forEach(modelName => {
         foreignKey: 'tagId'
       });
       db[modelName].hasMany(getModel('TagsToEntries'), {
-      as: 'tet',
+      as: 'tte',
       foreignKey: 'tagId'
       });
     break;
