@@ -26,12 +26,16 @@ Express & React template
 - ~~create tag listing and edit page~~
 - ~~create user backend function~~
 - create tag functional system
+- get multiple class names package
+-  cleanup, remove unused code
 -  add logic to tag listing page
 -  add logic to tag edit page
 -  add wysiwyg editor to entry field
 - lazy load the topic list, topic, and tag list page
 -  create quiz-sessions table
 -  possibly create answers table
+- update the new logging function that will log in console, on file, 
+and turn all content to json
 - add a status column to the quiz table (incomplete/completed)
 - add form error handling to topics, entries, and tags
 

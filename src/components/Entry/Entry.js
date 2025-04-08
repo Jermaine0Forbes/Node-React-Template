@@ -145,8 +145,8 @@ export default function Entry({num = 0, data = {}, handleChange, id = null, opti
             topicId: id,
         };
 
-        console.log('newInfo')
-        console.log(newInfo)
+        // console.log('newInfo')
+        // console.log(newInfo)
 
         setInfo(json(newInfo));
 

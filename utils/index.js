@@ -76,7 +76,7 @@ function invalidRegister(email, user, pass){
   return true;
 }
 
- function logging (fileName, content) {
+ function logging (fileName, content, showConsole = true) {
   const date = new Date();
   // Get month name (long format)
   const month = date.toLocaleString('default', { month: 'long' });
@@ -94,9 +94,18 @@ function invalidRegister(email, user, pass){
         console.log('File created and data appended.');
       });
     } else {
-      console.log('Log entry added to', logFilePath);
+      if(showConsole){
+        console.log('Log entry added to', logFilePath);
+      }
     }
   });
+ }
+
+ function loggingV2(fileName, content) {
+   
+  console.log(content)
+  logging(fileName, content, false)
+
  }
 
  function noUser(user){
@@ -226,6 +235,8 @@ exports.readJson = readJson;
 exports.writeJson = writeJson;
 
 exports.logging = logging;
+
+exports.loggingV2 = loggingV2;
   
 exports.sleep = sleep;
 

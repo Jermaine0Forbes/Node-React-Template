@@ -18,6 +18,7 @@ import { makeStyles } from '@material-ui/core';
 import SubtopicList from "../../components/List/SubtopicList";
 import { json, getKey, toJson, parse } from '../../utils';
 import { v4 as uuidv4 } from 'uuid';
+import WhileLoading from '../../components/Loading/WhileLoading';
 
 const useStyles = makeStyles(() => ({
     topicTitle: {
@@ -60,9 +61,7 @@ export default function TopicEdit()
         const titleRef = useRef();
         const redirect = useNavigate();
         const classes = useStyles();
-        const {isLoading,  data: topicData} = useQuery('topics', () => fetchTopic(id));
-        const {isLoading: entryDataLoading,  data:entriesData} = useQuery('get-entries', () => fetchEntries(id));
-        // const {isLoading: subEntriesLoading,  data:subEntriesData} = useQuery('get-sub-entries', () => fetchEntries(subId),{ enabled: !!subId});
+      
         const { mutate: mutateTopic } = useMutation({
             mutationFn: (data) => updateTopic(data),
             onSuccess: async (data) => {
@@ -75,7 +74,7 @@ export default function TopicEdit()
                 }
             }
         });
-        const { mutate: mutateEntry} = useMutation({
+        const { mutate: mutateEntry, isSuccess: createEntrySuccess} = useMutation({
             mutationFn: (data) => createEntry(data),
             onSuccess: async (data) => {
 
@@ -90,6 +89,17 @@ export default function TopicEdit()
                 console.log(err)
             }
         });
+        const {isLoading,  data: topicData} = useQuery({
+            queryKey:['get-topics', createEntrySuccess], 
+            queryFn:() => fetchTopic(id),
+            refetchOnWindowFocus: false,
+        });
+        const {isLoading: entriesDataLoading,  data:entriesData} = useQuery({
+            queryKey:['get-entries', createEntrySuccess], 
+            queryFn:() => fetchEntries(id),
+            refetchOnWindowFocus: false,
+        });
+        // const {isLoading: subEntriesLoading,  data:subEntriesData} = useQuery('get-sub-entries', () => fetchEntries(subId),{ enabled: !!subId});
        
         const isEntryEmpty =  (entries) => !!(entries.length <= 1 && entries[0]?.order === undefined);
        
@@ -235,11 +245,11 @@ export default function TopicEdit()
             
             e.preventDefault();
             const infos = entryRef.current.querySelectorAll('.entry-section input[name="info"]');
-            const entries = Array.from(infos).map((e) => json(e.value));
+            const currentEntries = Array.from(infos).map((e) => json(e.value));
             const data = {
                 userId: user.id,
                 topicId: id,
-                entries
+                entries:currentEntries
             };
    
             // handleEntry();
@@ -262,6 +272,7 @@ export default function TopicEdit()
             // })
             mutateTopic({title, userId: user?.id, id });
             mutateEntry(data);
+            setEntries([...currentEntries]);
 
         }
 
@@ -291,14 +302,17 @@ export default function TopicEdit()
                     className={classes.entryContainer}
                     component={'form'}
                 >
+                    <WhileLoading isLoading={entriesDataLoading}>
 
-                    {
-                       entries?.length && entries.map((e, i) => {
-                            // console.log("e")
-                            // console.log(e)
-                            return <Entry key={getKey(i)} num={i+1} data={e} id={id} options={tagValues} handleChange={handleEntry}/>
-                        })
-                    }
+                        {
+                            entries?.length && entries.map((e, i) => {
+                                    return <Entry key={getKey(i)} num={i+1} data={e} id={id} options={tagValues} handleChange={handleEntry}/>
+                                })
+                        }
+
+
+
+                    </WhileLoading>
                 </Grid>    
                 <Grid 
                     component="section"    

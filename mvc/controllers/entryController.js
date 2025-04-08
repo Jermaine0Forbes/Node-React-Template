@@ -1,9 +1,10 @@
 const  { Entries, Tags, TagsToEntries } = require("../models/index");
-const { logging, getUser, writeJson } = require('../../utils/index');
+const { logging, loggingV2 } = require('../../utils/index');
 const { validationResult } = require('express-validator');
 const bcrypt = require("bcrypt");
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
+const {Model} = require('sequelize');
 dotenv.config();
 
 async function getEntries (id) {
@@ -76,9 +77,10 @@ async function processEntries(entries, status){
   let logName = 'processEntries';
   const onlyStatuses = ['create', 'update'];
   const ln = logName;
+  const lv2 = loggingV2;
 
   if(!onlyStatuses.includes(status)){
-    logging(ln, 'status provided does not exist')
+    lv2(ln, 'status provided does not exist')
     return false;
   }
 
@@ -119,13 +121,13 @@ for(entry of entries) {
       */
       entryCurrent = await Entries.findByPk(entryId);
       ec = entryCurrent;
-      logging(ln, 'the current entry is')
-      logging(ln, ec)
+      lv2(ln, 'the current entry is')
+      lv2(ln, ec)
       
       
   
       let us = updateStatus == 1 ? 'updated successfully' : 'update went wrong';
-      logging(ln, `entry ${entryId}: ${us}`)
+      lv2(ln, `entry ${entryId}: ${us}`)
       
       
 
@@ -142,8 +144,8 @@ for(entry of entries) {
       Get the current entry
     */
      ec = entryCurrent;
-     logging(ln, 'the current entry is')
-     logging(ln, ec)
+     lv2(ln, 'the current entry is')
+     lv2(ln, ec)
      
      
      entryId = ec.id;
@@ -153,7 +155,7 @@ for(entry of entries) {
   entryTags = entry?.tags;
 
   if(entryTags) {
-    logging(ln, 'entryTags, count:'+ entryTags.length)
+    lv2(ln, 'entryTags, count:'+ entryTags.length)
     
 
       for(let tag of entryTags) {
@@ -162,8 +164,8 @@ for(entry of entries) {
         let et;
         let count;
 
-        logging(ln, 'entryId')
-        logging(ln, entryId)
+        lv2(ln, 'entryId')
+        lv2(ln, entryId)
         
         
 
@@ -191,8 +193,8 @@ for(entry of entries) {
         /*
           The tags that are associated with the entry
         */
-        logging(ln, 'existingTags count:'+ et.length)
-        logging(ln, existingTags)
+        lv2(ln, 'existingTags count:'+ et.length)
+        lv2(ln, existingTags)
         
         
 
@@ -200,8 +202,8 @@ for(entry of entries) {
           The tag names that are associated with the entry
         */
         exNames = et.map(e =>  e.name);
-        logging(ln, 'existing names count:'+ exNames.length);
-        logging(ln, exNames);
+        lv2(ln, 'existing names count:'+ exNames.length);
+        lv2(ln, exNames);
         
         
 
@@ -212,8 +214,8 @@ for(entry of entries) {
         */
         let diffTags = entryTags.filter( ent => !exNames.includes(ent.name));
         let dt = diffTags;
-        logging(ln, 'different tags')
-        logging(ln, dt)
+        lv2(ln, 'different tags')
+        lv2(ln, dt)
         
         
 
@@ -224,8 +226,8 @@ for(entry of entries) {
 
         let addedTags = dt.filter(ent => ent.hasOwnProperty('id'));
         let at = addedTags;
-        logging(ln, 'added tags, count:'+ at.length);
-        logging(ln, at);
+        lv2(ln, 'added tags, count:'+ at.length);
+        lv2(ln, at);
         
         
 
@@ -236,8 +238,8 @@ for(entry of entries) {
         let allTags = await Tags.findAll({ attributes:['name']});
         let allTagNames = allTags.map(tag => tag.name);
         let atn = allTagNames;
-        logging(ln, 'all of the tag names')
-        logging(ln, atn)
+        lv2(ln, 'all of the tag names')
+        lv2(ln, atn)
         
         
 
@@ -246,8 +248,8 @@ for(entry of entries) {
         */
         let newTags = dt.filter(ent => !ent.hasOwnProperty('id') && !atn.includes(ent.name));
         let nt = newTags;
-        logging(ln, 'new tags, count:'+nt.length);
-        logging(ln, nt);
+        lv2(ln, 'new tags, count:'+nt.length);
+        lv2(ln, nt);
         
         
 
@@ -257,8 +259,8 @@ for(entry of entries) {
         */
         let newNames = entryTags.map(e => e.name);
         let nn = newNames;
-        logging(ln, 'list of names of the new tags');
-        logging(ln, nn)
+        lv2(ln, 'list of names of the new tags');
+        lv2(ln, nn)
         
         
 
@@ -268,8 +270,8 @@ for(entry of entries) {
 
         let removedTags = et.filter( ent => !nn.includes(ent.name));
         let rt = removedTags;
-        logging(ln, 'removed tags count:'+ rt.length)
-        logging(ln, rt)
+        lv2(ln, 'removed tags count:'+ rt.length)
+        lv2(ln, rt)
         
         
 
@@ -279,20 +281,20 @@ for(entry of entries) {
         if(addedTags.length > 0 ){
 
           count = await ec.countTagsToEntries();
-          logging(ln, 'total of tags to entries')
-          logging(ln, count)
+          lv2(ln, 'total of tags to entries')
+          lv2(ln, count)
           
           
 
           let tranformAddedTags = at.map( tag => ( { userId: tag.userId, entryId, tagId: tag.id }));
           let tat = tranformAddedTags;
-          logging(ln, 'added tags that have been transformed');
-          logging(ln,tat)
+          lv2(ln, 'added tags that have been transformed');
+          lv2(ln,tat)
           
           
 
           // console.log('attempting to add tags to entries')
-          logging(ln, 'attempting to add tags to entries')
+          lv2(ln, 'attempting to add tags to entries')
           let tte = await TagsToEntries.bulkCreate(tat,{
             logging: (sql) => {
               logging('sql', sql);
@@ -303,8 +305,8 @@ for(entry of entries) {
           count = await ec.countTagsToEntries();
           // console.log('number of tags to entries left')
           // console.log(count)
-          logging(ln, 'number of tags to entries left')
-          logging(ln, count)
+          lv2(ln, 'number of tags to entries left')
+          lv2(ln, count)
 
         }
 
@@ -315,8 +317,8 @@ for(entry of entries) {
           count = await ec.countTagsToEntries();
           // console.log('total of tags to entries')
           // console.log(count)
-          logging(ln, 'total of tags to entries')
-          logging(ln, count)
+          lv2(ln, 'total of tags to entries')
+          lv2(ln, count)
 
             for(tag of newTags) {
 
@@ -332,19 +334,19 @@ for(entry of entries) {
 
               // console.log('new tag that have been transformed');
               // console.log(tnt)
-              logging(ln, 'new tag that have been transformed')
-              logging(ln, tnt)
+              lv2(ln, 'new tag that have been transformed')
+              lv2(ln, tnt)
 
               // console.log('attempting to create a tags to entries row')
-              logging(ln, 'attempting to create a tags to entries row')
+              lv2(ln, 'attempting to create a tags to entries row')
               await ec.createTagsToEntry(tnt)
             }
 
             count = await ec.countTagsToEntries();
             // console.log('number of tags to entries left')
             // console.log(count)
-            logging(ln, 'number of tags to entries left')
-            logging(ln, count)
+            lv2(ln, 'number of tags to entries left')
+            lv2(ln, count)
     
 
         
@@ -359,15 +361,15 @@ for(entry of entries) {
           count = await ec.countTagsToEntries();
           // console.log('total of tags to entries')
           // console.log(count)
-          logging(ln, 'total of tags to entries')
-          logging(ln, count)
+          lv2(ln, 'total of tags to entries')
+          lv2(ln, count)
 
           let transformRemovedTags = rt.map( tag => ( { entryId, tagId: tag.id }));
           let trt = transformRemovedTags;
           // console.log('removed tags that have been transformed')
           // console.log(trt);
-          logging(ln, 'removed tags that have been transformed')
-          logging(ln, trt)
+          lv2(ln, 'removed tags that have been transformed')
+          lv2(ln, trt)
 
           for(tag of trt) {
 
@@ -385,8 +387,8 @@ for(entry of entries) {
           count = await ec.countTagsToEntries();
           // console.log('number of tags to entries left')
           // console.log(count)
-          logging(ln, 'number of tags to entries left')
-          logging(ln, count)
+          lv2(ln, 'number of tags to entries left')
+          lv2(ln, count)
 
       }
 
@@ -399,21 +401,19 @@ for(entry of entries) {
 
 }
 
-const prepareTags = async (tag) => {
+const prepareTags = (tag, userId) => {
   // console.log("getting user json")
-  const {id} = await getUser();
-   if (typeof tag === "string") return { name: tag, userId:id}; 
-     tag.userId = id;
+   if (typeof tag === "string") return { name: tag, userId: userId}; 
+     tag.userId = userId;
      return tag;
 
 } 
 
-const prepareEntries = async (data) => { 
-   return data.map((obj) => {
+const prepareEntries = (data, userId) => { 
+   return  data.map((obj) => {
       
       const { title, entry,  tags, topicId, id } = obj;
-      //problem issue
-      const preppedTags = tags.map(prepareTags);
+      const preppedTags = tags.map((tag) => prepareTags(tag, userId));
       return {
         title,
         entry,
@@ -429,95 +429,77 @@ const prepareEntries = async (data) => {
 
 module.exports.test = async (req,res) => {
 
-  const data =[
-    {
-      "title":"t1",
-      "entry":"t1",
-      "tags":[
-          // {
-          //   name: 't1',
-          //   userId: 3,
-          //   id: 3,
-          // },
+  const data = {
+    userId: 3,
+    topicId: '3',
+    entries: [
+      {
+        id: 25,
+        title: 't1',
+        entry: 't1',
+        tags: [
+          {
+            name: 't1',
+            userId: 3,
+            id: 3,
+          },
           {
             name: 't2',
             userId: 3,
             id: 4,
           },
-          {
-            name: 'w7',
-            userId: 3,
-            id: 19,
-          },
-          {
-            name: 'q6',
-            userId: 3,
-            id: 14,
-          },
-          // {
-          //   name: 't5',
-          //   userId: 3,
-          //   id: 10,
-          // },
-
         ],
-      "topicId":"3",
-      "id":25
-    },
-    {
-      "title":"t2",
-      "entry":"t2",
-      "tags":[
+        order: '6aa178e4-8f97-4087-b5c4-0ca03c907e21',
+        topicId: '3'
+      },
+      {
+        id: 26,
+        title: 't2',
+        entry: 't2',
+        tags: [
           {
-          name: 't3',
-          userId: 3,
-          id: 5,
-          },
-          {
-            name: 't4',
+            name: 't1',
             userId: 3,
-            id: 6,
+            id: 3,
           },
           {
             name: 't2',
             userId: 3,
             id: 4,
           },
-          // {
-          //   name: 't1',
-          //   userId: 3,
-          //   id: 3,
-          // },
-          // {
-          //   name: 't5',
-          //   userId: 3,
-          // },
-          // {
-          //   name: 't6',
-          //   userId: 3,
-          // },
-          // {
-          //   name: 'w7',
-          //   userId: 3,
-          // },
-          // {
-          //   name: 'q6',
-          //   userId: 3, 
-          // },
+          {
+            name: 'w2',
+            userId: 3,
+          },
+        ],
+        order: '076f61a3-6f35-4bb8-b0a5-5330ac3790a6',
+        topicId: '3'
+      },
 
+    ]
+  };
 
-      ],
-      "topicId":"3",
-      "id":26
-    }
-  ];
+  // const tags = await Tags.findAll({
+  //   attributes: { exclude:['termId', 'createdAt', 'updatedAt', 'tags-to-entries']} ,
+  //   logging: (sql,queryObject) => {
+  //     logging('sql', sql);
+     
+  //   },
+  // });
 
-  let status = "update";
-  let topicId = 3;
-   
-  await processEntries(data, status)
+  // console.log(Array.isArray(tags))
+  // console.log(tags instanceof Model)
+  // console.log(tags[0].toJSON())
+   let topicId = 3;
+   let userId = 3;
+  const updatePrep = await prepareEntries(data.entries, userId);
+
+  await processEntries(updatePrep, 'update')
+
   const data2 = await getEntries(topicId);
   res.json(data2);
+
+
 }
 
 
@@ -542,19 +524,19 @@ module.exports.create = async (req,res,next) => {
     console.log('updating')
     console.log(bulkUpdate)
 
-    const createPrep = await prepareEntries(bulkCreate);
-    const updatePrep = await prepareEntries(bulkUpdate);
+    const createPrep =  prepareEntries(bulkCreate, userId);
+    const updatePrep =  prepareEntries(bulkUpdate, userId);
 
     console.log('createPrep')
     console.log(createPrep)  
     console.log('updatePrep')
-    console.log(updatePrep)
+    console.log(JSON.stringify(updatePrep,null,2));
 
-    //  await processEntries(createPrep, 'create');
-    //  await processEntries(updatePrep, 'update');
+     await processEntries(createPrep, 'create');
+     await processEntries(updatePrep, 'update');
 
-    //  const data = await getEntries(topicId);
-    //  res.json(data);
+     const data = await getEntries(topicId);
+     res.json(data);
 
 }
 
