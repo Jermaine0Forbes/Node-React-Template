@@ -235,7 +235,12 @@ export default function TopicEdit()
             
             e.preventDefault();
             const infos = entryRef.current.querySelectorAll('.entry-section input[name="info"]');
-            const data = Array.from(infos).map((e) => json(e.value));
+            const entries = Array.from(infos).map((e) => json(e.value));
+            const data = {
+                userId: user.id,
+                topicId: id,
+                entries
+            };
    
             // handleEntry();
             console.log('handle submit entries')
@@ -257,11 +262,7 @@ export default function TopicEdit()
             // })
             mutateTopic({title, userId: user?.id, id });
             mutateEntry(data);
-            // const data = {title, entries};
 
-
-            console.log(data)
-            // mutate(data)
         }
 
     

@@ -1,3 +1,124 @@
+## 4-8-25
+
+I don't want to get rid of the example entry data that I needed to test to create and update entries while also 
+removing/adding/creating tags that are associated with those entries. So I will just add them in here
+
+```js
+
+  const data =[
+    {
+      "title":"t1",
+      "entry":"t1",
+      "tags":[
+          {
+            name: 't1',
+            userId: 3,
+            id: 3,
+          },
+          {
+            name: 't2',
+            userId: 3,
+            id: 4,
+          },
+          {
+            name: 'w7',
+            userId: 3,
+            id: 19,
+          },
+          {
+            name: 'q6',
+            userId: 3,
+            id: 14,
+          },
+          {
+            name: 't5',
+            userId: 3,
+            id: 10,
+          },
+
+        ],
+      "topicId":"3",
+      "id":25
+    },
+    {
+      "title":"t2",
+      "entry":"t2",
+      "tags":[
+          // {
+          // name: 't3',
+          // userId: 3,
+          // id: 5,
+          // },
+          // {
+          //   name: 't4',
+          //   userId: 3,
+          //   id: 6,
+          // },
+          {
+            name: 't2',
+            userId: 3,
+            id: 4,
+          },
+          // {
+          //   name: 't1',
+          //   userId: 3,
+          //   id: 3,
+          // },
+          // {
+          //   name: 't5',
+          //   userId: 3,
+          // },
+          // {
+          //   name: 't6',
+          //   userId: 3,
+          // },
+          // {
+          //   name: 'w7',
+          //   userId: 3,
+          // },
+          // {
+          //   name: 'q6',
+          //   userId: 3, 
+          // },
+
+
+      ],
+      "topicId":"3",
+      "id":26
+    }
+  ];
+
+  // const data =[
+  //   {
+  //     "title":"t5",
+  //     "entry":"t5",
+  //     "tags":[
+  //         {
+  //           name: 't1',
+  //           userId: 3,
+  //           id: 3,
+  //           tte : {
+  //             userId: 3,
+  //             tagId:3,
+  //           },
+  //         },
+  //         {
+  //           name: 't2',
+  //           userId: 3,
+  //           id: 4,
+  //           tte : {
+  //             userId: 3,
+  //             tagId:3,
+  //           },
+  //         },
+  //       ],
+  //     "topicId":"4",
+  //   },
+  // ];
+
+```
+
+
 ## 1-11-25
 
 Need to create a simple app that will allow me to create categories which which will have topics and even subtopics. Within the topcis or subtopics
