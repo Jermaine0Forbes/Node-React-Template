@@ -535,21 +535,6 @@ module.exports.test = async (req,res) => {
   // console.log(tags[0].toJSON())
    let topicId = 6;
    let userId = 3;
-  // const prep = await prepareEntries(data.entries, userId);
-
-  // await processEntries(prep, 'create')
-
-//  res.json(x);
-
-  let tags = await Tags.findAll({
-    attributes: ['name', [3, 'userId'], 'id']
-  });
-
-  res.json(tags)
-
-  // const data2 = await getEntries(topicId);
-  // res.json(data2);
-
 
 }
 

@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import {json, toJson, getKey, parse, empty} from "../../utils/index";
 import { v4 as uuidv4 } from 'uuid';
+import classNames from 'classnames';
 
 const useStyles = makeStyles(() => ({
     title: {
@@ -201,7 +202,7 @@ export default function Entry({num = 0, data = {}, handleChange, id = null, opti
     },[data?.tags])
     
     return (
-        <Box component={'section'} className={classes.entrySection+" entry-section"}>
+        <Box component={'section'} className={classNames(classes.entrySection, "entry-section")}>
             <Grid className={classes.entryHead}>
             <Chip
                 label={num}
