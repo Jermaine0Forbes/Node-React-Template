@@ -46,7 +46,10 @@ Object.keys(db).forEach(modelName => {
 
   switch(modelName) {
     case 'Entries':
-      db[modelName].belongsTo(getModel('Topics'));
+      db[modelName].belongsTo(getModel('Topics'),{
+        as: 'topic',
+        foreignKey: 'topicId'
+      });
       // db[modelName].belongsToMany(getModel('Tags'), { through: getModel('TagsToEntries')});
       db[modelName].belongsToMany(getModel('Tags'), { 
         through: 'tags-to-entries',

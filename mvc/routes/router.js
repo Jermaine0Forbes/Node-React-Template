@@ -5,6 +5,7 @@ const userCtr = require("../controllers/userController");
 const loginCtr = require("../controllers/loginController");
 const topicCtr = require("../controllers/topicController");
 const entryCtr = require("../controllers/entryController");
+const tagCtr = require("../controllers/tagController");
 const multer = require('multer');
 const path = require('path')
 const storage = multer.diskStorage({
@@ -53,6 +54,8 @@ router.get('/subtopics/:id',[param('id').isNumeric().trim()], topicCtr.getSubs);
 router.post('/entry/create', entryCtr.create);
 router.post('/entry/test', entryCtr.test);
 router.get('/entries/:id',param('id').isNumeric().trim(), entryCtr.index);
+
+router.get('/tags', tagCtr.index);
 
 module.exports = router;
 

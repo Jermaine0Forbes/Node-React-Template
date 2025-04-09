@@ -1,4 +1,4 @@
-const  { Entries, Tags, TagsToEntries } = require("../models/index");
+const  { Entries, Tags, TagsToEntries, Topics } = require("../models/index");
 const { logging, loggingV2, getUser } = require('../../utils/index');
 const { validationResult } = require('express-validator');
 const bcrypt = require("bcrypt");
@@ -514,6 +514,33 @@ module.exports.test = async (req,res) => {
    let userId = 3;
 
   //  throw Error('you suck');
+
+  const tags = await Tags.findAll({
+    attributes:['name', 'id'],
+    include:[
+        {
+            model: Entries,
+            as: 'entries',
+            attributes: ['title'],
+            include:[
+              {
+                model: Topics,
+                as: 'topic',
+                attributes: ['title', 'id'],
+                foreignKey: 'topicId'
+              }
+
+            ],
+            through: {
+              attributes: [],
+            },
+        }
+    ],
+    logging: (sql) => {
+        logging('sql', sql);
+      }
+});
+res.json(tags);
 
 }
 
