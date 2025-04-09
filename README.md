@@ -27,7 +27,7 @@ Express & React template
 - ~~create user backend function~~
 - ~~create tag functional system~~
 - ~~get multiple class names package~~ 
--  cleanup, remove unused code
+-  ~~cleanup, remove unused code~~
 -  add logic to tag listing page
 -  add logic to tag edit page
 -  add wysiwyg editor to entry field

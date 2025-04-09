@@ -1,5 +1,7 @@
 ## 4-8-25
 
+- [classnames package](https://github.com/JedWatson/classnames)
+
 I don't want to get rid of the example entry data that I needed to test to create and update entries while also 
 removing/adding/creating tags that are associated with those entries. So I will just add them in here
 

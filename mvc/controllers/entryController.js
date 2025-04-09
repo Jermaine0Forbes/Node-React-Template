@@ -320,7 +320,6 @@ for(entry of entries) {
         lv2(ln, 'removed tags count:'+ rt.length)
         lv2(ln, rt)
         
-        
 
         /*
         If there are any existing tags, add them to entry
@@ -330,17 +329,12 @@ for(entry of entries) {
           count = await ec.countTagsToEntries();
           lv2(ln, 'total of tags to entries')
           lv2(ln, count)
-          
-          
 
           let tranformAddedTags = at.map( tag => ( { userId: tag.userId, entryId, tagId: tag.id }));
           let tat = tranformAddedTags;
           lv2(ln, 'added tags that have been transformed');
           lv2(ln,tat)
-          
-          
 
-          // console.log('attempting to add tags to entries')
           lv2(ln, 'attempting to add tags to entries')
           let tte = await TagsToEntries.bulkCreate(tat,{
             logging: (sql) => {
@@ -350,8 +344,6 @@ for(entry of entries) {
           });
 
           count = await ec.countTagsToEntries();
-          // console.log('number of tags to entries left')
-          // console.log(count)
           lv2(ln, 'number of tags to entries left')
           lv2(ln, count)
 
@@ -362,8 +354,6 @@ for(entry of entries) {
         */
         if(newTags.length > 0) {
           count = await ec.countTagsToEntries();
-          // console.log('total of tags to entries')
-          // console.log(count)
           lv2(ln, 'total of tags to entries')
           lv2(ln, count)
 
@@ -379,23 +369,16 @@ for(entry of entries) {
               let transfromNewTag = { userId: tag.userId, entryId, tagId: ct.id};
               let tnt = transfromNewTag;
 
-              // console.log('new tag that have been transformed');
-              // console.log(tnt)
               lv2(ln, 'new tag that have been transformed')
               lv2(ln, tnt)
 
-              // console.log('attempting to create a tags to entries row')
               lv2(ln, 'attempting to create a tags to entries row')
               await ec.createTagsToEntry(tnt)
             }
 
             count = await ec.countTagsToEntries();
-            // console.log('number of tags to entries left')
-            // console.log(count)
             lv2(ln, 'number of tags to entries left')
             lv2(ln, count)
-    
-
         
         }
 
@@ -406,15 +389,11 @@ for(entry of entries) {
         if(removedTags.length > 0 ) {
 
           count = await ec.countTagsToEntries();
-          // console.log('total of tags to entries')
-          // console.log(count)
           lv2(ln, 'total of tags to entries')
           lv2(ln, count)
 
           let transformRemovedTags = rt.map( tag => ( { entryId, tagId: tag.id }));
           let trt = transformRemovedTags;
-          // console.log('removed tags that have been transformed')
-          // console.log(trt);
           lv2(ln, 'removed tags that have been transformed')
           lv2(ln, trt)
 
@@ -432,8 +411,6 @@ for(entry of entries) {
           }
           
           count = await ec.countTagsToEntries();
-          // console.log('number of tags to entries left')
-          // console.log(count)
           lv2(ln, 'number of tags to entries left')
           lv2(ln, count)
 
@@ -536,6 +513,8 @@ module.exports.test = async (req,res) => {
    let topicId = 6;
    let userId = 3;
 
+  //  throw Error('you suck');
+
 }
 
 
@@ -545,11 +524,11 @@ module.exports.create = async (req,res,next) => {
 
   
 
-    //  if(!Array.isArray(req.body)) {
-    //     const msg = 'request body is not an array';
-    //     logging('error', msg);
-    //    return res.status(400).send(msg);
-    //  }
+     if(typeof req.body === "object") {
+        const msg = 'request body is not an object';
+        logging('error', msg);
+       return res.status(400).send(msg);
+     }
 
     const { userId, topicId, entries } = req.body;
     const bulkUpdate = entries.filter( e => !!(e?.id) === true);

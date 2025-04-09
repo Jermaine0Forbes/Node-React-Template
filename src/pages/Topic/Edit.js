@@ -8,7 +8,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import { useColor } from '../../hooks/users';
 import {AuthContext} from '../../providers/AuthProvider';
-import { useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import { useMutation } from 'react-query';
 import { useQuery } from 'react-query';
 import { fetchTopic, updateTopic } from '../../services/topic';
@@ -16,7 +16,7 @@ import { createEntry, fetchEntries } from '../../services/entry';
 import Entry from '../../components/Entry/Entry';
 import { makeStyles } from '@material-ui/core';
 import SubtopicList from "../../components/List/SubtopicList";
-import { json, getKey, toJson, parse } from '../../utils';
+import { json, getKey } from '../../utils';
 import { v4 as uuidv4 } from 'uuid';
 import WhileLoading from '../../components/Loading/WhileLoading';
 
@@ -55,11 +55,9 @@ export default function TopicEdit()
         const [title, setTitle] = useState('');
         const [entries, setEntries] = useState([]);
         const [tagValues, setTagValues] = useState([]);
-        // const [goto, setGoto] = useState(false);
         const {id} = useParams()
         const entryRef = useRef();
         const titleRef = useRef();
-        const redirect = useNavigate();
         const classes = useStyles();
       
         const { mutate: mutateTopic } = useMutation({
@@ -74,125 +72,31 @@ export default function TopicEdit()
                 }
             }
         });
+
         const { mutate: mutateEntry, isSuccess: createEntrySuccess} = useMutation({
             mutationFn: (data) => createEntry(data),
             onSuccess: async (data) => {
-
                 console.log(data)
-                // if(data.status === 200){
-                //    const topic =  await data.json();
-                //     console.log(topic)
-                //     // redirect('/');
-                // } 
             },
             onError: async (err) => {
                 console.log(err)
             }
         });
+
         const {isLoading,  data: topicData} = useQuery({
             queryKey:['get-topics', createEntrySuccess], 
             queryFn:() => fetchTopic(id),
             refetchOnWindowFocus: false,
         });
+
         const {isLoading: entriesDataLoading,  data:entriesData} = useQuery({
             queryKey:['get-entries', createEntrySuccess], 
             queryFn:() => fetchEntries(id),
             refetchOnWindowFocus: false,
         });
-        // const {isLoading: subEntriesLoading,  data:subEntriesData} = useQuery('get-sub-entries', () => fetchEntries(subId),{ enabled: !!subId});
        
-        const isEntryEmpty =  (entries) => !!(entries.length <= 1 && entries[0]?.order === undefined);
-       
-
-
-
-        const getOrders = (list = []) => {
-            const purgedList = list.filter((val) => (typeof val === "object") && val.hasOwnProperty('order'));
-            return purgedList.map(obj => obj?.order);
-        }
-
-        const handleEntry = (adding = false) => {
-            let data = {};
-            
-            const oldEntries = isEntryEmpty(entries) ? [] : [...entries];
-            const newEntries = [];
-
-            // if(adding) {
-            //     const newOrder = String(entries.length+1000);
-            //     oldEntries.push({order: newOrder });
-            //     setEntries(oldEntries);
-            //     return true;
-            // }
-
-            const form = new FormData(entryRef.current);
-            for (const [key, value] of form.entries()){
-                // console.log(key)
-                if(!key.includes('tags')){
-                    data[key] = value;
-                } else {
-                    console.log('data key')
-                    console.log(typeof value)
-                    console.log(value)
-                    switch(typeof value) {
-                        case "string":
-                            data[key] = typeof parse(value) === "object"? parse(value) : value ;
-                        break;
-
-                        case "object":
-                            data[key] = value;
-                        break;
-                        default:
-                            data[key] = [];
-
-                    }
-                   
-                    
-
-                    // data[key] = typeof value === "string" ? parse(value) : [];
-                }
-               
-                if(key.includes('topicId')){
-                    newEntries.push(data);
-                    data = {};
-                }
-            }
-
-            console.log('data')
-            console.log(data)
-
-           const orders = oldEntries.length > 0 ? getOrders(oldEntries) : [];
-        //    const newOrders = data.length > 0 ? data.map(e => e?.order ) : [];
-           console.log('orders')
-           console.log(orders)
-           // Need to map data orders and compare if the size of orders or data orders are different
-           // if so then push, if not then update
-            const shouldUpdate =  orders.length > 0  ?  newEntries.every((obj) => orders.includes(obj?.order))  : false;
-            // const shouldUpdate = data.some(e => orders.includes(e.order));
-
-            console.log('shouldUpdate')
-            console.log(shouldUpdate)
-
-            if (shouldUpdate) {
-                // list.push(data)
-                const x = newEntries;
-                console.log('should update new entries data')
-                console.log(x)
-                setEntries(x)
-
-            }else{
-                setEntries(newEntries)
-            }
-            // console.log(list)
-        }
-
         const addEntry = (e) => {
             e.preventDefault();
-            // handleEntry(true);
-            // const oldEntries = isEntryEmpty(entries) ? [] : [...entries];
-            // const newOrder = String(entries.length+1000);
-            // oldEntries.push({order: newOrder });
-            // setEntries(oldEntries);
-            // const size = entries.length;
             const orderId =  uuidv4();
             const newEntry = {order: orderId };
             const infos = entryRef.current.querySelectorAll('.entry-section input[name="info"]');
@@ -200,9 +104,6 @@ export default function TopicEdit()
             console.log(infos)
             const oldEntries = Array.from(infos).map((e) => json(e.value));
             setEntries([...oldEntries, newEntry]);
-            // const newEntry = <Entry key={getKey(size)} num={size+1} data={data} id={id} handleChange={handleEntry}/>;
-            // setEntries([...entries, newEntry]);
-
         }
 
         useEffect(() => {
@@ -217,28 +118,19 @@ export default function TopicEdit()
                 const {entries : entryList, tags} = entriesData; 
                data = Array.isArray(entryList) && entryList?.length === 0 
                ? [{}] : entryList;
-            //    const entryArr = [];
+
             console.log('data')
             console.log(data)
+
                const entryOrder = data.map((e, i) => {
                    e.order = uuidv4();
                    return e;
                 })
-            //    console.log(data)
 
-
-            //    setEntries(entryArr)
                setEntries(entryOrder)
                setTagValues(tags);
-            //    setEntries(data)
             }
-            // if(goto){
-            //     redirect(goto, {replace: true});
-            //     redirect(0);
-            // }
-            // if(subEntriesData){
-            //     setSubEntries(subEntriesData);
-            // }
+
         },[topicData, entriesData]);
 
         const handleSubmit = (e) => {
@@ -252,24 +144,9 @@ export default function TopicEdit()
                 entries:currentEntries
             };
    
-            // handleEntry();
             console.log('handle submit entries')
             console.log(data)
-            // Need to create input requirement handling in the future
 
-            // const data = entries.map((e,i) => {
-            //     let include = false;
-            //     for (const [key, value] of Object.entries(e)){
-            //         let requiredField = key.includes('title') || key.includes('entry');
-            //         if(requiredField && value.trim()){
-            //             include = true;
-            //         }
-            //     };
-            //     if(include) {
-            //         return e;
-            //     }
-
-            // })
             mutateTopic({title, userId: user?.id, id });
             mutateEntry(data);
             setEntries([...currentEntries]);
@@ -303,15 +180,11 @@ export default function TopicEdit()
                     component={'form'}
                 >
                     <WhileLoading isLoading={entriesDataLoading}>
-
                         {
                             entries?.length && entries.map((e, i) => {
-                                    return <Entry key={getKey(i)} num={i+1} data={e} id={id} options={tagValues} handleChange={handleEntry}/>
+                                    return <Entry key={getKey(i)} num={i+1} data={e} id={id} options={tagValues} />
                                 })
                         }
-
-
-
                     </WhileLoading>
                 </Grid>    
                 <Grid 

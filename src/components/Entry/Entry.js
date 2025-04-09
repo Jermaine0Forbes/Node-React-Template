@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import Badge from '@material-ui/core/Badge';
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import {json, toJson, getKey, parse, empty} from "../../utils/index";
+import {json, toJson } from "../../utils/index";
 import { v4 as uuidv4 } from 'uuid';
 import classNames from 'classnames';
 
@@ -87,18 +85,8 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-    { title: 'Pulp Fiction', year: 1994 },
-];
 
-
-export default function Entry({num = 0, data = {}, handleChange, id = null, options = []})
+export default function Entry({num = 0, data = {},  id = null, options = []})
 {
 
     const [title, setTitle] = useState(data?.title ?? '');
@@ -123,31 +111,20 @@ export default function Entry({num = 0, data = {}, handleChange, id = null, opti
         console.log('value')
         console.log(value)
         setSavedTags(value)
-        // const stringified = value.map( option => typeof option === "object" ? json(option): option);
-        // setTags(stringified);
         setTags(value);
        
     }
 
     useEffect(() => {
-        // this is probably the issue for infinite updates
-        // if(tags.length > 0)
-        // handleChange();
-        // console.log('tags')
-        // console.log(tags)
 
         const newInfo = {
             id: data?.id ?? null,
             title: title,
             entry: entry,
             tags: [...savedTags].reverse(),
-            // tags: empty(tags) ? tags: parse(tags).reverse(),
             order: orderId,
             topicId: id,
         };
-
-        // console.log('newInfo')
-        // console.log(newInfo)
 
         setInfo(json(newInfo));
 
@@ -169,33 +146,20 @@ export default function Entry({num = 0, data = {}, handleChange, id = null, opti
     }
 
     useEffect(() => {
-        // console.log('1')
         if(data?.tags && data?.tags.length > 0){
             const tagsSaved = [];
             const tagsField = [];
             let jsonTag;
             let tag;
-            // console.log('2')
             for(let i =  data.tags.length -1 ; i >= 0; i--){
                 tag = data.tags[i];
-                // console.log(tag)
                 jsonTag = toJson(tag);
                 tagsSaved.push(tag);
-                // tagsField.push(jsonTag);
                 tagsField.push(tag);
             }
 
-            // for(let i = 0; i < data.tags.length; i++){
-            //     tag = data.tags[i];
-            //     // console.log(tag)
-            //     jsonTag = toJson(tag);
-            //     tagsSaved.push(tag);
-            //     tagsField.push(tag);
-            // }
-            // console.log(tagsSaved)
             setSavedTags(tagsSaved);
-            // console.log('tagsField')
-            // console.log(tagsField)
+
             setTags(tagsField);
 
         }
@@ -237,7 +201,6 @@ export default function Entry({num = 0, data = {}, handleChange, id = null, opti
                     margin="normal"
                     className={classes.title}
                     name={"title"}
-                    // name={"title-"+num}
                     onChange={handleField}
                     value={title}
                     >
@@ -252,7 +215,6 @@ export default function Entry({num = 0, data = {}, handleChange, id = null, opti
                         className={classes.entry}
                         minRows={3}
                         name={"entry"}
-                        // name={"entry-"+num}
                         onChange={handleField}
                         value={entry}
                     >
@@ -266,12 +228,8 @@ export default function Entry({num = 0, data = {}, handleChange, id = null, opti
                         freeSolo
                         disablePortal={true}
                         options={ options}
-                        // options={data?.tagList ?? []}
                         className={classes.tagField}
                         getOptionLabel={(option) => {
-
-                            // console.log('option')
-                            // console.log(option)
                             // Value selected with enter, right from the input
                             if (typeof option === 'string') {
                                 return  option;
@@ -296,35 +254,7 @@ export default function Entry({num = 0, data = {}, handleChange, id = null, opti
                         />
                         )}
                     />
-                    {/* {
-                        tags ? 
-                        (
-                            tags.map( (tag, i) =>  {
-
-                            <TextField type="hidden" key={getKey(i)} className={classes.hidden} value={tag} name={`tags[]`} />
-
-                            })
-                        )
-                        : 
-                        (
-                            <TextField type="hidden" className={classes.hidden} value={tags} name={`tags[]`} />
-
-                        )
-                    }
-                     */}
                 </Grid>
-                {/* <TextField
-                        type="hidden" 
-                        className={classes.hidden} 
-                        name={"order"}
-                        value={orderId}
-                    />
-                <TextField
-                        type="hidden" 
-                        className={classes.hidden} 
-                        name={"topicId"}
-                        value={id}
-                    /> */}
                     <TextField
                         type="hidden" 
                         className={classes.hidden} 
