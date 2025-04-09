@@ -1,5 +1,5 @@
 const  { Entries, Tags, TagsToEntries } = require("../models/index");
-const { logging, loggingV2 } = require('../../utils/index');
+const { logging, loggingV2, getUser } = require('../../utils/index');
 const { validationResult } = require('express-validator');
 const bcrypt = require("bcrypt");
 const dotenv = require('dotenv');
@@ -82,6 +82,12 @@ async function processEntries(entries, status){
   if(!onlyStatuses.includes(status)){
     lv2(ln, 'status provided does not exist')
     return false;
+  }
+
+  if(!global?.userId){
+    lv2(ln, 'global userId does not exist')
+    const {id: userId} = await getUser();
+    global.userId = userId;
   }
 
   Entries.hasMany(TagsToEntries, {
@@ -250,8 +256,49 @@ for(entry of entries) {
         let nt = newTags;
         lv2(ln, 'new tags, count:'+nt.length);
         lv2(ln, nt);
-        
-        
+
+        /*  
+          The tags that exist, but they don't have id's
+        */
+        let noIdTags = dt.filter(ent => !ent.hasOwnProperty('id') && atn.includes(ent.name));
+        let nit = noIdTags;
+        lv2(ln, 'tags with no ids, count:'+nit.length);
+        lv2(ln, nit);
+
+
+        /*
+          If there are tags that exist, but they don't carry an id. 
+          We query the tag, attach the userId to it
+          and add it to the addedTags variable
+        */
+        if(nit.length){
+          
+          for(let tag of nit) {
+
+           let found =  await Tags.findOne({
+                where:{
+                  name: tag.name,
+                },
+                attributes: ['name', 'id'],
+                logging: (sql) => {
+                  logging('sql', sql);
+                
+                }
+              });
+
+            if( found !== null) {
+              lv2(ln, 'found tag :'+tag.name);
+              let f = found.toJSON()
+              lv2(ln, f);
+              f.userId = global.userId;
+              at.push(f)
+            }else{
+              lv2(ln,'could not find tag :'+tag.name);
+            }
+
+          }
+        }
+
 
         /*
             The tag names that are associated with the entry
@@ -431,49 +478,45 @@ module.exports.test = async (req,res) => {
 
   const data = {
     userId: 3,
-    topicId: '3',
+    topicId: '6',
     entries: [
       {
-        id: 25,
-        title: 't1',
-        entry: 't1',
+        // id: 25,
+        title: 'foo2',
+        entry: 'foo2',
         tags: [
+          {
+            name: 'qw',
+            userId: 3,
+          },
           {
             name: 't1',
             userId: 3,
-            id: 3,
-          },
-          {
-            name: 't2',
-            userId: 3,
-            id: 4,
           },
         ],
         order: '6aa178e4-8f97-4087-b5c4-0ca03c907e21',
-        topicId: '3'
+        topicId: '6'
       },
       {
-        id: 26,
-        title: 't2',
-        entry: 't2',
+        // id: 26,
+        title: 'foo3',
+        entry: 'foo3',
         tags: [
           {
-            name: 't1',
+            name: 'qw',
             userId: 3,
-            id: 3,
           },
           {
-            name: 't2',
+            name: 'qe',
             userId: 3,
-            id: 4,
           },
           {
-            name: 'w2',
+            name: 'qr',
             userId: 3,
           },
         ],
         order: '076f61a3-6f35-4bb8-b0a5-5330ac3790a6',
-        topicId: '3'
+        topicId: '6'
       },
 
     ]
@@ -490,14 +533,22 @@ module.exports.test = async (req,res) => {
   // console.log(Array.isArray(tags))
   // console.log(tags instanceof Model)
   // console.log(tags[0].toJSON())
-   let topicId = 3;
+   let topicId = 6;
    let userId = 3;
-  const updatePrep = await prepareEntries(data.entries, userId);
+  // const prep = await prepareEntries(data.entries, userId);
 
-  await processEntries(updatePrep, 'update')
+  // await processEntries(prep, 'create')
 
-  const data2 = await getEntries(topicId);
-  res.json(data2);
+//  res.json(x);
+
+  let tags = await Tags.findAll({
+    attributes: ['name', [3, 'userId'], 'id']
+  });
+
+  res.json(tags)
+
+  // const data2 = await getEntries(topicId);
+  // res.json(data2);
 
 
 }
@@ -518,6 +569,8 @@ module.exports.create = async (req,res,next) => {
     const { userId, topicId, entries } = req.body;
     const bulkUpdate = entries.filter( e => !!(e?.id) === true);
     const bulkCreate = entries.filter( e => !!(e?.id) === false);
+
+    global.userId ??= userId;
 
     console.log('creating')
     console.log(bulkCreate)
