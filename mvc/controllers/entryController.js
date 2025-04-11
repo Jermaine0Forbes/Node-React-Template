@@ -550,12 +550,12 @@ module.exports.create = async (req,res,next) => {
      console.log(req.body)
 
   
-
-     if(typeof req.body === "object") {
-        const msg = 'request body is not an object';
-        logging('error', msg);
-       return res.status(400).send(msg);
-     }
+    //   console.log(typeof req.body);
+    //  if(typeof req.body === 'object') {
+    //     const msg = 'request body is not an object';
+    //     logging('error', msg);
+    //    return res.status(400).send(msg);
+    //  }
 
     const { userId, topicId, entries } = req.body;
     const bulkUpdate = entries.filter( e => !!(e?.id) === true);

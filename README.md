@@ -29,10 +29,11 @@ Express & React template
 - ~~get multiple class names package~~ 
 -  ~~cleanup, remove unused code~~
 -  add logic to tag listing page
+-  fix dropdown subtopic list
 -  add logic to tag edit page
 -  add wysiwyg editor to entry field
 - lazy load the topic list, topic, and tag list page
--  create quiz-sessions table
+-  create quiz-templates, quiz-sessions,  table
 -  possibly create answers table
 - update the new logging function that will log in console, on file, 
 and turn all content to json

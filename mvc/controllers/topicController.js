@@ -63,6 +63,9 @@ module.exports.getSubs = async (req,res) => {
         }
     );
 
+    console.log('entries')
+    console.log(entries)
+
     res.json({ entries, subtopics});
 }
 

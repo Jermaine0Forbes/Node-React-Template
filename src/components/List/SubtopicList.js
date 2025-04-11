@@ -61,11 +61,12 @@ export default function SubtopicList({subtopicList})
         const [subEntries, setSubEntries] = useState([]);
         const [openSubList, setOpenSubList] = useState(false);
         const [subId, setSubId] = useState(null);
+        const [dropDownId, setDropDownId] = useState(0);
         const [goto, setGoto] = useState(false);
-        // const {id} = useParams()
+        const prevSubId  = useRef(0);
         const redirect = useNavigate();
         const classes = useStyles();
-        const {isLoading: subEntriesLoading,  data:subData} = useQuery('get-subtopics-entries', () => fetchSubtopics(subId),{ enabled: !!subId});
+        const {isLoading: subEntriesLoading,  data:subData, refetch} = useQuery('get-subtopics-entries', () => fetchSubtopics(subId),{ enabled: !!subId});
 
         useEffect(() => {
             // let data; 
@@ -81,16 +82,34 @@ export default function SubtopicList({subtopicList})
                 setSubEntries(entries);
                 setSubTopics(subtopics);
             }
-        },[ goto, subData]);
+            if(prevSubId !== subId){
+                refetch();
+            }
+
+        },[ goto, subData, subId]);
 
 
-        const handleSubtopic =  (evt) => {
-            const id = evt.target.dataset.subtopicId ??  null;
-            // console.log(evt.target)
-            // console.log(evt.target.dataset)
-            // console.log(id)
-            setSubId(id);
-            setOpenSubList(!openSubList);
+        // const handleSubtopic =  (evt) => {
+        //     const id = evt.target.dataset.subtopicId ??  null;
+        //     // console.log(evt.target)
+        //     // console.log(evt.target.dataset)
+        //     // console.log(id)
+        //     setSubId(id);
+        //     setOpenSubList(!openSubList);
+        // }
+
+        const handleDropdown = (id) => {
+            let shouldOpen ;
+            const diffId = subId !== id;
+            if(diffId){
+                shouldOpen = true;
+                prevSubId.current = subId;
+                setSubId(id);
+            }else{
+                shouldOpen = !openSubList;
+            }
+    
+           setOpenSubList(shouldOpen)
         }
 
         // console.log('openSubList')
@@ -108,55 +127,59 @@ export default function SubtopicList({subtopicList})
                     <List >
                         {
                             subtopicList.map((e,i) => {
+                                const openUp = !!(openSubList && (subId === e.id));
                                 return (
-                                <ListItem 
-                                    key={i} 
-                                    className={classes.subtopicItem} 
-                                    style={{backgroundColor:color}}
-                                    secondaryAction={
-                                        <>
-                                        <IconButton 
-                                            onClick={() => setGoto("/topic/"+e?.id)} 
-                                            edge="end" 
-                                            aria-label="link"
-                                        >
-                                            <LinkIcon />
-                                        </IconButton>
-                                        <IconButton 
-                                            edge="end" 
-                                            aria-label="show more"
-                                            onClick={handleSubtopic}
-                                        >
-                                            {
-                                                openSubList ? (
-                                                    <KeyboardArrowUpIcon  />
-                                                ) : (
-                                                    <KeyboardArrowDownIcon data-subtopic-id={e?.id} />
-                                                )
+                                    <>
+                                        <ListItem 
+                                            key={i} 
+                                            className={classes.subtopicItem} 
+                                            style={{backgroundColor:color}}
+                                            secondaryAction={
+                                                <>
+                                                <IconButton 
+                                                    onClick={() => setGoto("/topic/"+e?.id)} 
+                                                    edge="end" 
+                                                    aria-label="link"
+                                                >
+                                                    <LinkIcon />
+                                                </IconButton>
+                                                <IconButton 
+                                                    edge="end" 
+                                                    aria-label="show more"
+                                                    onClick={ () => handleDropdown(e.id)}
+                                                >
+                                                    {
+                                                        openUp ? (
+                                                            <KeyboardArrowUpIcon  />
+                                                        ) : (
+                                                            <KeyboardArrowDownIcon />
+                                                        )
+                                                    }
+                                                    
+                                                </IconButton>
+                                                </>
                                             }
-                                            
-                                        </IconButton>
-                                        </>
-                                    }
-                                >
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <ImageIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary={e?.title} />
-                            </ListItem>
+                                        >
+                                        <ListItemAvatar>
+                                            <Avatar>
+                                                <ImageIcon />
+                                            </Avatar>
+                                        </ListItemAvatar>
+                                        <ListItemText primary={e?.title} />
+                                    </ListItem>
+                                    
+                                    <Collapse in={openUp}>
+                                        <ChildSubtopicList
+                                        isLoading={subEntriesLoading}
+                                        childTopics={subTopics}
+                                        childEntries={subEntries}
+                                        setGoto={setGoto}
+                                        />
+                                    </Collapse>
+                                    </>
                                 );
                             })
                         }
-                        <Collapse in={openSubList}>
-                            <ChildSubtopicList
-                              isLoading={subEntriesLoading}
-                              childTopics={subTopics}
-                              childEntries={subEntries}
-                              setGoto={setGoto}
-                            />
-                        </Collapse>
                     </List>
                 )
             }

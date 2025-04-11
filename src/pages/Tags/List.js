@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useState, useEffect, useRef} from 'react';
 import { useQuery } from 'react-query';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -17,7 +17,6 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
-// import ImageIcon from '@mui/icons-material/Image';
 import LinkIcon from '@mui/icons-material/Link';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -98,15 +97,22 @@ export default function TagList()
     },[data]);
 
     const handleDropdown = (tagId) => {
-       if(!openCollapse) {
-           const el =  entriesList.filter((entry) => entry.id == tagId)[0]
-           const {entries} = el;
-           console.log('entries')
-           console.log(el)
-           setCurrentEntries(entries);
-           setDropDownId(tagId)
-       }
-       setOpenCollapse(!openCollapse)
+        let shouldOpen ;
+        const diffId = dropDownId !== tagId;
+        if(diffId){
+            const el =  entriesList.filter((entry) => entry.id == tagId)[0]
+            const {entries} = el;
+            console.log('entries')
+            console.log(el)
+            setCurrentEntries(entries);
+            shouldOpen = true
+
+        }else{
+            shouldOpen = !openCollapse;
+        }
+
+       setOpenCollapse(shouldOpen)
+       setDropDownId(tagId);
     }
 
     return (
