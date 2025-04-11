@@ -56,6 +56,8 @@ router.post('/entry/test', entryCtr.test);
 router.get('/entries/:id',param('id').isNumeric().trim(), entryCtr.index);
 
 router.get('/tags', tagCtr.index);
+router.get('/tag/:id', tagCtr.view);
+router.put('/update/tag/', tagCtr.put);
 
 module.exports = router;
 

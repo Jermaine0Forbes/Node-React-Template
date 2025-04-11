@@ -36,3 +36,35 @@ module.exports.index = async(req, res) => {
     });
     res.json(tags);
 }
+
+module.exports.view = async(req,res) => {
+  logging('api', req.originalUrl);
+
+  const { id }  = req.params;
+
+  const tag = await Tags.findOne({
+    where:{id},
+    attributes:['name'],
+    logging: (sql) => {
+      logging('sql', sql);
+    }
+  });
+
+  res.json(tag);
+}
+
+
+module.exports.put = async(req,res) => {
+  logging('api', req.originalUrl);
+
+  const { id, name }  = req.body;
+
+  const tag = await Tags.update({name},{
+    where:{id},
+    logging: (sql) => {
+      logging('sql', sql);
+    }
+  });
+
+  res.json(tag);
+}

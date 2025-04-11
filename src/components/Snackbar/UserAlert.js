@@ -2,7 +2,7 @@ import React from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert  from '@mui/material/Alert';
 
-export default function UserAlert({isOpen, duration, onClose, children, status, testId}) {
+export default function UserAlert({isOpen, duration = 3000, onClose, children, status, testId = "user-alert"}) {
 
     return (
     <Snackbar 

@@ -30,9 +30,10 @@ Express & React template
 -  ~~cleanup, remove unused code~~
 -  ~~fix dropdown subtopic list~~
 -  ~~add logic to tag listing page~~
--  add logic to tag edit page
+-  ~~add logic to tag edit page~~
 -  add wysiwyg editor to entry field
 - lazy load the topic list, entries, and tag list page
+- add userId to tags table 
 -  create quiz-templates, quiz-sessions, and maybe results table
 -  possibly create answers table
 - update the new logging function that will log in console, on file, 

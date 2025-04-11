@@ -1,3 +1,9 @@
+## 4-11-25
+- [react-window](https://react-window.vercel.app/#/examples/list/fixed-size)
+
+ If you get controlled/controlled input error in react, just do a double coalesce operator in the value attribute like
+ this `value ={val ?? ''}`, that will get rid of the dumb error
+
 ## 4-8-25
 
 - [classnames package](https://github.com/JedWatson/classnames)
