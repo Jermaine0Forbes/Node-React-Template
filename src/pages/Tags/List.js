@@ -21,7 +21,8 @@ import LinkIcon from '@mui/icons-material/Link';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Collapse from '@mui/material/Collapse';
-import classNames from 'classnames';
+// import classNames from 'classnames';
+import { FixedSizeList } from 'react-window';
 
 const useStyles = makeStyles(() => ({
     topicTitle: {
@@ -68,6 +69,38 @@ const useStyles = makeStyles(() => ({
     }
 
 }));
+
+const entryRow = ({index, style, data}) => {
+    const classes = useStyles();
+    const entry = data[index];
+    const {topic} = entry;
+    return (
+    <Grid 
+        component={'section'}  
+        container 
+        key={index}
+        style={style}
+    >
+        <Grid item md={6}>
+            <ListItem>
+                <ListItemText primary={entry.title}/>
+            </ListItem>
+        </Grid>
+        
+        <Grid item md={6}>
+            <ListItem>
+                <Link href={"/topic/"+topic.id}>
+                    <ListItemText 
+                        primary={topic.title}
+                        className={classes.topicTitle}
+                    />
+                </Link>
+            </ListItem>
+        </Grid>
+    </Grid>
+
+    );
+}
 
 export default function TagList()
 {
@@ -176,34 +209,14 @@ export default function TagList()
                                                             </Grid>
 
                                                         </Grid>
-                                                        {
-                                                            currentEntries.map((e,i) => {
-                                                                return (
-                                                                <Grid 
-                                                                    component={'section'}  
-                                                                    container 
-                                                                    key={key(i)}
-                                                                >
-                                                                    <Grid item md={6}>
-                                                                        <ListItem>
-                                                                            <ListItemText primary={e.title}/>
-                                                                        </ListItem>
-                                                                    </Grid>
-                                                                    
-                                                                    <Grid item md={6}>
-                                                                        <ListItem>
-                                                                            <Link href={"/topic/"+e.topic.id}>
-                                                                                <ListItemText 
-                                                                                    primary={e.topic.title}
-                                                                                    className={classes.topicTitle}
-                                                                                />
-                                                                            </Link>
-                                                                        </ListItem>
-                                                                    </Grid>
-                                                                </Grid>
-                                                                )
-                                                            })
-                                                        }
+                                                        <FixedSizeList
+                                                                height={150}
+                                                                itemCount={currentEntries.length}
+                                                                itemSize={35}
+                                                                itemData={currentEntries}
+                                                        >
+                                                            {entryRow}
+                                                        </FixedSizeList>
                                                     </List>
                                                 </Collapse>
                                             </section>
