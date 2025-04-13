@@ -3,15 +3,15 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    return await queryInterface.sequelize.transaction( t => {
-      return Promise.all([
-        queryInterface.addColumn('Users', 'profileImage', {
-          type: Sequelize.DataTypes.STRING
-        },
-      { transaction: t },
-      ),
-      ]);
+    /**
+     * Add altering commands here.
+     *
+     * Example:
+     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
+     */
 
+    return await queryInterface.changeColumn('Entries', 'entry',{
+       type: Sequelize.TEXT
     })
   },
 

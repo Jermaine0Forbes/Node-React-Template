@@ -8,6 +8,7 @@ import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import {json, toJson } from "../../utils/index";
 import { v4 as uuidv4 } from 'uuid';
+import TextEditor from '../RichTextEditor/TextEditor';
 import classNames from 'classnames';
 
 const useStyles = makeStyles(() => ({
@@ -32,10 +33,6 @@ const useStyles = makeStyles(() => ({
         alignItems: 'center',
         padding: "1em",
        
-        '&> p': {
-            textTransform:'uppercase',
-            fontSize: "0.8em"
-        },
 
         "& .MuiTextField-root":{
             width:"100%",
@@ -43,6 +40,12 @@ const useStyles = makeStyles(() => ({
         }
 
     },
+    entryHeading: {
+        textTransform:'uppercase',
+        fontSize: "0.8em",
+        color: 'white',
+    },
+
     entryHead: {
         fontSize:"1.2em",
         backgroundColor: 'rgba(0, 0, 0, 0.3)',
@@ -53,7 +56,7 @@ const useStyles = makeStyles(() => ({
     },
     entrySection: {
        
-        color:'white',
+        // color:'white',
 
         "& .MuiFilledInput-root": {
             backgroundColor:"transparent",
@@ -90,7 +93,7 @@ export default function Entry({num = 0, data = {},  id = null, options = []})
 {
 
     const [title, setTitle] = useState(data?.title ?? '');
-    const [entry, setEntry] = useState(data?.title ?? '');
+    const [entry, setEntry] = useState(data?.entry ?? '');
     const [tags, setTags] = useState([]);
     const orderId = data?.order ?? uuidv4();
     const defaultInfo = {
@@ -106,10 +109,10 @@ export default function Entry({num = 0, data = {},  id = null, options = []})
     const [savedTags, setSavedTags] = useState([]);
     const classes = useStyles();
     const handleTags = (evt, value) => {
-        console.log('saved tags')
-        console.log(savedTags)
-        console.log('value')
-        console.log(value)
+        // console.log('saved tags')
+        // console.log(savedTags)
+        // console.log('value')
+        // console.log(value)
         setSavedTags(value)
         setTags(value);
        
@@ -125,6 +128,7 @@ export default function Entry({num = 0, data = {},  id = null, options = []})
             order: orderId,
             topicId: id,
         };
+
 
         setInfo(json(newInfo));
 
@@ -168,92 +172,97 @@ export default function Entry({num = 0, data = {},  id = null, options = []})
     return (
         <Box component={'section'} className={classNames(classes.entrySection, "entry-section")}>
             <Grid className={classes.entryHead}>
-            <Chip
-                label={num}
-                component="div"
-                href="#basic-chip"
-                variant="outlined"
-                className={classes.entryOrder}
-            />
+                <Chip
+                    label={num}
+                    component="div"
+                    href="#basic-chip"
+                    variant="outlined"
+                    className={classes.entryOrder}
+                />
             </Grid>
             <Grid className={classes.entryBody}>
                 <Grid className={classes.entryBlock}>
-                    <Typography>Title:</Typography>
+                    <Grid item md={1}>
+                        <Typography className={classes.entryHeading}>Title:</Typography>
+                    </Grid>
+                    <Grid item md={10}>
+                        {
+                            data?.id && (
 
-                    {
-                        data?.id && (
+                                <TextField
+                                name={"id"}
+                                type="hidden"
+                                className={classes.hidden}
+                                hidden
+                                value={data?.id}
+                                >
+                                </TextField>
 
-                            <TextField
-                            name={"id"}
-                            type="hidden"
-                            className={classes.hidden}
-                            hidden
-                            value={data?.id}
-                            >
-                            </TextField>
-
-                        ) 
-                    }
-                    
-                    <TextField
-                    variant="filled"
-                    size="small"
-                    margin="normal"
-                    className={classes.title}
-                    name={"title"}
-                    onChange={handleField}
-                    value={title}
-                    >
-                    </TextField>
-                </Grid>
-                <Grid className={classes.entryBlock}>
-                    <Typography>Entry:</Typography>
-                    <TextField
-                        label="Enter the answer"
-                        multiline
-                        variant='filled'
-                        className={classes.entry}
-                        minRows={3}
-                        name={"entry"}
-                        onChange={handleField}
-                        value={entry}
-                    >
-                    </TextField>
-                </Grid>
-                <Grid className={classes.entryBlock+" "+classes.entryTag}>
-                    <Typography>Tags:</Typography>
-                    <Autocomplete
-                        multiple
-                        id="tags-standard"
-                        freeSolo
-                        disablePortal={true}
-                        options={ options}
-                        className={classes.tagField}
-                        getOptionLabel={(option) => {
-                            // Value selected with enter, right from the input
-                            if (typeof option === 'string') {
-                                return  option;
-                            }
-                            // Add "xxx" option created dynamically
-                            if (option.inputValue) {
-                                return { name: option.inputValue, id: null};
-                            }
-                            // Regular option
-                            return option.name;
-                        }}
-                        // defaultValue={[top100Films[1]]}
-                        value={savedTags}
+                            ) 
+                        }
                         
-                        onChange={handleTags}
-                        renderInput={(params) => (
                         <TextField
-                            {...params}
-                            variant="filled"
-                            label="Multiple values"
-                            placeholder="Tags"
+                        variant="filled"
+                        size="small"
+                        margin="normal"
+                        className={classes.title}
+                        name={"title"}
+                        onChange={handleField}
+                        value={title}
+                        >
+                        </TextField>
+                    </Grid>
+                </Grid>
+                <Grid container className={classes.entryBlock}>
+                    <Grid item md={1}>
+                        <Typography className={classes.entryHeading}>Entry:</Typography>
+                    </Grid>
+                    <Grid item md={10}>
+                        <TextEditor content={entry} handleEditor={setEntry} />
+
+                    </Grid>
+                </Grid>
+
+                <Grid container className={classNames(classes.entryBlock,classes.entryTag)}>
+                    <Grid item md={1}>
+                        <Typography className={classes.entryHeading}>Tags:</Typography>
+
+                    </Grid>
+                    <Grid item md={10}>
+                        <Autocomplete
+                            multiple
+                            id="tags-standard"
+                            freeSolo
+                            disablePortal={true}
+                            options={ options}
+                            className={classes.tagField}
+                            getOptionLabel={(option) => {
+                                // Value selected with enter, right from the input
+                                if (typeof option === 'string') {
+                                    return  option;
+                                }
+                                // Add "xxx" option created dynamically
+                                if (option.inputValue) {
+                                    return { name: option.inputValue, id: null};
+                                }
+                                // Regular option
+                                return option.name;
+                            }}
+                            // defaultValue={[top100Films[1]]}
+                            value={savedTags}
+                            
+                            onChange={handleTags}
+                            renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                variant="filled"
+                                label="Multiple values"
+                                placeholder="Tags"
+                            />
+                            )}
                         />
-                        )}
-                    />
+
+                    </Grid>
                 </Grid>
                     <TextField
                         type="hidden" 

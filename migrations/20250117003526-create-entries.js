@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       entry: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       topicId: {
         type: Sequelize.INTEGER,

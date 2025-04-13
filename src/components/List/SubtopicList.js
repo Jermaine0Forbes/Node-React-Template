@@ -25,6 +25,7 @@ import { fetchSubtopics } from '../../services/topic';
 import { makeStyles } from '@material-ui/core';
 import Collapse from '@mui/material/Collapse';
 import ChildSubtopicList from './ChildSubtopicList';
+import { getKey as key } from '../../utils';
 
 const useStyles = makeStyles(() => ({
     topicTitle: {
@@ -56,12 +57,10 @@ export default function SubtopicList({subtopicList})
         const {getUser, token} = useContext(AuthContext);
         const user = getUser(token);
         const color = useColor(user?.adminLevel);
-        // const [subtopicList, setSubtopicList] = useState([]);
         const [subTopics, setSubTopics] = useState([]);
         const [subEntries, setSubEntries] = useState([]);
         const [openSubList, setOpenSubList] = useState(false);
         const [subId, setSubId] = useState(null);
-        const [dropDownId, setDropDownId] = useState(0);
         const [goto, setGoto] = useState(false);
         const prevSubId  = useRef(0);
         const redirect = useNavigate();
@@ -121,7 +120,7 @@ export default function SubtopicList({subtopicList})
     
     return (
             
-        <>
+        <Box component="section">
             {
                 (subtopicList?.length > 0) && (
                     <List >
@@ -129,7 +128,7 @@ export default function SubtopicList({subtopicList})
                             subtopicList.map((e,i) => {
                                 const openUp = !!(openSubList && (subId === e.id));
                                 return (
-                                    <>
+                                    <section key={key(i)}>
                                         <ListItem 
                                             key={i} 
                                             className={classes.subtopicItem} 
@@ -176,14 +175,14 @@ export default function SubtopicList({subtopicList})
                                         setGoto={setGoto}
                                         />
                                     </Collapse>
-                                    </>
+                                 </section>
                                 );
                             })
                         }
                     </List>
                 )
             }
-        </>
+        </Box>
              
     );
 }

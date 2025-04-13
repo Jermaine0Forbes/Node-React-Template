@@ -1,5 +1,11 @@
 ## 4-11-25
+- [extensions in tiptap](https://tiptap.dev/docs/editor/core-concepts/extensions)
+
+## 4-11-25
 - [react-window](https://react-window.vercel.app/#/examples/list/fixed-size)
+- [Sequelize - How can I return JSON objects of the database results only?](https://stackoverflow.com/questions/34460482/sequelize-how-can-i-return-json-objects-of-the-database-results-only)
+- [What is the 'global' object in NodeJS](https://stackoverflow.com/questions/43627622/what-is-the-global-object-in-nodejs)
+- [Sequelize Many-to-Many Association example – Node.js & MySQL](https://www.bezkoder.com/sequelize-associate-many-to-many/)
 
  If you get controlled/controlled input error in react, just do a double coalesce operator in the value attribute like
  this `value ={val ?? ''}`, that will get rid of the dumb error

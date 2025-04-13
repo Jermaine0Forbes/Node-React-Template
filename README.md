@@ -31,11 +31,11 @@ Express & React template
 -  ~~fix dropdown subtopic list~~
 -  ~~add logic to tag listing page~~
 -  ~~add logic to tag edit page~~
--  add wysiwyg editor to entry field
+-  ~~add wysiwyg editor to entry field~~
+- ~~add userId to tags table~~ 
 - lazy load the topic list, entries, and tag list page
-- add userId to tags table 
 -  create quiz-templates, quiz-sessions, and maybe results table
--  possibly create answers table
+-  possibly create answers or session-entries table
 - update the new logging function that will log in console, on file, 
 and turn all content to json
 - add a status column to the quiz table (incomplete/completed)
@@ -69,6 +69,60 @@ and turn all content to json
 - run jest while watching: `npm run test:watch`
 
 [go back home](home)
+
+
+## Sequelize Migrations
+
+### migrating all files in a particular folder
+
+`npx sequelize-cli db:migrate  --migrations-path ./path/to/folder`
+
+### altering a column
+
+```js
+    return await queryInterface.changeColumn('Entries', 'entry',{
+       type: Sequelize.TEXT
+    })
+
+```
+
+### removing a column 
+
+```js
+    await queryInterface.describeTable('Tags')
+    .then(tableDefinition => {
+       if(tableDefinition['termId']){
+        return queryInterface.removeColumn('Tags', 'termId');
+       }
+
+       return Promise.resolve(true);
+    });
+
+```
+
+### To check if a column exists before altering/removing the column
+
+```js
+     await queryInterface.describeTable('Tags')
+    .then(tableDefinition => {
+      if(!tableDefinition['userId']) {
+        return queryInterface.addColumn("Tags", 'userId', {
+           type: Sequelize.INTEGER,
+           references:{
+            model:'Users',
+            key:'id'
+           }
+        },{
+          indexes:[
+            'userId',
+          ]
+        })
+      }
+      return Promise.resolve(true)
+    });
+
+```
+
 
 ## Sequelize Commands
 

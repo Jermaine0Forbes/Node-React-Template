@@ -12,8 +12,12 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      termId: {
-        type: Sequelize.INTEGER
+      userId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,
@@ -22,8 +26,16 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+     }, 
+     {
+        indexes: [
+          {
+            fields: ['userId']
+          }
+        ]
       }
-    });
+    );
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Tags');
