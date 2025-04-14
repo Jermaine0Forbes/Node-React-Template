@@ -1,5 +1,5 @@
-export const fetchTags = async () => {
-    return await fetch(process.env.URL+'/api/tags/', { 
+export const fetchTags = async (id) => {
+    return await fetch(process.env.URL+'/api/tags/?page='+id, { 
         method:'GET', 
         headers:{
             'Content-Type': "application/json"

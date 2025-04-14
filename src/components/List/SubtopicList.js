@@ -1,11 +1,7 @@
 import React, {useContext, useState, useEffect, useRef} from 'react';
+
+// Components
 import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-// import TextField from '@material-ui/core/TextField';
-// import Button from '@mui/material/Button';
-// import Typography from '@mui/material/Typography';
-// import ButtonGroup from '@mui/material/ButtonGroup';
-// import BottomNavigation from '@mui/material/BottomNavigation';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
