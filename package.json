@@ -50,6 +50,7 @@
     "react-jwt": "^1.2.0",
     "react-query": "^3.39.3",
     "react-window": "^1.8.11",
+    "react-window-infinite-loader": "^1.0.10",
     "sequelize": "^6.29.3",
     "sequelize-auto": "^0.8.8",
     "socket.io": "^4.1.3",

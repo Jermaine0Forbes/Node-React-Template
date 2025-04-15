@@ -23,6 +23,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Collapse from '@mui/material/Collapse';
 // import classNames from 'classnames';
 import { FixedSizeList } from 'react-window';
+import InfiniteLoader from 'react-window-infinite-loader';
 import { useVirtualizer } from '@tanstack/react-virtual'
 
 const useStyles = makeStyles(() => ({
@@ -71,6 +72,43 @@ const useStyles = makeStyles(() => ({
 
 }));
 
+function InfiniteWrapper({hasNextPage, isNextPageLoading, items, loadNextPage, Item, options = {}}) {
+
+      // If there are more items to be loaded then add an extra row to hold a loading indicator.
+  const itemCount = hasNextPage ? items.length + 1 : items.length;
+
+  // Only load 1 page of items at a time.
+  // Pass an empty callback to InfiniteLoader in case it asks us to load more than once.
+  const loadMoreItems = isNextPageLoading ? () => {} : loadNextPage;
+
+  // Every row is loaded except for our loading indicator row.
+  const isItemLoaded = index => !hasNextPage || index < items.length;
+
+  return (
+    
+    <InfiniteLoader
+        isItemLoaded={isItemLoaded}
+        itemCount={itemCount}
+        loadMoreItems={loadMoreItems}
+  >
+    {({ onItemsRendered, ref }) => (
+      <FixedSizeList
+        className="InfiniteList"
+        height={150}
+        itemCount={itemCount}
+        itemSize={30}
+        onItemsRendered={onItemsRendered}
+        ref={ref}
+        {...options}
+      >
+        {Item}
+      </FixedSizeList>
+    )}
+  </InfiniteLoader>
+  );
+
+}
+
 const entryRow = ({index, style, data}) => {
     const classes = useStyles();
     const entry = data[index];
@@ -115,120 +153,34 @@ export default function TagList()
     const [openCollapse, setOpenCollapse] = useState(false);
     const [dropDownId, setDropDownId] = useState(0);
     const parentRef = useRef();
-    // const {isLoading,  data} = useQuery('get-tags', () => fetchTags(), { refetchOnWindowFocus: false});
+    const {isLoading,  data, refetch,} = useQuery('get-tags', () => fetchTags(), { refetchOnWindowFocus: false});
     
-    // async function fetchServerPage(
-    //     limit,
-    //     offset = 0,
-    //   ) {
-    //     const rows = new Array(limit)
-    //       .fill(0)
-    //       .map((_, i) => `Async loaded row #${i + offset * limit}`)
-      
-    //     await new Promise((r) => setTimeout(r, 500))
-      
-    //     return { rows, nextOffset: offset + 1 }
-    //   }
-    
-    
-    const {
-        status,
-        data,
-        error,
-        isFetching,
-        isFetchingNextPage,
-        fetchNextPage,
-        hasNextPage,
-      } = useInfiniteQuery({
-        queryKey: ['get-tags'],
-        queryFn: ({pageParam = 0}) => fetchTags( pageParam),
-        // queryFn: ({pageParam}) => fetchServerPage(10, pageParam),
-        getNextPageParam: (lastPage) => { 
-            console.log('lastPage')
-            console.log(lastPage)
-            if( lastPage.rows.length === 0 ) return undefined;
 
-            return lastPage.nextOffset;
-            // return lastPage.nextOffset+1;
-        },
-        initialPageParam: 0,
-      })
-
-      
-      const allRows = data ? data.pages.flatMap((d) => d.rows) : [];
-    //   const allParams = data ? data.pages.flatMap((d) => d.nextOffset): [];
-    //   const currentPage = allParams.reverse()[0] ??  0;
-      console.log('data')
-      console.log(data)
-      
-      const rowVirtualizer = useVirtualizer({
-        count: hasNextPage ? allRows.length + 1 : allRows.length,
-        getScrollElement: () => parentRef.current,
-        estimateSize: () => 20,
-        overscan: 5,
-      });
-
-      useEffect(() => {
-        const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse()
-
-        // console.log('virtual items')
-        // console.log(rowVirtualizer.getVirtualItems())
-
-        console.log('lastItem')
-        console.log(lastItem)
-    
-        if (!lastItem) {
-          return
-        }
-    
-        if (
-          lastItem.index >= allRows.length - 1 &&
-          hasNextPage &&
-          !isFetchingNextPage
-        ) {
-        
-        //  console.log('currentPage')
-        //   console.log(currentPage)
-        //   const nextPage =  currentPage+1;
-        //   console.log('nextPage')
-        //   console.log(nextPage)
-          fetchNextPage({
-            // pageParam: nextPage,
-            cancelRefetch: false,
-          })
-        }
-      }, [
-        hasNextPage,
-        fetchNextPage,
-        allRows.length,
-        isFetchingNextPage,
-        rowVirtualizer.getVirtualItems(),
-        // currentPage,
-      ]);
 
     useEffect(() => {
-        if(allRows?.length) {
-            console.log('allRows')
-            console.log(allRows)
-            // console.log('rows')
-            // console.log(rows)
+        if(data?.rows) {
+            console.log('data')
+            console.log(data)
+            const { rows } = data;
+            console.log('rows')
+            console.log(rows)
 
-            // const entries = allRows.map((tag) => ({id:tag.id, entries: tag.entries}));
-            // const tags = allRows.map((tag) => {
-            //     delete tag.entries;
-            //     return tag
-            // });
+            const entries = rows.map((tag) => ({id:tag.id, entries: tag.entries}));
+            const tags = rows.map((tag) => {
+                delete tag.entries;
+                return tag
+            });
             // const entries = data.map((tag) => ({id:tag.id, entries: tag.entries}));
             // const tags = data.map((tag) => {
             //     delete tag.entries;
             //     return tag
             // });
 
-            // setTagList(tags)
-            // setEntriesList(entries)
+            setTagList(tags)
+            setEntriesList(entries)
 
         }
-    },[allRows]);
+    },[data]);
 
     const handleDropdown = (tagId) => {
         let shouldOpen ;
@@ -254,93 +206,21 @@ export default function TagList()
                 <main>
                     <Typography variant="h3">Tags</Typography>
                     <Grid component="section" ref={parentRef}>
-                    {status === 'pending' ? (
-                            <p>Loading...</p>
-                        ) : status === 'error' ? (
-                            <span>Error: {error.message}</span>
-                        ) : (
-                            <div
-                            ref={parentRef}
-                            className="List"
-                            style={{
-                                height: `500px`,
-                                width: `100%`,
-                                overflow: 'auto',
-                            }}
-                            >
-                            <div
-                                style={{
-                                height: `${rowVirtualizer.getTotalSize()}px`,
-                                width: '100%',
-                                position: 'relative',
-                                }}
-                            >
-                                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                                const isLoaderRow = virtualRow.index > allRows.length - 1
-                                const row = allRows[virtualRow.index]
-                                // console.log('row')
-                                // console.log(row)
 
-                                const post = row?.name ?? '';
 
-                                return (
-                                    <div
-                                    key={virtualRow.index}
-                                    className={
-                                        virtualRow.index % 2 ? 'ListItemOdd' : 'ListItemEven'
-                                    }
-                                    style={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        width: '100%',
-                                        height: `${virtualRow.size}px`,
-                                        transform: `translateY(${virtualRow.start}px)`,
-                                    }}
-                                    >
-                                    {isLoaderRow
-                                        ? hasNextPage
-                                        ? 'Loading more...'
-                                        : 'Nothing more to load'
-                                        : post}
-                                    </div>
-                                )
-                                })}
-                            </div>
-                            </div>
-                        )}
-
-                        {/* <WhileLoading isLoading={isFetchingNextPage}>
+                        <WhileLoading isLoading={isLoading}>
 
                             {
                                tagList?.length ? (
-                                <List 
-                                    style={{
-                                        height: `${rowVirtualizer.getTotalSize()}px`,
-                                        position: 'relative',
-                                    }}
-                                
-                                >
+                                <List>
                                 {
                            
-                                    rowVirtualizer.getVirtualItems().map((e, i) => {
-                                         const openUp = !!(openCollapse && (dropDownId === e.id));
+                                    tagList.map((e, i) => {
+                                        const openUp = !!(openCollapse && (dropDownId === e.id));
                                         return (
                                             <section 
-                                            
-                                            key={key(i)}
-                                             style={{
-                                                position:'absolute',
-                                                top:0,
-                                                left: 0,
-                                                widht:'100%',
-                                                // height: `${virtualRow.size}.px`,
-                                                // transform: `translateY(${virtualRow.start}px)`
-                                                height: `${e.size}.px`,
-                                                transform: `translateY(${e.start}px)`
-                                             }}
-                                            
-                                            >
+                                                key={key(i)}
+                                             >
                                                 <ListItem 
                                                     key={key(i)} 
                                                     className={classes.tagItem} 
@@ -406,7 +286,7 @@ export default function TagList()
                                 ) :
                                 <Link href='/topic/list' variant="subtitle1" style={{color}} >no tags? create them within an topic entry</Link>
                             }
-                        </WhileLoading> */}
+                        </WhileLoading> 
                         <div>
                             {isFetching && !isFetchingNextPage ? 'Background Updating...' : null}
                         </div>

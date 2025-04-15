@@ -1,3 +1,11 @@
+## 4-14-25
+
+tan stack sucks, react query sucks, and all of their hooks suck! I tried to use `useInfiniteQuery` and `useVirtualizer` and they were clunky and confusing.  I'm going to try to use the other package that is supposed to work well with `react-window` and hopefully it's more intuitive. Here are the links to those stupid hooks, just in case if I want to be bold enough to try it again
+
+- [useInfiniteQuery](https://tanstack.com/query/v4/docs/framework/react/reference/useInfiniteQuery)
+- [Virtualizer](https://tanstack.com/virtual/latest/docs/api/virtualizer#scrolltofn)
+- [React Example: Infinite Scroll](https://tanstack.com/virtual/latest/docs/framework/react/examples/infinite-scroll?panel=sandbox)
+
 ## 4-11-25
 - [extensions in tiptap](https://tiptap.dev/docs/editor/core-concepts/extensions)
 
