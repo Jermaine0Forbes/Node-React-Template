@@ -78,6 +78,12 @@ Object.keys(db).forEach(modelName => {
         as: 'tag',
         foreignKey: 'tagId'
       });
+
+      db[modelName].belongsTo(getModel('Entries'), { 
+        through: getModel('TagsToEntries'),
+        as: 'entry',
+        foreignKey: 'entryId'
+      });
     break;
    }
 });

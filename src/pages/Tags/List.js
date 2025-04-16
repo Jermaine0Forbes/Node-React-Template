@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect, useRef} from 'react';
-import { useInfiniteQuery } from 'react-query';
+import { useQuery } from 'react-query';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -7,7 +7,7 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import { useColor } from '../../hooks/users';
 import {AuthContext} from '../../providers/AuthProvider';
-import { fetchTags } from '../../services/tags';
+import { fetchTags, fetchEntriesByTag } from '../../services/tags';
 import WhileLoading from '../../components/Loading/WhileLoading';
 import {getKey as key } from "../../utils/index";
 import { makeStyles } from '@material-ui/core';
@@ -24,7 +24,7 @@ import Collapse from '@mui/material/Collapse';
 // import classNames from 'classnames';
 import { FixedSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
-import { useVirtualizer } from '@tanstack/react-virtual'
+// import { useVirtualizer } from '@tanstack/react-virtual'
 
 const useStyles = makeStyles(() => ({
     topicTitle: {
@@ -153,15 +153,23 @@ export default function TagList()
     const [openCollapse, setOpenCollapse] = useState(false);
     const [dropDownId, setDropDownId] = useState(0);
     const parentRef = useRef();
-    const {isLoading,  data, refetch,} = useQuery('get-tags', () => fetchTags(), { refetchOnWindowFocus: false});
-    
+    const [nextPage, setNextPage] = useState(0);
+   
+    const {isLoading,  data: tagsData} = useQuery('get-tags', () => fetchTags(), { refetchOnWindowFocus: false});
+    const {
+        isLoading: entriesLoading,  
+        data: entriesData, 
+        refetch : refetchEntries
+    } 
+    = useQuery('get-tag-entries', () => fetchEntriesByTag(dropDownId, nextPage), { refetchOnWindowFocus: false, enabled: !!dropDownId});
+    const loadEntriesByTag = (id = dropDownId, page = nextPage) => refetchEntries(id, page);
 
 
     useEffect(() => {
-        if(data?.rows) {
-            console.log('data')
-            console.log(data)
-            const { rows } = data;
+        if(tagsData?.rows) {
+            console.log('tagsData')
+            console.log(tagsData)
+            const { rows } = tagsData;
             console.log('rows')
             console.log(rows)
 
@@ -180,7 +188,19 @@ export default function TagList()
             setEntriesList(entries)
 
         }
-    },[data]);
+        if(entriesData?.rows) {
+            const { rows, nextOffset} = entriesData;
+
+            console.log('entriesData')
+            console.log(entriesData)
+            setNextPage(nextOffset);
+
+            setEntriesList(rows);
+
+
+
+        }
+    },[tagsData, entriesData]);
 
     const handleDropdown = (tagId) => {
         let shouldOpen ;
@@ -191,14 +211,17 @@ export default function TagList()
             console.log('entries')
             console.log(el)
             setCurrentEntries(entries);
-            shouldOpen = true
+            shouldOpen = true;
+            setDropDownId(tagId);
 
         }else{
             shouldOpen = !openCollapse;
+            setNextPage(0);
+            setDropDownId(0);
         }
 
        setOpenCollapse(shouldOpen)
-       setDropDownId(tagId);
+      
     }
 
     return (
@@ -287,9 +310,6 @@ export default function TagList()
                                 <Link href='/topic/list' variant="subtitle1" style={{color}} >no tags? create them within an topic entry</Link>
                             }
                         </WhileLoading> 
-                        <div>
-                            {isFetching && !isFetchingNextPage ? 'Background Updating...' : null}
-                        </div>
                     </Grid>
                 </main>
         </Container>

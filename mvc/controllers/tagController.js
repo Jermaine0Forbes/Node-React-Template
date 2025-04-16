@@ -6,6 +6,80 @@ const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 
 
+module.exports.getEntries = async(req,res) => {
+  logging('api', req.originalUrl);
+
+  console.log('req query is')
+  console.log(req.query)
+  const totalCount = 3;
+  const { page, id } = req.query;
+  const currentPage = isNaN(page) ? 0 : parseInt(page);
+  const offset =  currentPage  * totalCount;
+
+  // const entries =  await TagsToEntries.findAll({
+  //   offset: offset,
+  //   limit: totalCount,
+  //   where:{
+  //     tagId: id,
+  //   },
+  //   attributes: [['entryId','id']],
+  //   include: {
+  //     model: Entries,
+  //     as: 'entry',
+  //     attributes: ['title'],
+  //     include:[
+  //       {
+  //         model: Topics,
+  //         as: 'topic',
+  //         attributes: ['title', 'id'],
+  //         foreignKey: 'topicId'
+  //       }
+
+  //     ],
+  //   },
+  //   logging: (sql) => {
+  //     logging('sql', sql);
+  //   }
+  // });
+
+
+  const entries =  await Tags.findOne({
+    offset: offset,
+    limit: totalCount,
+    where:{
+      id: id,
+    },
+    attributes:['id'],
+    include:[
+        {
+            model: Entries,
+            as: 'entries',
+            attributes: ['title'],
+
+            include:[
+              {
+                model: Topics,
+                as: 'topic',
+                attributes: ['title', 'id'],
+                foreignKey: 'topicId'
+              }
+
+            ],
+            through: {
+              attributes: [],
+            },
+        }
+    ],
+    logging: (sql) => {
+      logging('sql', sql);
+    }
+  })
+
+  const json = {rows:entries, nextOffset: currentPage +1 };
+  console.log(json)
+  res.json(json);
+}
+
 module.exports.index = async(req, res) => {
     logging('api', req.originalUrl);
 
@@ -13,8 +87,8 @@ module.exports.index = async(req, res) => {
     console.log(req.query)
     const totalCount = 10;
     const { page } = req.query;
-    const currentPage = parseInt(page);
-    const offset = Number.isInteger(currentPage) ? currentPage  * totalCount : 0;
+    const currentPage = isNaN(page) ? 0 : parseInt(page);
+    const offset =  currentPage  * totalCount;
     // const offset = Number.isInteger(page) ? page * 3 : 0;
 
     const tags = await Tags.findAll({
