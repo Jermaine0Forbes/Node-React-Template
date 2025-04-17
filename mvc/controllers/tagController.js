@@ -16,66 +16,70 @@ module.exports.getEntries = async(req,res) => {
   const currentPage = isNaN(page) ? 0 : parseInt(page);
   const offset =  currentPage  * totalCount;
 
-  // const entries =  await TagsToEntries.findAll({
+  const entries =  await TagsToEntries.findAll({
+    offset: offset,
+    limit: totalCount,
+    where:{
+      tagId: id,
+    },
+    attributes: [['entryId','id']],
+    include: {
+      model: Entries,
+      as: 'entry',
+      attributes: ['title'],
+      include:[
+        {
+          model: Topics,
+          as: 'topic',
+          attributes: ['title', 'id'],
+          foreignKey: 'topicId'
+        }
+
+      ],
+    },
+    logging: (sql) => {
+      logging('sql', sql);
+    },
+    raw: true,
+    nest:true,
+  });
+
+  const entriesList = entries.map( item => item.entry)
+
+
+  // const entries =  await Tags.findOne({
   //   offset: offset,
   //   limit: totalCount,
   //   where:{
-  //     tagId: id,
+  //     id: id,
   //   },
-  //   attributes: [['entryId','id']],
-  //   include: {
-  //     model: Entries,
-  //     as: 'entry',
-  //     attributes: ['title'],
-  //     include:[
+  //   attributes:['id'],
+  //   include:[
   //       {
-  //         model: Topics,
-  //         as: 'topic',
-  //         attributes: ['title', 'id'],
-  //         foreignKey: 'topicId'
-  //       }
+  //           model: Entries,
+  //           as: 'entries',
+  //           attributes: ['title'],
 
-  //     ],
-  //   },
+  //           include:[
+  //             {
+  //               model: Topics,
+  //               as: 'topic',
+  //               attributes: ['title', 'id'],
+  //               foreignKey: 'topicId'
+  //             }
+
+  //           ],
+  //           through: {
+  //             attributes: [],
+  //           },
+  //       }
+  //   ],
   //   logging: (sql) => {
   //     logging('sql', sql);
   //   }
   // });
 
-
-  const entries =  await Tags.findOne({
-    offset: offset,
-    limit: totalCount,
-    where:{
-      id: id,
-    },
-    attributes:['id'],
-    include:[
-        {
-            model: Entries,
-            as: 'entries',
-            attributes: ['title'],
-
-            include:[
-              {
-                model: Topics,
-                as: 'topic',
-                attributes: ['title', 'id'],
-                foreignKey: 'topicId'
-              }
-
-            ],
-            through: {
-              attributes: [],
-            },
-        }
-    ],
-    logging: (sql) => {
-      logging('sql', sql);
-    }
-  })
-
-  const json = {rows:entries, nextOffset: currentPage +1 };
+  const json = {rows:entriesList, nextOffset: currentPage +1 };
   console.log(json)
   res.json(json);
 }
