@@ -41,6 +41,7 @@ and turn all content to json
 - add a status column to the quiz table (incomplete/completed)
 - add form error handling to topics, entries, and tags
 - update mui and maybe react
+- fix double fetching of entries in tags list page
 
 [go back home](home)
 

@@ -98,7 +98,7 @@ function InfiniteWrapper({hasNextPage, isNextPageLoading, items, loadNextPage, I
         itemCount={itemCount}
         itemSize={options?.itemSize ?? 30}
         onItemsRendered={onItemsRendered}
-        itemData={{ row: items, props}}
+        itemData={items}
         ref={ref}
         {...options}
       >
@@ -163,108 +163,6 @@ const entryRow = ({index, style, data}) => {
     return content;
 }
 
-const tagRow = ({
-    index, 
-    style, 
-    data, 
-}) => {
-    const {row, props} = data;
-    const tag = row[index];
-    const {
-        openCollapse, 
-        dropDownId, 
-        classes, 
-        entriesLoading, 
-        handleDropdown,
-        nextEntryPage,
-        currentEntries,
-        loadEntriesByTag,
-        entryRow,
-        color,
-    } = props;
-    let content;
-   
-    if(tag) {
-
-    const openUp = !!(openCollapse && (dropDownId === tag.id));
-
-     content = (
-        <section 
-        key={key(index)}
-        style={style}
-     >
-        <ListItem 
-            className={classes.tagItem} 
-            style={{backgroundColor:color}}
-            secondaryAction={
-                <IconButton 
-                    edge="end" 
-                    aria-label="show more"
-                    onClick={() => handleDropdown(tag.id)}
-                >
-                    {
-                        openUp ? (
-                            <KeyboardArrowUpIcon  />
-                        ) : (
-                            <KeyboardArrowDownIcon />
-                        )
-                    }
-                    
-                </IconButton>
-            }
-        >
-            <Link href={'/tag/'+tag.id} className={classes.tagLink}>
-                <ListItemAvatar>
-                    <Avatar>
-                        <LinkIcon />
-                    </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={tag?.name} className='tagName' />
-            </Link>
-        </ListItem>
-        <Collapse in={openUp}>
-            <WhileLoading isLoading={entriesLoading}>
-                <List>
-                    <Grid
-                        component={'section'}  
-                        container 
-                    >
-                        <Grid item md={6}>
-                            <Typography variant="h6">Entry</Typography>
-                        </Grid>
-                        
-                        <Grid item md={6}>
-                            <Typography variant="h6">Topic</Typography>
-                        </Grid>
-
-                    </Grid>
-                    <InfiniteWrapper
-                        hasNextPage={nextEntryPage}
-                        isNextPageLoading={entriesLoading}
-                        items={currentEntries}
-                        loadNextPage={loadEntriesByTag}
-                        Item={entryRow}
-                    />
-                </List>
-            </WhileLoading>
-        </Collapse>
-    </section>
-     );
-
-    }else {
-
-    content = (
-        
-        <section style={style} key={index}>
-            <WhileLoading isLoading={true}/>
-        </section>
-    );
-
-    }
-
-    return content;
-}
-
 export default function TagList()
 {
     const {getUser, token} = useContext(AuthContext);
@@ -277,25 +175,29 @@ export default function TagList()
     const [openCollapse, setOpenCollapse] = useState(false);
     const [dropDownId, setDropDownId] = useState(0);
     const parentRef = useRef();
+    const prevEntryPage = useRef(0);
     const [nextEntryPage, setNextEntryPage] = useState(0);
     const [nextTagPage, setNextTagPage] = useState(0);
    
-    const {isLoading,  data: tagsData, refetch: refetchTags} = useQuery('get-tags', () => fetchTags(nextTagPage), { refetchOnWindowFocus: false});
     const {
-        isLoading: entriesLoading,  
+        isLoading,  
+        data: tagsData, 
+        refetch: refetchTags,
+        isRefetching: isRefetchingTags,
+    } 
+    = useQuery('get-tags', () => fetchTags(nextTagPage), { refetchOnWindowFocus: false});
+    const {
+        isLoading: entriesLoading,
+        isFetching: isFetchingEntries,  
         data: entriesData, 
         refetch : refetchEntries
     } 
     = useQuery(['get-tag-entries', dropDownId], () => fetchEntriesByTag(dropDownId, nextEntryPage), { refetchOnWindowFocus: false, enabled: !!dropDownId});
     const loadEntriesByTag = () => {
-        if(nextEntryPage)
+        if(nextEntryPage && prevEntryPage.current !== nextEntryPage)
             refetchEntries()
     };
 
-    const loadTags = () => {
-        if(nextTagPage)
-            refetchTags()
-    }
 
 
     useEffect(() => {
@@ -318,8 +220,8 @@ export default function TagList()
             // });
 
             if(rows.length){
-                setTagList([...tagList,...tags]);
                 setNextTagPage(nextOffset);
+                setTagList([...tagList,...tags]);
 
             } else {
                 setNextTagPage(null);
@@ -334,6 +236,7 @@ export default function TagList()
             console.log('entriesData')
             console.log(entriesData)
             if(rows.length){
+                prevEntryPage.current = nextEntryPage;
                 setNextEntryPage(nextOffset);
     
                 setCurrentEntries([...currentEntries, ...rows]);
@@ -348,6 +251,15 @@ export default function TagList()
 
         }
     },[tagsData, entriesData]);
+
+    const loadTags = () => {
+        console.log(`next tag ${nextTagPage}`)
+        if(nextTagPage){
+            refetchTags();
+            
+        }
+    }
+
 
     const handleDropdown = (tagId) => {
         let shouldOpen ;
@@ -378,108 +290,149 @@ export default function TagList()
       
     }
 
-    const tagProps = {
-        classes,
-        nextEntryPage,
-        entriesLoading,
-        currentEntries,
-        loadEntriesByTag,
-        entryRow,
-        handleDropdown,
-        color,
-    };
+    useEffect(() => {
+        // fetchData();
+        // window.addEventListener("scroll", handleScroll);
+        // const x = (entries, observer) => {
+        //     console.log(typeof entries)
+        //     console.log(entries)
+
+        // }
+        // const options = {
+        //     root: document.querySelector('#tagList'),
+        //     rootMargin: "0px",
+        //     threshold: 1.0,
+        //   };
+        //   const observer = new IntersectionObserver(x, options);
+
+
+      }, [nextTagPage]);
+
+    const handleScroll = () => {
+        const scrollingPoint = Math.ceil(window.innerHeight + document.documentElement.scrollTop);
+        const parentHeight =  parentRef.current.offsetHeight;
+        const notAtBottom =  scrollingPoint < parentHeight ;
+        // !== document.documentElement.offsetHeight ;
+        console.log('notAtBottom')
+        console.log(notAtBottom)
+        // console.log('offsetHeight')
+        // console.log(document.documentElement.offsetHeight)
+        console.log('scrollingPoint')
+        console.log(scrollingPoint)
+        console.log('parentRef.current')
+        console.log(parentRef.current.offsetHeight)
+        if (notAtBottom  ||
+            isRefetchingTags
+        )
+          return;
+
+        // console.log('is this true')
+        // console.log(!isRefetchingTags && !notAtBottom)
+        if(!isRefetchingTags && !notAtBottom){
+            // console.log(nextTagPage)
+            loadTags();
+            // setIsFetching(true);
+            // console.log(isFetching);
+
+        }
+      };
+
+    // const tagProps = {
+    //     classes,
+    //     nextEntryPage,
+    //     entriesLoading,
+    //     currentEntries,
+    //     loadEntriesByTag,
+    //     entryRow,
+    //     handleDropdown,
+    //     color,
+    // };
+
+    console.log('nextTagPage')
+    console.log(nextTagPage)
 
     return (
         <Container>
                 <main>
                     <Typography variant="h3">Tags</Typography>
-                    <Grid component="section" ref={parentRef}>
+                    <Grid component="section" >
 
 
                         <WhileLoading isLoading={isLoading}>
 
                             {
                                tagList?.length ? (
-                                <List>
+                                <List
+                                    ref={parentRef}
+                                    id="tagList"
+                                >
 
-                                <InfiniteWrapper
-                                    hasNextPage={nextTagPage}
-                                    isNextPageLoading={isLoading}
-                                    items={tagList}
-                                    loadNextPage={loadTags}
-                                    Item={tagRow}
-                                    props={tagProps}
-                                    options ={{height:2000, itemSize: 70}}
-                                />
                                 {
-
-                                    
-                           
-                                    // tagList.map((e, i) => {
-                                    //     const openUp = !!(openCollapse && (dropDownId === e.id));
-                                    //     return (
-                                    //         <section 
-                                    //             key={key(i)}
-                                    //          >
-                                    //             <ListItem 
-                                    //                 key={key(i)} 
-                                    //                 className={classes.tagItem} 
-                                    //                 style={{backgroundColor:color}}
-                                    //                 secondaryAction={
-                                    //                     <IconButton 
-                                    //                         edge="end" 
-                                    //                         aria-label="show more"
-                                    //                         onClick={() => handleDropdown(e.id)}
-                                    //                     >
-                                    //                         {
-                                    //                             openUp ? (
-                                    //                                 <KeyboardArrowUpIcon  />
-                                    //                             ) : (
-                                    //                                 <KeyboardArrowDownIcon />
-                                    //                             )
-                                    //                         }
+                                    tagList.map((e, i) => {
+                                        const openUp = !!(openCollapse && (dropDownId === e.id));
+                                        return (
+                                            <section 
+                                                key={key(i)}
+                                             >
+                                                <ListItem 
+                                                    key={key(i)} 
+                                                    className={classes.tagItem} 
+                                                    style={{backgroundColor:color}}
+                                                    secondaryAction={
+                                                        <IconButton 
+                                                            edge="end" 
+                                                            aria-label="show more"
+                                                            onClick={() => handleDropdown(e.id)}
+                                                        >
+                                                            {
+                                                                openUp ? (
+                                                                    <KeyboardArrowUpIcon  />
+                                                                ) : (
+                                                                    <KeyboardArrowDownIcon />
+                                                                )
+                                                            }
                                                             
-                                    //                     </IconButton>
-                                    //                 }
-                                    //             >
-                                    //                 <Link href={'/tag/'+e.id} className={classes.tagLink}>
-                                    //                     <ListItemAvatar>
-                                    //                         <Avatar>
-                                    //                             <LinkIcon />
-                                    //                         </Avatar>
-                                    //                     </ListItemAvatar>
-                                    //                     <ListItemText primary={e?.name} className='tagName' />
-                                    //                 </Link>
-                                    //             </ListItem>
-                                    //             <Collapse in={openUp}>
-                                    //                 <WhileLoading isLoading={entriesLoading}>
-                                    //                     <List>
-                                    //                         <Grid
-                                    //                             component={'section'}  
-                                    //                             container 
-                                    //                         >
-                                    //                             <Grid item md={6}>
-                                    //                                 <Typography variant="h6">Entry</Typography>
-                                    //                             </Grid>
+                                                        </IconButton>
+                                                    }
+                                                >
+                                                    <Link href={'/tag/'+e.id} className={classes.tagLink}>
+                                                        <ListItemAvatar>
+                                                            <Avatar>
+                                                                <LinkIcon />
+                                                            </Avatar>
+                                                        </ListItemAvatar>
+                                                        <ListItemText primary={e?.name} className='tagName' />
+                                                    </Link>
+                                                </ListItem>
+                                                <Collapse in={openUp}>
+                                                    <WhileLoading isLoading={entriesLoading}>
+                                                        <List>
+                                                            <Grid
+                                                                component={'section'}  
+                                                                container 
+                                                            >
+                                                                <Grid item md={6}>
+                                                                    <Typography variant="h6">Entry</Typography>
+                                                                </Grid>
                                                                 
-                                    //                             <Grid item md={6}>
-                                    //                                 <Typography variant="h6">Topic</Typography>
-                                    //                             </Grid>
+                                                                <Grid item md={6}>
+                                                                    <Typography variant="h6">Topic</Typography>
+                                                                </Grid>
 
-                                    //                         </Grid>
-                                    //                         <InfiniteWrapper
-                                    //                             hasNextPage={nextPage}
-                                    //                             isNextPageLoading={entriesLoading}
-                                    //                             items={currentEntries}
-                                    //                             loadNextPage={loadEntriesByTag}
-                                    //                             Item={entryRow}
-                                    //                         />
-                                    //                     </List>
-                                    //                 </WhileLoading>
-                                    //             </Collapse>
-                                    //         </section>
-                                    //     );
-                                    // })
+                                                            </Grid>
+                                                            <InfiniteWrapper
+                                                                hasNextPage={nextEntryPage}
+                                                                isNextPageLoading={isFetchingEntries}
+                                                                items={currentEntries}
+                                                                loadNextPage={loadEntriesByTag}
+                                                                Item={entryRow}
+                                                            />
+                                                        </List>
+                                                    </WhileLoading>
+                                                </Collapse>
+                                            </section>
+                                        );
+                                    })
 
                                 }
 
