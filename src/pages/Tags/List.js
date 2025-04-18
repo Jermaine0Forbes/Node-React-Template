@@ -72,7 +72,7 @@ const useStyles = makeStyles(() => ({
 
 }));
 
-function InfiniteWrapper({hasNextPage, isNextPageLoading, items, loadNextPage, Item, options = {}}) {
+function InfiniteWrapper({hasNextPage, isNextPageLoading, items, loadNextPage, Item, props = {}, options = {}}) {
 
       // If there are more items to be loaded then add an extra row to hold a loading indicator.
   const itemCount = hasNextPage ? items.length + 1 : items.length;
@@ -98,7 +98,7 @@ function InfiniteWrapper({hasNextPage, isNextPageLoading, items, loadNextPage, I
         itemCount={itemCount}
         itemSize={options?.itemSize ?? 30}
         onItemsRendered={onItemsRendered}
-        itemData={items}
+        itemData={{ row: items, props}}
         ref={ref}
         {...options}
       >
@@ -167,17 +167,21 @@ const tagRow = ({
     index, 
     style, 
     data, 
-    openCollapse, 
-    dropDownId, 
-    classes,
-    entriesLoading,
-    handleDropdown,
-    nextEntryPage,
-    currentEntries,
-    loadEntriesByTag,
-    entryRow
 }) => {
-    const tag = data[index];
+    const {row, props} = data;
+    const tag = row[index];
+    const {
+        openCollapse, 
+        dropDownId, 
+        classes, 
+        entriesLoading, 
+        handleDropdown,
+        nextEntryPage,
+        currentEntries,
+        loadEntriesByTag,
+        entryRow,
+        color,
+    } = props;
     let content;
    
     if(tag) {
@@ -374,6 +378,17 @@ export default function TagList()
       
     }
 
+    const tagProps = {
+        classes,
+        nextEntryPage,
+        entriesLoading,
+        currentEntries,
+        loadEntriesByTag,
+        entryRow,
+        handleDropdown,
+        color,
+    };
+
     return (
         <Container>
                 <main>
@@ -393,13 +408,8 @@ export default function TagList()
                                     items={tagList}
                                     loadNextPage={loadTags}
                                     Item={tagRow}
-                                    handleDropdown={handleDropdown}
-                                    classes={classes}
-                                    nextEntryPage={nextEntryPage}
-                                    entriesLoading={entriesLoading}
-                                    currentEntries={currentEntries}
-                                    loadEntriesByTag={loadEntriesByTag}
-                                    entryRow={entryRow}
+                                    props={tagProps}
+                                    options ={{height:2000, itemSize: 70}}
                                 />
                                 {
 
