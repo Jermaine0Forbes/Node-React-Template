@@ -1,15 +1,15 @@
 import React, {useContext, useState} from 'react';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Link from '@mui/material/Link';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import PasswordField from '../components/Form/PasswordField';
 
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate} from "react-router-dom";
 import {AuthContext} from '../providers/AuthProvider';
 import { registerUser } from '../services/login';

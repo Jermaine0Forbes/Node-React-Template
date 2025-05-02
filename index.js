@@ -32,7 +32,7 @@ app.use(body.urlencoded({extended:true}));
 app.use(cookie());
 
 app.use("/api", routes);
-app.get('*', (req, res) => res.sendFile(path.resolve('public', 'js','index.html')));
+app.get(/(.*)/, (req, res) => res.sendFile(path.resolve('public', 'js','index.html')));
 
 app.use(function(err,req,res,next){
 	if(res.statusCode == 404 ){

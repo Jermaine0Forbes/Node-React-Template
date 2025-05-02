@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import ListContainer from '@mui/material/List';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { fetchUsers } from '../services/users';
 import { useColor } from '../hooks/users';
 import UserListItem from "../components/List/UserListItem";

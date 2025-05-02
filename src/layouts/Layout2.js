@@ -1,11 +1,11 @@
 import React from 'react';
 import { Outlet, Link} from "react-router-dom";
-import Container from '@material-ui/core/Container';
-import AppBar from '@material-ui/core/AppBar';
-import MenuList from '@material-ui/core/MenuList';
-import MenuItem from '@material-ui/core/MenuItem';
-import Toolbar from '@material-ui/core/Toolbar';
-import { makeStyles } from '@material-ui/core';
+import Container from '@mui/material/Container';
+import AppBar from '@mui/material/AppBar';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
+import Toolbar from '@mui/material/Toolbar';
+import { makeStyles } from '@mui/material';
 
 const useStyles = makeStyles(() => ({
     toolbar: {

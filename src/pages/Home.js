@@ -1,7 +1,7 @@
 import React, {useContext, useState, useEffect}  from 'react';
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import {AuthContext} from '../providers/AuthProvider';
 
 export default function Home()

@@ -1,14 +1,14 @@
 import React, {useContext, useState, useEffect} from 'react';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import {useParams} from "react-router-dom";
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/material';
 
 // Components
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import TextField from '@material-ui/core/TextField';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import UserAlert from '../../components/Snackbar/UserAlert';
 

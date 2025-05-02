@@ -1,18 +1,18 @@
 import React, {useContext, useState, useEffect, useCallback} from 'react';
 import { Outlet, Link, useNavigate} from "react-router-dom";
-import { useQuery } from 'react-query';
-import Container from '@material-ui/core/Container';
-import AppBar from '@material-ui/core/AppBar';
-import Typography from '@material-ui/core/Typography';
-import Menu from '@material-ui/core/Menu';
-import MenuList from '@material-ui/core/MenuList';
-import MenuItem from '@material-ui/core/MenuItem';
-import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
+import { useQuery } from '@tanstack/react-query';
+import Container from '@mui/material/Container';
+import AppBar from '@mui/material/AppBar';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {AuthContext} from '../providers/AuthProvider';
 import { useColor } from '../hooks/users';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/material';
 import {logoutUser} from "../services/login";
 
 const useStyles = makeStyles(() => ({

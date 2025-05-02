@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Box from '@material-ui/core/Box';
-import TextField from '@material-ui/core/TextField';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import Chip from '@material-ui/core/Chip';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
+import Chip from '@mui/material/Chip';
+import Grid from '@mui/material/Grid';
+import { makeStyles } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import {json, toJson } from "../../utils/index";
 import { v4 as uuidv4 } from 'uuid';
 import TextEditor from '../RichTextEditor/TextEditor';

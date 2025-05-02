@@ -1,12 +1,12 @@
 import React, {useContext} from 'react';
-import { useQuery } from 'react-query';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
+import { useQuery } from '@tanstack/react-query';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import Link from '@material-ui/core/Link';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Link from '@mui/material/Link';
 import { useColor } from '../../hooks/users';
 import {AuthContext} from '../../providers/AuthProvider';
 import { fetchTopics } from '../../services/topic';

@@ -43,7 +43,6 @@ module.exports = () => {
       port:3200,
       static:path.resolve(__dirname, "public/js"),
       historyApiFallback: true,
-      magicHtml: false,
       hot:true
     }
   }

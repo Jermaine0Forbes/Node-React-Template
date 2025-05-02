@@ -1,8 +1,8 @@
 import React from 'react';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
 
 export default function SelectAdminLevel({level, setLevel, testId, readOnly }) 
 {   const readOrWrite = readOnly ? {defaultValue: level} : {value: level}

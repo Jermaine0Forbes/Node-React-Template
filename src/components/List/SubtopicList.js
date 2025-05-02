@@ -1,7 +1,7 @@
 import React, {useContext, useState, useEffect, useRef} from 'react';
 
 // Components
-import Box from '@material-ui/core/Box';
+import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -15,10 +15,10 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useColor } from '../../hooks/users';
 import {AuthContext} from '../../providers/AuthProvider';
 import { useNavigate, useParams} from "react-router-dom";
-import { useMutation } from 'react-query';
-import { useQuery } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { fetchSubtopics } from '../../services/topic';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
 import ChildSubtopicList from './ChildSubtopicList';
 import { getKey as key } from '../../utils';

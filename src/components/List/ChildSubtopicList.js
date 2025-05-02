@@ -1,7 +1,7 @@
 import React, {useContext, useState, useEffect, useRef} from 'react';
-// import Box from '@material-ui/core/Box';
-// import Grid from '@material-ui/core/Grid';
-// import TextField from '@material-ui/core/TextField';
+// import Box from '@mui/material/Box';
+// import Grid from '@mui/material/Grid';
+// import TextField from '@mui/material/TextField';
 // import Button from '@mui/material/Button';
 // import Typography from '@mui/material/Typography';
 // import ButtonGroup from '@mui/material/ButtonGroup';
@@ -19,10 +19,10 @@ import LinkIcon from '@mui/icons-material/Link';
 import { useColor } from '../../hooks/users';
 import {AuthContext} from '../../providers/AuthProvider';
 // import { useNavigate, useParams} from "react-router-dom";
-// import { useMutation } from 'react-query';
-// import { useQuery } from 'react-query';
+// import { useMutation } from '@tanstack/react-query';
+// import { useQuery } from '@tanstack/react-query';
 // import { fetchSubtopics } from '../../services/topic';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/material';
 import WhileLoading from '../Loading/WhileLoading';
 // import Collapse from '@mui/material/Collapse';
 
